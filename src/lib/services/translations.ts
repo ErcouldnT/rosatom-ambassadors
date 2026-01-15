@@ -86,6 +86,12 @@ export const translations = {
 			success: 'Message sent successfully!',
 			error: 'Failed to send message. Please try again.'
 		},
+		ambassadorsPage: {
+			title: 'Our Ambassadors',
+			description:
+				'Meet the talented students representing Russian nuclear education across the globe. They are the bridge between cultures and knowledge.',
+			viewProfile: 'View Profile'
+		},
 		footer: {
 			desc: 'Promoting Russian nuclear education globally and building a sustainable future through international cooperation.',
 			headers: {
@@ -156,6 +162,11 @@ export const translations = {
 			community_desc:
 				'Общайтесь с единомышленниками из более чем 28 стран и создавайте профессиональную сеть.'
 		},
+		events: {
+			title: 'Предстоящие События',
+			description:
+				'Присоединяйтесь к нашим амбассадорам на мероприятиях по всему миру. От семинаров до конференций — узнайте, где мы будем завтра.'
+		},
 		impact: {
 			title: 'Глобальное Присутствие',
 			description:
@@ -187,6 +198,12 @@ export const translations = {
 			send: 'Отправить',
 			success: 'Сообщение успешно отправлено!',
 			error: 'Не удалось отправить сообщение. Пожалуйста, попробуйте снова.'
+		},
+		ambassadorsPage: {
+			title: 'Наши Амбассадоры',
+			description:
+				'Познакомьтесь с талантливыми студентами, представляющими российское ядерное образование по всему миру. Они — мост между культурами и знаниями.',
+			viewProfile: 'Посмотреть Профиль'
 		},
 		footer: {
 			desc: 'Продвижение российского ядерного образования во всем мире и построение устойчивого будущего через международное сотрудничество.',

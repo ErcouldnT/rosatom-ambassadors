@@ -10,11 +10,11 @@
 	$: t = translations[$language];
 
 	$: navLinks = [
-		{ name: t.nav.about, href: '#about' },
-		{ name: t.nav.ambassadors, href: '#ambassadors' },
-		{ name: t.nav.events, href: '#events' },
-		{ name: t.nav.news, href: '#news' },
-		{ name: t.nav.contact, href: '#contact' }
+		{ name: t.nav.about, href: '/#about' },
+		{ name: t.nav.ambassadors, href: '/ambassadors' },
+		{ name: t.nav.events, href: '/events' },
+		{ name: t.nav.news, href: '/news' },
+		{ name: t.nav.contact, href: '/#contact' }
 	];
 
 	onMount(() => {
@@ -34,10 +34,15 @@
 	function toggleLanguage() {
 		language.update((l) => (l === 'en' ? 'ru' : 'en'));
 	}
+	let y = 0;
 </script>
 
+<svelte:window bind:scrollY={y} />
+
 <header
-	class="fixed top-0 z-50 w-full border-b border-base-200/50 bg-base-100/80 backdrop-blur-md transition-all duration-300"
+	class="fixed top-0 z-50 w-full transition-all duration-300 {y > 20
+		? 'border-b border-base-200/50 bg-base-100/80 backdrop-blur-md'
+		: 'border-transparent bg-transparent'}"
 >
 	<div class="container mx-auto px-4">
 		<div class="flex h-16 items-center justify-between">
