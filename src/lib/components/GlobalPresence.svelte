@@ -8,7 +8,7 @@
 	const countries = getCountries();
 </script>
 
-<section id="global-presence" class="relative overflow-hidden bg-base-100 py-20">
+<section id="ambassadors" class="relative overflow-hidden bg-base-100 py-20">
 	<!-- Background Map/Globe placeholder (CSS radial gradient for now) -->
 	<div
 		class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-primary/5"

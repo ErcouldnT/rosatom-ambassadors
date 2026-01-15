@@ -49,6 +49,11 @@ export const translations = {
 			community_desc:
 				'Connect with like-minded individuals from over 28 countries and build a professional network.'
 		},
+		events: {
+			title: 'Upcoming Events',
+			description:
+				'Join our ambassadors at events around the world. From workshops to conferences, find out where we will be next.'
+		},
 		impact: {
 			title: 'Global Presence',
 			description:

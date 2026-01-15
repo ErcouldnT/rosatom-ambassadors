@@ -19,9 +19,7 @@
 <div
 	class="group relative flex overflow-x-hidden border-t border-neutral-content/10 bg-neutral py-4 text-neutral-content"
 >
-	<div
-		class="animate-marquee flex items-center gap-16 whitespace-nowrap group-hover:[animation-play-state:paused]"
-	>
+	<div class="animate-marquee flex items-center gap-16 whitespace-nowrap">
 		{#each items as item (item.text)}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
@@ -49,7 +47,7 @@
 	</div>
 
 	<div
-		class="animate-marquee2 absolute top-0 ml-16 flex h-full items-center gap-16 whitespace-nowrap group-hover:[animation-play-state:paused]"
+		class="animate-marquee2 absolute top-0 ml-16 flex h-full items-center gap-16 whitespace-nowrap"
 	>
 		{#each items as item (item.text + 'mq2')}
 			<div
@@ -101,5 +99,10 @@
 		100% {
 			transform: translateX(0%);
 		}
+	}
+
+	.group:hover .animate-marquee,
+	.group:hover .animate-marquee2 {
+		animation-play-state: paused;
 	}
 </style>
