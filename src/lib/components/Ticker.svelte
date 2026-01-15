@@ -17,7 +17,7 @@
 </script>
 
 <div
-	class="group relative flex overflow-x-hidden border-t border-neutral-content/10 bg-neutral py-4 text-neutral-content"
+	class="group relative flex overflow-x-hidden border-t border-base-content/5 bg-base-200 py-4 text-base-content"
 >
 	<div class="animate-marquee flex items-center gap-16 whitespace-nowrap">
 		{#each items as item (item.text)}

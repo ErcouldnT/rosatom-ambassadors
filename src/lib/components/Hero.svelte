@@ -10,9 +10,7 @@
 	$: t = translations[$language].hero;
 </script>
 
-<section
-	class="relative flex min-h-screen flex-col justify-center overflow-hidden bg-base-100 pt-20"
->
+<section class="relative flex min-h-screen flex-col overflow-hidden bg-base-100 pt-20">
 	<!-- Background decoration -->
 	<div
 		class="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-primary opacity-10 blur-3xl"
