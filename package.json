@@ -8,7 +8,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"schema:setup": "node scripts/setup-pocketbase.mjs",
-		"prepare": "svelte-kit sync || echo ''",
+		"prepare": "husky",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
@@ -27,6 +27,8 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.13.1",
 		"globals": "^16.5.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.2.7",
 		"prettier": "^3.7.4",
 		"prettier-plugin-svelte": "^3.4.0",
 		"prettier-plugin-tailwindcss": "^0.7.2",
@@ -42,5 +44,13 @@
 		"daisyui": "^5.5.14",
 		"dotenv": "^17.2.3",
 		"pocketbase": "^0.26.6"
+	},
+	"lint-staged": {
+		"*.{js,ts,svelte,json,md}": [
+			"prettier --write"
+		],
+		"*.{js,ts,svelte}": [
+			"eslint"
+		]
 	}
 }
