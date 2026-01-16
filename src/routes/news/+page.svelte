@@ -1,5 +1,7 @@
 <script>
 	import { ArrowRight, Calendar } from '@lucide/svelte';
+	import { language } from '$lib/stores/language';
+	import { getImageUrl } from '$lib/utils';
 
 	let { data } = $props();
 	let news = $derived(data.news);
@@ -34,8 +36,8 @@
 					<!-- News Image -->
 					<figure class="h-40 md:h-48">
 						<img
-							src={item.image}
-							alt={item.title}
+							src={getImageUrl(item.collectionId, item.id, item.image)}
+							alt={$language === 'en' ? item.title_en : item.title_ru}
 							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
 							loading="lazy"
 						/>
@@ -47,7 +49,7 @@
 							<span
 								class="inline-block rounded-lg bg-base-300 px-2 py-1 text-xs font-bold tracking-wider text-base-content/80 uppercase transition-colors group-hover:bg-primary group-hover:text-primary-content"
 							>
-								{item.category}
+								{$language === 'en' ? item.category_en : item.category_ru}
 							</span>
 						</div>
 
@@ -61,12 +63,12 @@
 						<h3
 							class="card-title line-clamp-2 text-base font-bold text-base-content transition-colors group-hover:text-primary md:text-lg"
 						>
-							{item.title}
+							{$language === 'en' ? item.title_en : item.title_ru}
 						</h3>
 
 						<!-- Excerpt -->
 						<p class="line-clamp-2 text-sm text-base-content/70">
-							{item.excerpt}
+							{$language === 'en' ? item.excerpt_en : item.excerpt_ru}
 						</p>
 
 						<!-- Action -->

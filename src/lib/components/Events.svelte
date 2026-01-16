@@ -31,16 +31,20 @@
 						<div class="mb-4 flex items-start justify-between">
 							<div class="flex flex-col items-center rounded-xl bg-primary/10 p-3 text-primary">
 								<span class="text-xl leading-none font-bold">{event.date_day}</span>
-								<span class="text-xs font-bold uppercase">{event.date_month}</span>
+								<span class="text-xs font-bold uppercase">
+									{$language === 'en' ? event.date_month_en : event.date_month_ru}
+								</span>
 							</div>
 							<div class="badge badge-ghost">{event.time}</div>
 						</div>
 
-						<h3 class="mb-2 card-title text-xl">{event.title}</h3>
+						<h3 class="mb-2 card-title text-xl">
+							{$language === 'en' ? event.title_en : event.title_ru}
+						</h3>
 
 						<div class="mb-4 flex items-center gap-2 text-sm text-base-content/60">
 							<MapPin class="h-4 w-4" />
-							<span>{event.location}</span>
+							<span>{$language === 'en' ? event.location_en : event.location_ru}</span>
 						</div>
 
 						<div class="mt-auto card-actions justify-end">

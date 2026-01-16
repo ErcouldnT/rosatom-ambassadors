@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ArrowLeft, MapPin, Briefcase, Mail, Globe } from '@lucide/svelte';
 	import type { Ambassador } from '$lib/types';
+	import { language } from '$lib/stores/language';
 
 	interface Props {
 		data: { ambassador: Ambassador };
@@ -11,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>{ambassador.name} | RNE Ambassadors</title>
+	<title>{$language === 'en' ? ambassador.name_en : ambassador.name_ru} | RNE Ambassadors</title>
 </svelte:head>
 
 <div class="min-h-screen bg-base-100 pt-20 pb-16">
@@ -28,7 +29,7 @@
 			<figure class="lg:w-1/3">
 				<img
 					src={ambassador.image}
-					alt={ambassador.name}
+					alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
 					class="h-80 w-full object-cover lg:h-full"
 					loading="lazy"
 				/>
@@ -37,21 +38,23 @@
 			<!-- Profile Content -->
 			<div class="card-body lg:w-2/3">
 				<div class="mb-4">
-					<span class="badge badge-lg badge-primary">{ambassador.role}</span>
+					<span class="badge badge-lg badge-primary">
+						{$language === 'en' ? ambassador.role_en : ambassador.role_ru}
+					</span>
 				</div>
 
 				<h1 class="card-title text-4xl font-bold text-base-content">
-					{ambassador.name}
+					{$language === 'en' ? ambassador.name_en : ambassador.name_ru}
 				</h1>
 
 				<div class="mt-4 flex flex-wrap gap-4 text-base-content/70">
 					<div class="flex items-center gap-2">
 						<MapPin class="h-5 w-5 text-primary" />
-						<span>{ambassador.country}</span>
+						<span>{$language === 'en' ? ambassador.country_en : ambassador.country_ru}</span>
 					</div>
 					<div class="flex items-center gap-2">
 						<Briefcase class="h-5 w-5 text-secondary" />
-						<span>{ambassador.role}</span>
+						<span>{$language === 'en' ? ambassador.role_en : ambassador.role_ru}</span>
 					</div>
 				</div>
 
@@ -61,9 +64,11 @@
 				<div class="prose prose-lg max-w-none">
 					<h3 class="text-base-content">About</h3>
 					<p class="text-base-content/80">
-						{ambassador.name} is a dedicated ambassador from {ambassador.country}, working as a {ambassador.role}.
-						They are committed to promoting nuclear education and fostering international
-						cooperation in the field of sustainable energy.
+						{$language === 'en' ? ambassador.name_en : ambassador.name_ru} is a dedicated ambassador from
+						{$language === 'en' ? ambassador.country_en : ambassador.country_ru}, working as a
+						{$language === 'en' ? ambassador.role_en : ambassador.role_ru}. They are committed to
+						promoting nuclear education and fostering international cooperation in the field of
+						sustainable energy.
 					</p>
 
 					<h3 class="text-base-content">Contributions</h3>

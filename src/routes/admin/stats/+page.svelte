@@ -3,7 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import type { Stat } from '$lib/types';
 	import { language } from '$lib/services/language';
-	import { translations } from '$lib/services/translations';
+
 	import { Edit } from '@lucide/svelte';
 
 	let stats = $state<Stat[]>([]);
@@ -11,7 +11,6 @@
 	let error = $state<string | null>(null);
 
 	// Translation
-	let t = $derived(translations[$language].admin);
 
 	// Modal state
 	let isModalOpen = $state(false);
@@ -39,7 +38,7 @@
 			} else {
 				error = 'Failed to load stats';
 			}
-		} catch (e) {
+		} catch {
 			error = 'Error loading stats';
 		} finally {
 			loading = false;
@@ -83,8 +82,8 @@
 			} else {
 				alert('Failed to save stat');
 			}
-		} catch (e) {
-			console.error(e);
+		} catch {
+			console.error('Failed to update stat');
 			alert('Error saving stat');
 		} finally {
 			isSaving = false;
@@ -120,7 +119,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each stats as stat}
+					{#each stats as stat (stat.id)}
 						<tr class="hover">
 							<td class="font-mono text-sm opacity-50">{stat.key}</td>
 							<td class="font-bold">{stat.value}</td>

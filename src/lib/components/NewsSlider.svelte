@@ -3,6 +3,7 @@
 	import { language } from '$lib/stores/language';
 	import { translations } from '$lib/services/translations';
 	import type { NewsItem } from '$lib/types';
+	import { getImageUrl } from '$lib/utils';
 
 	interface Props {
 		news: NewsItem[];
@@ -40,20 +41,25 @@
 					>
 						<figure class="relative overflow-hidden px-4 pt-4">
 							<img
-								src={item.image}
-								alt={item.title}
+								src={getImageUrl(item.collectionId, item.id, item.image)}
+								alt={$language === 'en' ? item.title_en : item.title_ru}
 								class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
+								loading="lazy"
 							/>
-							<div class="absolute top-6 left-6 badge badge-primary">{item.category}</div>
+							<div class="absolute top-6 left-6 badge badge-primary">
+								{$language === 'en' ? item.category_en : item.category_ru}
+							</div>
 						</figure>
 						<div class="card-body">
 							<div class="mb-1 text-sm text-base-content/60">{item.date}</div>
 							<h2
 								class="mb-2 card-title cursor-pointer text-lg leading-tight text-base-content transition-colors hover:text-primary"
 							>
-								{item.title}
+								{$language === 'en' ? item.title_en : item.title_ru}
 							</h2>
-							<p class="line-clamp-2 text-sm text-base-content/70">{item.excerpt}</p>
+							<p class="line-clamp-2 text-sm text-base-content/70">
+								{$language === 'en' ? item.excerpt_en : item.excerpt_ru}
+							</p>
 							<div class="mt-4 card-actions justify-end">
 								<!-- eslint-disable svelte/no-navigation-without-resolve -->
 								<a

@@ -11,9 +11,9 @@ export const language = writable<Language>(initialLanguage);
 
 // Subscribe to changes and update local storage
 if (browser) {
-    language.subscribe((value) => {
-        localStorage.setItem('language', value);
-        // Update connection with cookie for SSR
-        document.cookie = `lang=${value}; path=/; max-age=31536000`; // 1 year
-    });
+	language.subscribe((value) => {
+		localStorage.setItem('language', value);
+		// Update connection with cookie for SSR
+		document.cookie = `lang=${value}; path=/; max-age=31536000`; // 1 year
+	});
 }

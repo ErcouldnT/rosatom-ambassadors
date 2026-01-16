@@ -6,7 +6,6 @@
 		Users,
 		Calendar,
 		Newspaper,
-		Settings,
 		LogOut,
 		Menu,
 		X,

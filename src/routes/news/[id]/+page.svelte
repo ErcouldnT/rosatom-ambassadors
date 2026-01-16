@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ArrowLeft, Calendar, Tag, Share2, Bookmark, Clock } from '@lucide/svelte';
 	import type { NewsItem } from '$lib/types';
+	import { language } from '$lib/stores/language';
 
 	interface Props {
 		data: { newsItem: NewsItem };
@@ -11,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>{newsItem.title} | RNE News</title>
+	<title>{$language === 'en' ? newsItem.title_en : newsItem.title_ru} | RNE News</title>
 </svelte:head>
 
 <div class="min-h-screen bg-base-100 pt-20 pb-16">
@@ -26,7 +27,9 @@
 			<!-- Article Header -->
 			<header class="mb-8">
 				<div class="mb-4 flex flex-wrap items-center gap-3">
-					<span class="badge badge-lg badge-primary">{newsItem.category}</span>
+					<span class="badge badge-lg badge-primary">
+						{$language === 'en' ? newsItem.category_en : newsItem.category_ru}
+					</span>
 					<div class="flex items-center gap-2 text-base-content/60">
 						<Calendar class="h-4 w-4" />
 						<span>{newsItem.date}</span>
@@ -38,11 +41,11 @@
 				</div>
 
 				<h1 class="mb-6 text-4xl leading-tight font-bold text-base-content lg:text-5xl">
-					{newsItem.title}
+					{$language === 'en' ? newsItem.title_en : newsItem.title_ru}
 				</h1>
 
 				<p class="text-xl text-base-content/70">
-					{newsItem.excerpt}
+					{$language === 'en' ? newsItem.excerpt_en : newsItem.excerpt_ru}
 				</p>
 			</header>
 
@@ -50,7 +53,7 @@
 			<figure class="mb-10 overflow-hidden rounded-2xl">
 				<img
 					src={newsItem.image}
-					alt={newsItem.title}
+					alt={$language === 'en' ? newsItem.title_en : newsItem.title_ru}
 					class="h-auto w-full object-cover"
 					loading="lazy"
 				/>

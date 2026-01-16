@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, X, X as XIcon, FileText, Upload, Calendar } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, FileText, Upload } from '@lucide/svelte';
 	import type { NewsItem } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
 	let news = $state<NewsItem[]>([]);
 	let loading = $state(true);
@@ -54,10 +54,8 @@
 		}
 	}
 
-	function getImageUrl(collectionId: string, recordId: string, filename: string) {
-		if (!filename) return '';
-		return `${PUBLIC_POCKETBASE_URL}/api/files/${collectionId}/${recordId}/${filename}`;
-	}
+	import { getImageUrl } from '$lib/utils';
+	// function getImageUrl ... removed
 
 	function openModal(item?: NewsItem) {
 		if (item) {
@@ -72,7 +70,7 @@
 			form.image = null; // Reset
 
 			existingImageUrl = item.image
-				? getImageUrl((item as any).collectionId || 'news', item.id, item.image)
+				? getImageUrl(item.collectionId || 'news', item.id, item.image)
 				: '';
 		} else {
 			editingId = null;
@@ -197,11 +195,7 @@
 											<div class="mask h-16 w-16 bg-base-300 mask-squircle">
 												{#if item.image}
 													<img
-														src={getImageUrl(
-															(item as any).collectionId || 'news',
-															item.id,
-															item.image
-														)}
+														src={getImageUrl(item.collectionId || 'news', item.id, item.image)}
 														alt={item.title_en}
 													/>
 												{:else}
@@ -386,7 +380,7 @@
 								required
 							/>
 							<datalist id="cats-en">
-								{#each categoryOptions as opt}
+								{#each categoryOptions as opt (opt.en)}
 									<option value={opt.en}></option>
 								{/each}
 							</datalist>
@@ -434,7 +428,7 @@
 								required
 							/>
 							<datalist id="cats-ru">
-								{#each categoryOptions as opt}
+								{#each categoryOptions as opt (opt.ru)}
 									<option value={opt.ru}></option>
 								{/each}
 							</datalist>

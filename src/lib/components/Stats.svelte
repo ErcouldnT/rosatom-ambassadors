@@ -33,7 +33,7 @@
 			case 'universities':
 				return t.universities;
 			default:
-				return stat.label;
+				return $language === 'en' ? stat.label_en : stat.label_ru;
 		}
 	}
 </script>

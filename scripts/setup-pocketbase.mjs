@@ -29,7 +29,14 @@ const collections = [
 			{ name: 'country_ru', type: 'text', required: true },
 			{ name: 'role_en', type: 'text', required: true },
 			{ name: 'role_ru', type: 'text', required: true },
-			{ name: 'image', type: 'file', required: false, maxSelect: 1, maxSize: 5242880, mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] },
+			{
+				name: 'image',
+				type: 'file',
+				required: false,
+				maxSelect: 1,
+				maxSize: 5242880,
+				mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+			},
 			{ name: 'isActive', type: 'bool', required: false }
 		],
 		listRule: '',
@@ -52,7 +59,14 @@ const collections = [
 			{ name: 'location_ru', type: 'text', required: true },
 			{ name: 'description_en', type: 'text', required: false },
 			{ name: 'description_ru', type: 'text', required: false },
-			{ name: 'image', type: 'file', required: false, maxSelect: 1, maxSize: 5242880, mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] }
+			{
+				name: 'image',
+				type: 'file',
+				required: false,
+				maxSelect: 1,
+				maxSize: 5242880,
+				mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+			}
 		],
 		listRule: '',
 		viewRule: '',
@@ -71,7 +85,14 @@ const collections = [
 			{ name: 'title_ru', type: 'text', required: true },
 			{ name: 'excerpt_en', type: 'text', required: false },
 			{ name: 'excerpt_ru', type: 'text', required: false },
-			{ name: 'image', type: 'file', required: false, maxSelect: 1, maxSize: 5242880, mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'] }
+			{
+				name: 'image',
+				type: 'file',
+				required: false,
+				maxSelect: 1,
+				maxSize: 5242880,
+				mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+			}
 		],
 		listRule: '',
 		viewRule: '',

@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - '3000:3000'
+      - '3020:3000'
     env_file:
       - .env
     environment:
@@ -15,11 +15,8 @@ services:
     networks:
       - app-network
 
-
   pocketbase:
     image: ghcr.io/muchobien/pocketbase:latest
-    ports:
-      - '8090:8090'
     env_file:
       - .env
     environment:
@@ -29,6 +26,8 @@ services:
       - pocketbase_data:/pb_data
     networks:
       - app-network
+    ports:
+      - '8020:8090'
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
       interval: 5s

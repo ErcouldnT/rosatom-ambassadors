@@ -2,6 +2,7 @@
 	import { language } from '$lib/stores/language';
 	import { translations } from '$lib/services/translations';
 	import { ArrowRight } from '@lucide/svelte';
+	import { getImageUrl } from '$lib/utils';
 
 	let { data } = $props();
 
@@ -29,8 +30,8 @@
 					class="group relative block h-[400px] overflow-hidden rounded-2xl bg-base-200 shadow-xl"
 				>
 					<img
-						src={ambassador.image}
-						alt={ambassador.name}
+						src={getImageUrl(ambassador.collectionId, ambassador.id, ambassador.image)}
+						alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
 						class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
 						loading="lazy"
 					/>
@@ -38,9 +39,15 @@
 						class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 transition-opacity duration-300"
 					></div>
 					<div class="absolute bottom-0 left-0 w-full p-6 text-white">
-						<h3 class="mb-1 text-xl font-bold">{ambassador.name}</h3>
-						<p class="mb-1 text-sm font-medium text-primary">{ambassador.country}</p>
-						<p class="mb-4 text-xs text-white/70">{ambassador.role}</p>
+						<h3 class="mb-1 text-xl font-bold">
+							{$language === 'en' ? ambassador.name_en : ambassador.name_ru}
+						</h3>
+						<p class="mb-1 text-sm font-medium text-primary">
+							{$language === 'en' ? ambassador.country_en : ambassador.country_ru}
+						</p>
+						<p class="mb-4 text-xs text-white/70">
+							{$language === 'en' ? ambassador.role_en : ambassador.role_ru}
+						</p>
 						<span
 							class="group/btn flex items-center gap-2 text-sm font-medium text-white/90 transition-colors hover:text-white"
 						>

@@ -41,6 +41,19 @@ const authHandle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
+	// Protect admin API routes
+	if (event.url.pathname.startsWith('/api/admin')) {
+		const publicApiRoutes = ['/api/admin/login'];
+		if (!publicApiRoutes.includes(event.url.pathname)) {
+			if (!isAuthenticated) {
+				return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+					status: 401,
+					headers: { 'Content-Type': 'application/json' }
+				});
+			}
+		}
+	}
+
 	return resolve(event);
 };
 

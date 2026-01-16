@@ -365,4 +365,3 @@ export async function deleteTicker(id: string, token?: string): Promise<boolean>
 		return false;
 	}
 }
-

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, X, Check, X as XIcon, Upload } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, Upload } from '@lucide/svelte';
 	import type { Ambassador } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
 	let ambassadors = $state<Ambassador[]>([]);
 	let loading = $state(true);
@@ -45,10 +45,8 @@
 		}
 	}
 
-	function getImageUrl(collectionId: string, recordId: string, filename: string) {
-		if (!filename) return '';
-		return `${PUBLIC_POCKETBASE_URL}/api/files/${collectionId}/${recordId}/${filename}`;
-	}
+	import { getImageUrl } from '$lib/utils';
+	// function getImageUrl ... removed
 
 	function openModal(ambassador?: Ambassador) {
 		if (ambassador) {
@@ -64,11 +62,7 @@
 
 			// Construct existing image URL if available
 			existingImageUrl = ambassador.image
-				? getImageUrl(
-						(ambassador as any).collectionId || 'ambassadors',
-						ambassador.id,
-						ambassador.image
-					)
+				? getImageUrl(ambassador.collectionId || 'ambassadors', ambassador.id, ambassador.image)
 				: '';
 		} else {
 			editingId = null;
@@ -195,7 +189,7 @@
 												{#if ambassador.image}
 													<img
 														src={getImageUrl(
-															(ambassador as any).collectionId || 'ambassadors',
+															ambassador.collectionId || 'ambassadors',
 															ambassador.id,
 															ambassador.image
 														)}

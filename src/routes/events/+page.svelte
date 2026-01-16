@@ -1,5 +1,7 @@
 <script>
 	import { ArrowRight, MapPin, Clock } from '@lucide/svelte';
+	import { language } from '$lib/stores/language';
+	import { getImageUrl } from '$lib/utils';
 
 	let { data } = $props();
 	let events = $derived(data.events);
@@ -26,8 +28,8 @@
 					<!-- Event Image -->
 					<figure class="h-40 md:h-48">
 						<img
-							src={event.image}
-							alt={event.title}
+							src={getImageUrl(event.collectionId, event.id, event.image)}
+							alt={$language === 'en' ? event.title_en : event.title_ru}
 							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
 							loading="lazy"
 						/>
@@ -40,9 +42,9 @@
 								class="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-primary/10"
 							>
 								<span class="text-lg leading-none font-bold text-primary">{event.date_day}</span>
-								<span class="text-[10px] font-bold text-primary/80 uppercase"
-									>{event.date_month}</span
-								>
+								<span class="text-[10px] font-bold text-primary/80 uppercase">
+									{$language === 'en' ? event.date_month_en : event.date_month_ru}
+								</span>
 							</div>
 							<div class="flex flex-col gap-1 text-xs text-base-content/60">
 								<div class="flex items-center gap-1">
@@ -51,7 +53,7 @@
 								</div>
 								<div class="flex items-center gap-1">
 									<MapPin class="h-3 w-3" />
-									<span>{event.location}</span>
+									<span>{$language === 'en' ? event.location_en : event.location_ru}</span>
 								</div>
 							</div>
 						</div>
@@ -60,12 +62,12 @@
 						<h3
 							class="card-title line-clamp-2 text-base font-bold text-base-content transition-colors group-hover:text-primary md:text-lg"
 						>
-							{event.title}
+							{$language === 'en' ? event.title_en : event.title_ru}
 						</h3>
 
 						<!-- Description -->
 						<p class="line-clamp-2 text-sm text-base-content/70">
-							{event.description}
+							{$language === 'en' ? event.description_en : event.description_ru}
 						</p>
 
 						<!-- Action -->

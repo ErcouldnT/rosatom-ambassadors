@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, X, X as XIcon, Calendar, MapPin, Upload } from '@lucide/svelte';
-	import type { Event } from '$lib/types';
+	import { Plus, Pencil, Trash2, Calendar, MapPin, Upload } from '@lucide/svelte';
+	import type { Event as AppEvent } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
-	let events = $state<Event[]>([]);
+	let events = $state<AppEvent[]>([]);
 	let loading = $state(true);
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
@@ -47,12 +47,10 @@
 		}
 	}
 
-	function getImageUrl(collectionId: string, recordId: string, filename: string) {
-		if (!filename) return '';
-		return `${PUBLIC_POCKETBASE_URL}/api/files/${collectionId}/${recordId}/${filename}`;
-	}
+	import { getImageUrl } from '$lib/utils';
+	// function getImageUrl ... removed
 
-	function openModal(event?: Event) {
+	function openModal(event?: AppEvent) {
 		if (event) {
 			editingId = event.id;
 			form.title_en = event.title_en;
@@ -68,7 +66,7 @@
 			form.image = null;
 
 			existingImageUrl = event.image
-				? getImageUrl((event as any).collectionId || 'events', event.id, event.image)
+				? getImageUrl(event.collectionId || 'events', event.id, event.image)
 				: '';
 		} else {
 			editingId = null;
@@ -140,7 +138,7 @@
 		await fetchEvents();
 	}
 
-	function handleFileChange(e: Event) {
+	function handleFileChange(e: globalThis.Event) {
 		const target = e.target as HTMLInputElement;
 		if (target.files && target.files.length > 0) {
 			form.image = target.files[0];
@@ -197,11 +195,7 @@
 											<div class="mask h-16 w-16 rounded-lg bg-base-300 mask-squircle">
 												{#if event.image}
 													<img
-														src={getImageUrl(
-															(event as any).collectionId || 'events',
-															event.id,
-															event.image
-														)}
+														src={getImageUrl(event.collectionId || 'events', event.id, event.image)}
 														alt={event.title_en}
 														class="object-cover"
 													/>

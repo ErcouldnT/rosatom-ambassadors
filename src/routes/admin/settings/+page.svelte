@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { Save, RefreshCw } from '@lucide/svelte';
 	import type { Stat } from '$lib/types';
+	import { language } from '$lib/services/language';
 
 	let stats: Stat[] = [];
 	let loading = true;
@@ -73,11 +74,12 @@
 				</div>
 			{:else}
 				<div class="mt-4 grid gap-4 md:grid-cols-2">
-					{#each stats as stat, i (stat.label)}
+					{#each stats as stat, i (stat.id)}
 						<div class="rounded-lg border border-base-200 p-4">
-							<div class="mb-4 flex items-center gap-2">
+							<div class="flex items-center gap-3">
 								<span class="badge badge-primary">{stat.icon}</span>
-								<span class="font-medium">{stat.label}</span>
+								<span class="font-medium">{$language === 'en' ? stat.label_en : stat.label_ru}</span
+								>
 							</div>
 
 							<div class="form-control">

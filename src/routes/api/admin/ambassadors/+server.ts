@@ -15,10 +15,14 @@ export const GET: RequestHandler = async () => {
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const token = cookies.get('admin_session');
-	console.log('Ambassador POST: Retrieved token from cookie:', token ? token.substring(0, 10) + '...' : 'null');
+	console.log(
+		'Ambassador POST: Retrieved token from cookie:',
+		token ? token.substring(0, 10) + '...' : 'null'
+	);
 
 	const contentType = request.headers.get('content-type');
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let data: any;
 	if (contentType?.includes('multipart/form-data')) {
 		data = await request.formData();
@@ -38,6 +42,7 @@ export const PUT: RequestHandler = async ({ request, cookies }) => {
 	const token = cookies.get('admin_session');
 	const contentType = request.headers.get('content-type');
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let data: any;
 	let id: string;
 

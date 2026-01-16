@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2 } from '@lucide/svelte';
 	import type { Event } from '$lib/types';
+	import { language } from '$lib/stores/language';
 
 	interface Props {
 		data: { event: Event };
@@ -11,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>{event.title} | RNE Ambassadors</title>
+	<title>{$language === 'en' ? event.title_en : event.title_ru} | RNE Ambassadors</title>
 </svelte:head>
 
 <div class="min-h-screen bg-base-100 pt-20 pb-16">
@@ -31,7 +32,7 @@
 					<figure class="h-48 md:h-64">
 						<img
 							src={event.image}
-							alt={event.title}
+							alt={$language === 'en' ? event.title_en : event.title_ru}
 							class="h-full w-full object-cover"
 							loading="lazy"
 						/>
@@ -44,13 +45,16 @@
 						</div>
 
 						<h1 class="card-title text-3xl font-bold text-base-content">
-							{event.title}
+							{$language === 'en' ? event.title_en : event.title_ru}
 						</h1>
 
 						<div class="mt-4 flex flex-wrap gap-6 text-base-content/70">
 							<div class="flex items-center gap-2">
 								<Calendar class="h-5 w-5 text-primary" />
-								<span>{event.date_month} {event.date_day}, 2024</span>
+								<span>
+									{$language === 'en' ? event.date_month_en : event.date_month_ru}
+									{event.date_day}, 2024
+								</span>
 							</div>
 							<div class="flex items-center gap-2">
 								<Clock class="h-5 w-5 text-secondary" />
@@ -58,7 +62,7 @@
 							</div>
 							<div class="flex items-center gap-2">
 								<MapPin class="h-5 w-5 text-accent" />
-								<span>{event.location}</span>
+								<span>{$language === 'en' ? event.location_en : event.location_ru}</span>
 							</div>
 						</div>
 
@@ -68,7 +72,7 @@
 						<div class="prose prose-lg max-w-none">
 							<h3 class="text-base-content">About This Event</h3>
 							<p class="text-base-content/80">
-								{event.description}
+								{$language === 'en' ? event.description_en : event.description_ru}
 							</p>
 
 							<h3 class="text-base-content">What to Expect</h3>
@@ -113,7 +117,10 @@
 								<Calendar class="mt-1 h-5 w-5 text-primary" />
 								<div>
 									<p class="font-semibold text-base-content">Date</p>
-									<p class="text-base-content/70">{event.date_month} {event.date_day}, 2024</p>
+									<p class="text-base-content/70">
+										{$language === 'en' ? event.date_month_en : event.date_month_ru}
+										{event.date_day}, 2024
+									</p>
 								</div>
 							</div>
 
@@ -129,7 +136,9 @@
 								<MapPin class="mt-1 h-5 w-5 text-accent" />
 								<div>
 									<p class="font-semibold text-base-content">Location</p>
-									<p class="text-base-content/70">{event.location}</p>
+									<p class="text-base-content/70">
+										{$language === 'en' ? event.location_en : event.location_ru}
+									</p>
 								</div>
 							</div>
 

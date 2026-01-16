@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, X, Check, X as XIcon } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2 } from '@lucide/svelte';
 	import type { Ticker } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
