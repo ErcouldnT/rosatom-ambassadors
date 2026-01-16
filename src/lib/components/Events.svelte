@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { MapPin, ArrowRight } from '@lucide/svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import type { Event } from '$lib/types';
 

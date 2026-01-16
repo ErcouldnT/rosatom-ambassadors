@@ -1,5 +1,5 @@
 <script>
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
 	$: t = translations[$language].cta;

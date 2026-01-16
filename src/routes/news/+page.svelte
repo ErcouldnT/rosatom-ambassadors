@@ -1,6 +1,6 @@
 <script>
 	import { ArrowRight, Calendar } from '@lucide/svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { getImageUrl } from '$lib/utils';
 
 	let { data } = $props();
@@ -36,7 +36,7 @@
 					<!-- News Image -->
 					<figure class="h-40 md:h-48">
 						<img
-							src={getImageUrl(item.collectionId, item.id, item.image)}
+							src={getImageUrl('news', item.id, item.image)}
 							alt={$language === 'en' ? item.title_en : item.title_ru}
 							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
 							loading="lazy"
@@ -82,6 +82,10 @@
 						</div>
 					</div>
 				</a>
+			{:else}
+				<div class="col-span-full py-12 text-center text-base-content/50">
+					<p class="text-lg">No news found.</p>
+				</div>
 			{/each}
 		</div>
 	</div>

@@ -4,7 +4,9 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			isAuthenticated: boolean;
+			user: import('lucia').User | null;
+			session: import('lucia').Session | null;
+			lang: 'en' | 'ru';
 		}
 		// interface PageData {}
 		// interface PageState {}

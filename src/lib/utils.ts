@@ -1,4 +1,6 @@
-export function getImageUrl(collectionId: string, recordId: string, filename: string): string {
-	if (!filename) return '';
-	return `/api/files/${collectionId}/${recordId}/${filename}`;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getImageUrl(type: string, id: string, image: any): string {
+	if (!image) return '';
+	if (typeof image === 'string' && image.startsWith('http')) return image;
+	return `/api/images/${type}/${id}`;
 }

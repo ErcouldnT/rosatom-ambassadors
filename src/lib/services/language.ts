@@ -1,19 +1,32 @@
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
-type Language = 'en' | 'ru';
+export type Language = 'en' | 'ru';
 
-// Get initial language from browser storage or default to 'en'
-const storedLanguage = browser ? (localStorage.getItem('language') as Language) : 'en';
-const initialLanguage: Language = storedLanguage === 'ru' ? 'ru' : 'en';
+// Helper to detect system language
+function detectLanguage(): Language {
+	if (!browser) return 'en';
 
-export const language = writable<Language>(initialLanguage);
+	// 1. Try to get from HTML lang attribute (set by server to avoid FOUC)
+	const htmlLang = document.documentElement.lang as Language;
+	if (htmlLang === 'en' || htmlLang === 'ru') return htmlLang;
 
-// Subscribe to changes and update local storage
+	// 2. Try to get from local storage
+	const persisted = localStorage.getItem('language') as Language | null;
+	if (persisted && (persisted === 'en' || persisted === 'ru')) return persisted;
+
+	// 3. Fallback to system language
+	const system = navigator.language.toLowerCase();
+	return system.startsWith('ru') ? 'ru' : 'en';
+}
+
+export const language = writable<Language>(detectLanguage());
+
+// Subscribe to changes and update local storage and document
 if (browser) {
 	language.subscribe((value) => {
 		localStorage.setItem('language', value);
-		// Update connection with cookie for SSR
 		document.cookie = `lang=${value}; path=/; max-age=31536000`; // 1 year
+		document.documentElement.lang = value;
 	});
 }

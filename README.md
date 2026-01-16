@@ -17,9 +17,9 @@ A modern, responsive landing page and admin management system for the Rosatom Am
 
 ### Admin Panel (`/admin`)
 
-- **Secure Authentication**: Protected routes using PocketBase authentication.
+- **Secure Authentication**: Protected routes using **Lucia Auth**.
 - **Content Management**:
-  - **Ambassadors**: Create, edit, delete, and manage profiles with photos.
+  - **Ambassadors**: Create, edit, delete, and manage profiles.
   - **Events**: Schedule and manage upcoming events.
   - **News**: Publish news articles with categories and localized content.
   - **Statistics**: Update key metrics displayed on the landing page.
@@ -28,28 +28,29 @@ A modern, responsive landing page and admin management system for the Rosatom Am
 
 ### Infrastructure
 
-- **Dockerized**: specific `docker-compose` setup for easy deployment.
-- **PocketBase**: Self-hosted backend for real-time database and file storage.
-- **Internal Networking**: Secure communication between App and PocketBase within Docker.
-- **File Proxy**: Server-side proxy handling for secure and reliable file delivery.
+- **Serverless Ready**: Optimized for Vercel deployment.
+- **Database**: **Turso (LibSQL)** for edge-compatible SQLite.
+- **ORM**: **Drizzle ORM** for type-safe database interactions.
+- **Auth**: **Lucia Auth** for secure session management.
 
 ## 🛠 Tech Stack
 
-- **Framework**: SvelteKit (Node.js Adapter)
+- **Framework**: SvelteKit
 - **Language**: TypeScript
 - **Styling**: TailwindCSS, DaisyUI v5
-- **Backend**: PocketBase
-- **Infrastructure**: Docker, Docker Compose
+- **Backend**: Serverless Functions (Vercel)
+- **Database**: Turso (LibSQL) / Drizzle ORM
+- **Authentication**: Lucia Auth
 - **Quality Control**: ESLint, Prettier, Husky, Lint-Staged
 
 ## ⚙️ Setup & Installation
 
 ### Prerequisites
 
-- Docker and Docker Compose
-- Node.js 20+ (for local development)
+- Node.js 20+
+- Turso Database (Remote) or just local file support
 
-### Quick Start (Docker)
+### Local Development
 
 1.  **Clone the repository**:
 
@@ -58,7 +59,13 @@ A modern, responsive landing page and admin management system for the Rosatom Am
     cd rosatom-ambassadors
     ```
 
-2.  **Configuration**:
+2.  **Install dependencies**:
+
+    ```bash
+    npm install
+    ```
+
+3.  **Configuration**:
     Create a `.env` file in the root directory (see `.env.example` for reference):
 
     ```env
@@ -66,71 +73,50 @@ A modern, responsive landing page and admin management system for the Rosatom Am
     TELEGRAM_BOT_TOKEN=your_token
     THE_USER_CHAT_ID=your_chat_id
 
-    # PocketBase Configuration
-    POCKETBASE_URL=http://pocketbase:8090 # Internal Docker URL
-    POCKETBASE_ADMIN_EMAIL=admin@example.com
-    POCKETBASE_ADMIN_PASSWORD=secure_password
+    # Database (Local Development)
+    TURSO_CONNECTION_URL=file:local.db
+    TURSO_AUTH_TOKEN=unused
+
+    # Admin Setup (for auto-seeding)
+    ADMIN_EMAIL=admin@example.com
+    ADMIN_PASSWORD=secure_password
     ```
 
-3.  **Run with Docker**:
-    ```bash
-    docker-compose up -d --build
-    ```
-
-    - **Public Site**: `http://localhost:3020`
-    - **Admin Panel**: `http://localhost:3020/admin`
-    - **PocketBase UI**: `http://localhost:8020/_/`
-
-### Local Development
-
-1.  **Install dependencies**:
-
-    ```bash
-    npm install
-    ```
-
-2.  **Start Development Server**:
+4.  **Start Development Server**:
     ```bash
     npm run dev
     ```
+    _Note: This command automatically runs migrations and seeds the database (Admin + Stats) before starting the server._
 
 ## 🛡️ Admin Access
 
-To access the admin panel, navigate to `/admin`.
-Default credentials (defined in your `.env`):
+To access the admin panel, navigate to `/admin/login`.
 
-- **Email**: `your_configured_email` (as set in `.env`)
-- **Password**: `your_configured_password` (as set in `.env`)
+Default credentials (if unchanged in your `.env`):
 
-## 💻 Development Workflow
+- **Email**: `admin@example.com`
+- **Password**: `secure_password`
 
-This project enforces code quality via pre-commit hooks.
+## 📦 Database Management
 
-- **Committing**: `husky` triggers `lint-staged` and `svelte-check`.
-  - Staged files are automatically formatted (`prettier`) and linted (`eslint`).
-  - Full project type checking (`npm run check`) runs before commit.
-  - **Note**: If checks fail, the commit is blocked.
+We use **Drizzle Kit** for database management.
 
-### Manual Commands
+- `npm run db:push`: Push schema changes to the database.
+- `npm run db:studio`: Open Drizzle Studio to manage data visually.
+- `npm run db:generate`: Generate migrations based on schema changes.
+- `npm run db:migrate`: Apply migrations.
+- `npm run db:seed`: Manually run the seed script (usually not needed, runs on dev start).
 
-- `npm run check`: Run SvelteKit sync and type check.
-- `npm run lint`: Run ESLint and Prettier check.
-- `npm run format`: Fix formatting issues.
+## 🚀 Deployment (Vercel)
 
-## 📂 Project Structure
+The project is configured for seamless Vercel deployment.
 
-```
-src/
-├── lib/
-│   ├── components/    # Public UI components (Hero, NewsSlider, etc.)
-│   ├── services/      # Business logic (Translations, API)
-│   ├── stores/        # Global state (Language)
-│   ├── server/        # Server-side logic (PocketBase client)
-│   └── types.ts       # TypeScript definitions
-├── routes/
-│   ├── admin/         # Admin panel pages (protected)
-│   ├── api/           # API endpoints (Contact, Admin APIs, File Proxy)
-│   └── +page.svelte   # Public landing page
-├── hooks.server.ts    # Server hooks (Auth protection)
-└── app.html           # Document shell
-```
+1.  Push your code to GitHub.
+2.  Import the project in Vercel.
+3.  Set your Environment Variables in Vercel (Production Turso URL/Token).
+4.  **Important**: Vercel's default Build Command will execute `npm run build`, which is configured to:
+    1.  Run Migrations (`db:migrate`)
+    2.  Seed Data (`db:seed`)
+    3.  Build App (`vite build`)
+
+This ensures your production database is always up-to-date with every deploy.

@@ -69,9 +69,7 @@
 			form.excerpt_ru = item.excerpt_ru;
 			form.image = null; // Reset
 
-			existingImageUrl = item.image
-				? getImageUrl(item.collectionId || 'news', item.id, item.image)
-				: '';
+			existingImageUrl = item.image ? getImageUrl('news', item.id, item.image) : '';
 		} else {
 			editingId = null;
 			form.category_en = '';
@@ -194,10 +192,7 @@
 										<div class="avatar">
 											<div class="mask h-16 w-16 bg-base-300 mask-squircle">
 												{#if item.image}
-													<img
-														src={getImageUrl(item.collectionId || 'news', item.id, item.image)}
-														alt={item.title_en}
-													/>
+													<img src={getImageUrl('news', item.id, item.image)} alt={item.title_en} />
 												{:else}
 													<div
 														class="flex h-full w-full items-center justify-center text-base-content/30"

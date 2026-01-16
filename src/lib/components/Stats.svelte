@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Users, Globe, Calendar, GraduationCap } from '@lucide/svelte';
 	import type { Component } from 'svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import type { Stat } from '$lib/types';
 

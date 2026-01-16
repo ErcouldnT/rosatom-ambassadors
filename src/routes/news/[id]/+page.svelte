@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { ArrowLeft, Calendar, Tag, Share2, Bookmark, Clock } from '@lucide/svelte';
 	import type { NewsItem } from '$lib/types';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
+	import { getImageUrl } from '$lib/utils';
 
 	interface Props {
 		data: { newsItem: NewsItem };
@@ -52,7 +53,7 @@
 			<!-- Featured Image -->
 			<figure class="mb-10 overflow-hidden rounded-2xl">
 				<img
-					src={newsItem.image}
+					src={getImageUrl('news', newsItem.id, newsItem.image)}
 					alt={$language === 'en' ? newsItem.title_en : newsItem.title_ru}
 					class="h-auto w-full object-cover"
 					loading="lazy"

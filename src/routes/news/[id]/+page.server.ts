@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { getNewsById } from '$lib/server/pocketbase';
+import { getNewsById } from '$lib/server/data';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {

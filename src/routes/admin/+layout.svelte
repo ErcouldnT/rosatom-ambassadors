@@ -16,7 +16,15 @@
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
-	let { children } = $props();
+	let { children, data } = $props();
+
+	// Sync language with server data to avoid FOUC
+	$effect.pre(() => {
+		if (data.lang) {
+			language.set(data.lang);
+		}
+	});
+
 	let sidebarOpen = $state(false);
 
 	let t = $derived(translations[$language].admin);

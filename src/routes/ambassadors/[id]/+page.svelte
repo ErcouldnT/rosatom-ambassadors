@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { ArrowLeft, MapPin, Briefcase, Mail, Globe } from '@lucide/svelte';
 	import type { Ambassador } from '$lib/types';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
+	import { getImageUrl } from '$lib/utils';
 
 	interface Props {
 		data: { ambassador: Ambassador };
@@ -28,7 +29,7 @@
 			<!-- Profile Image -->
 			<figure class="lg:w-1/3">
 				<img
-					src={ambassador.image}
+					src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
 					alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
 					class="h-80 w-full object-cover lg:h-full"
 					loading="lazy"

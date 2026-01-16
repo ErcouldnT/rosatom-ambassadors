@@ -1,21 +1,22 @@
 <script lang="ts">
 	import { Menu, Sun, Moon, Atom } from '@lucide/svelte';
 	import { onMount } from 'svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
-	let theme: string = 'light';
+	let theme = $state('light');
 
 	// Reactive translations
-	$: t = translations[$language];
+	let t = $derived(translations[$language]);
 
-	$: navLinks = [
+	// Reactive nav links
+	let navLinks = $derived([
 		{ name: t.nav.about, href: '/#about' },
 		{ name: t.nav.ambassadors, href: '/ambassadors' },
 		{ name: t.nav.events, href: '/events' },
 		{ name: t.nav.news, href: '/news' },
 		{ name: t.nav.contact, href: '/#contact' }
-	];
+	]);
 
 	onMount(() => {
 		// Sync local state with the theme applied by app.html
@@ -34,7 +35,7 @@
 	function toggleLanguage() {
 		language.update((l) => (l === 'en' ? 'ru' : 'en'));
 	}
-	let y = 0;
+	let y = $state(0);
 </script>
 
 <svelte:window bind:scrollY={y} />
@@ -95,7 +96,7 @@
 						class="theme-controller"
 						value="dark"
 						checked={theme === 'dark'}
-						on:change={toggleTheme}
+						onchange={toggleTheme}
 					/>
 
 					<!-- moon icon (show when light, to switch to dark) -->
@@ -106,7 +107,7 @@
 				</label>
 
 				<!-- Language Toggle -->
-				<button class="btn w-10 font-bold btn-ghost btn-sm" on:click={toggleLanguage}>
+				<button class="btn w-10 font-bold btn-ghost btn-sm" onclick={toggleLanguage}>
 					{$language === 'en' ? 'RU' : 'EN'}
 				</button>
 			</div>

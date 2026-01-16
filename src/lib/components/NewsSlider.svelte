@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ChevronLeft, ChevronRight, ArrowRight } from '@lucide/svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import type { NewsItem } from '$lib/types';
 	import { getImageUrl } from '$lib/utils';
@@ -41,7 +41,7 @@
 					>
 						<figure class="relative overflow-hidden px-4 pt-4">
 							<img
-								src={getImageUrl(item.collectionId, item.id, item.image)}
+								src={getImageUrl('news', item.id, item.image)}
 								alt={$language === 'en' ? item.title_en : item.title_ru}
 								class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
 								loading="lazy"

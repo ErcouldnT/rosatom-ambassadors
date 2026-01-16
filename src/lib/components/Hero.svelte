@@ -1,6 +1,6 @@
 <script>
 	import Ticker from './Ticker.svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
 	// Placeholder for hero image. Using a high-quality academic/global themed image.

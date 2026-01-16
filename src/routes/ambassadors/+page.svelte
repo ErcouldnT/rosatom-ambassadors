@@ -1,5 +1,5 @@
 <script>
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import { ArrowRight } from '@lucide/svelte';
 	import { getImageUrl } from '$lib/utils';
@@ -30,7 +30,7 @@
 					class="group relative block h-[400px] overflow-hidden rounded-2xl bg-base-200 shadow-xl"
 				>
 					<img
-						src={getImageUrl(ambassador.collectionId, ambassador.id, ambassador.image)}
+						src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
 						alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
 						class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
 						loading="lazy"
@@ -56,6 +56,10 @@
 						</span>
 					</div>
 				</a>
+			{:else}
+				<div class="col-span-full py-12 text-center text-base-content/50">
+					<p class="text-lg">No ambassadors found.</p>
+				</div>
 			{/each}
 		</div>
 	</div>

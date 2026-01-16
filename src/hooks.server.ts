@@ -1,14 +1,20 @@
 import type { Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { validateSession } from '$lib/server/pocketbase';
+import { lucia } from '$lib/server/auth';
 
 // Language handling hook
 const languageHandle: Handle = async ({ event, resolve }) => {
 	// Try to get language from cookie, otherwise fallback to accept-language header or default to 'en'
-	const lang =
-		event.cookies.get('lang') ||
-		(event.request.headers.get('accept-language')?.toLowerCase().startsWith('ru') ? 'ru' : 'en');
+	let lang = event.cookies.get('lang') as 'en' | 'ru' | undefined;
+
+	if (!lang || (lang !== 'en' && lang !== 'ru')) {
+		lang = event.request.headers.get('accept-language')?.toLowerCase().startsWith('ru')
+			? 'ru'
+			: 'en';
+	}
+
+	event.locals.lang = lang;
 
 	return resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('%lang%', lang)
@@ -17,25 +23,57 @@ const languageHandle: Handle = async ({ event, resolve }) => {
 
 // Admin authentication hook
 const authHandle: Handle = async ({ event, resolve }) => {
-	const sessionId = event.cookies.get('admin_session');
+	// CSRF Protection
+	if (event.request.method !== 'GET') {
+		const origin = event.request.headers.get('Origin');
+		const url = new URL(event.request.url);
 
-	// Check if authenticated
-	const isAuthenticated = sessionId ? await validateSession(sessionId) : false;
+		if (origin) {
+			const originUrl = new URL(origin);
+			// Relaxed check for dev: allow localhost regardless of port if needed,
+			// but better to be strict and handle port correctly.
+			if (originUrl.origin !== url.origin) {
+				console.error(`CSRF Blocked: Origin ${originUrl.origin} !== URL Origin ${url.origin}`);
+				return new Response('Forbidden', { status: 403 });
+			}
+		}
+	}
 
-	// Store auth state in locals
-	event.locals.isAuthenticated = isAuthenticated;
+	const sessionId = event.cookies.get(lucia.sessionCookieName);
+	if (!sessionId) {
+		event.locals.user = null;
+		event.locals.session = null;
+	} else {
+		const { session, user } = await lucia.validateSession(sessionId);
+		if (session && session.fresh) {
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			event.cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '/', // Ensure path is /
+				...sessionCookie.attributes
+			});
+		}
+		if (!session) {
+			const sessionCookie = lucia.createBlankSessionCookie();
+			event.cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '/', // Ensure path is /
+				...sessionCookie.attributes
+			});
+		}
+		event.locals.user = user;
+		event.locals.session = session;
+	}
 
 	// Protect admin routes (except login page)
 	if (event.url.pathname.startsWith('/admin')) {
 		// Allow access to login page
 		if (event.url.pathname === '/admin/login') {
 			// If already authenticated, redirect to dashboard
-			if (isAuthenticated) {
+			if (event.locals.user) {
 				throw redirect(303, '/admin');
 			}
 		} else {
 			// All other admin pages require authentication
-			if (!isAuthenticated) {
+			if (!event.locals.user) {
 				throw redirect(303, '/admin/login');
 			}
 		}
@@ -45,7 +83,7 @@ const authHandle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/api/admin')) {
 		const publicApiRoutes = ['/api/admin/login'];
 		if (!publicApiRoutes.includes(event.url.pathname)) {
-			if (!isAuthenticated) {
+			if (!event.locals.user) {
 				return new Response(JSON.stringify({ error: 'Unauthorized' }), {
 					status: 401,
 					headers: { 'Content-Type': 'application/json' }

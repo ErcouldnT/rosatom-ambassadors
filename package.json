@@ -4,25 +4,29 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
-		"build": "vite build",
+		"dev": "npm run db:seed && vite dev",
+		"build": "npm run db:migrate && npm run db:seed && vite build",
 		"preview": "vite preview",
-		"schema:setup": "node scripts/setup-pocketbase.mjs",
 		"prepare": "husky",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "prettier --check . && eslint .",
+		"db:studio": "drizzle-kit studio",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:seed": "npx tsx scripts/seed.js"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
 		"@eslint/js": "^9.39.1",
-		"@sveltejs/adapter-node": "^5.5.1",
+		"@sveltejs/adapter-vercel": "^6.3.0",
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/typography": "^0.5.19",
 		"@tailwindcss/vite": "^4.1.18",
 		"@types/node": "^24",
+		"drizzle-kit": "^0.31.8",
 		"eslint": "^9.39.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.13.1",
@@ -40,10 +44,14 @@
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"@libsql/client": "^0.17.0",
+		"@lucia-auth/adapter-drizzle": "^1.1.0",
 		"@lucide/svelte": "^0.562.0",
 		"daisyui": "^5.5.14",
 		"dotenv": "^17.2.3",
-		"pocketbase": "^0.26.6"
+		"drizzle-orm": "^0.45.1",
+		"lucia": "^3.2.2",
+		"sharp": "^0.34.5"
 	},
 	"lint-staged": {
 		"*.{js,ts,svelte,json,md}": [

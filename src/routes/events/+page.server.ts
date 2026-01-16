@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { getEvents } from '$lib/server/pocketbase';
+import { getEvents } from '$lib/server/data';
 
 export const load: PageServerLoad = async () => {
 	const events = await getEvents();

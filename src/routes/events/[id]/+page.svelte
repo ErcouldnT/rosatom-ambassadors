@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { ArrowLeft, MapPin, Clock, Calendar, Users, Share2 } from '@lucide/svelte';
 	import type { Event } from '$lib/types';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
+	import { getImageUrl } from '$lib/utils';
 
 	interface Props {
 		data: { event: Event };
@@ -31,7 +32,7 @@
 					<!-- Event Image -->
 					<figure class="h-48 md:h-64">
 						<img
-							src={event.image}
+							src={getImageUrl('events', event.id, event.image)}
 							alt={$language === 'en' ? event.title_en : event.title_ru}
 							class="h-full w-full object-cover"
 							loading="lazy"

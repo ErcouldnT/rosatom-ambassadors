@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { getAmbassadorById } from '$lib/server/pocketbase';
+import { getAmbassadorById } from '$lib/server/data';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {

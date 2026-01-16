@@ -62,7 +62,7 @@
 
 			// Construct existing image URL if available
 			existingImageUrl = ambassador.image
-				? getImageUrl(ambassador.collectionId || 'ambassadors', ambassador.id, ambassador.image)
+				? getImageUrl('ambassadors', ambassador.id, ambassador.image)
 				: '';
 		} else {
 			editingId = null;
@@ -85,35 +85,51 @@
 		editingId = null;
 	}
 
+	let submitting = $state(false);
+	let formError = $state('');
+
 	async function handleSubmit() {
-		const formData = new FormData();
-		if (editingId) formData.append('id', editingId);
-		formData.append('name_en', form.name_en);
-		formData.append('name_ru', form.name_ru);
-		formData.append('country_en', form.country_en);
-		formData.append('country_ru', form.country_ru);
-		formData.append('role_en', form.role_en);
-		formData.append('role_ru', form.role_ru);
-		formData.append('isActive', form.isActive.toString());
+		submitting = true;
+		formError = '';
+		try {
+			const formData = new FormData();
+			if (editingId) formData.append('id', editingId);
+			formData.append('name_en', form.name_en);
+			formData.append('name_ru', form.name_ru);
+			formData.append('country_en', form.country_en);
+			formData.append('country_ru', form.country_ru);
+			formData.append('role_en', form.role_en);
+			formData.append('role_ru', form.role_ru);
+			formData.append('isActive', form.isActive.toString());
 
-		if (form.image) {
-			formData.append('image', form.image);
-		}
+			if (form.image) {
+				formData.append('image', form.image);
+			} else if (editingId && existingImageUrl) {
+				// Pass the relative path back if no new image is selected
+				const url = new URL(existingImageUrl, window.location.origin);
+				const path = url.pathname.startsWith('/') ? url.pathname.substring(1) : url.pathname;
+				formData.append('existingImage', path);
+			}
 
-		if (editingId) {
-			await fetch('/api/admin/ambassadors', {
-				method: 'PUT',
+			const res = await fetch('/api/admin/ambassadors', {
+				method: editingId ? 'PUT' : 'POST',
 				body: formData
 			});
-		} else {
-			await fetch('/api/admin/ambassadors', {
-				method: 'POST',
-				body: formData
-			});
-		}
 
-		closeModal();
-		await fetchAmbassadors();
+			if (!res.ok) {
+				const errData = await res.json().catch(() => ({}));
+				throw new Error(errData.error || 'Failed to save ambassador');
+			}
+
+			closeModal();
+			await fetchAmbassadors();
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (error: any) {
+			console.error('Submit error:', error);
+			formError = error.message || 'An unexpected error occurred';
+		} finally {
+			submitting = false;
+		}
 	}
 
 	async function handleDelete(id: string) {
@@ -188,11 +204,7 @@
 											<div class="mask h-12 w-12 bg-base-300 mask-squircle">
 												{#if ambassador.image}
 													<img
-														src={getImageUrl(
-															ambassador.collectionId || 'ambassadors',
-															ambassador.id,
-															ambassador.image
-														)}
+														src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
 														alt={ambassador.name_en}
 													/>
 												{:else}
@@ -439,8 +451,18 @@
 				</div>
 
 				<div class="modal-action pt-4">
-					<button type="button" class="btn" onclick={closeModal}>Cancel</button>
-					<button type="submit" class="btn px-8 btn-primary">
+					{#if formError}
+						<div class="mb-4 rounded-lg bg-error/10 p-3 text-sm text-error">
+							{formError}
+						</div>
+					{/if}
+					<button type="button" class="btn" onclick={closeModal} disabled={submitting}
+						>Cancel</button
+					>
+					<button type="submit" class="btn px-8 btn-primary" disabled={submitting}>
+						{#if submitting}
+							<span class="loading loading-sm loading-spinner"></span>
+						{/if}
 						{editingId ? 'Save Changes' : 'Create Ambassador'}
 					</button>
 				</div>

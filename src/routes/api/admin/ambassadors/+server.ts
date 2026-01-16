@@ -5,72 +5,109 @@ import {
 	createAmbassador,
 	updateAmbassador,
 	deleteAmbassador
-} from '$lib/server/pocketbase';
+} from '$lib/server/data';
+import sharp from 'sharp';
 
 export const GET: RequestHandler = async () => {
-	// Don't filter by active in admin
 	const ambassadors = await getAmbassadors(false);
 	return json(ambassadors);
 };
 
-export const POST: RequestHandler = async ({ request, cookies }) => {
-	const token = cookies.get('admin_session');
-	console.log(
-		'Ambassador POST: Retrieved token from cookie:',
-		token ? token.substring(0, 10) + '...' : 'null'
-	);
-
-	const contentType = request.headers.get('content-type');
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	let data: any;
-	if (contentType?.includes('multipart/form-data')) {
-		data = await request.formData();
-	} else {
-		data = await request.json();
+export const POST: RequestHandler = async ({ request, locals }) => {
+	if (!locals.user) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const ambassador = await createAmbassador(data, token);
+	const formData = await request.formData();
+	const imageFile = formData.get('image') as File | null;
+
+	let imageData: Buffer | null = null;
+	let mimeType: string | null = null;
+
+	if (imageFile && imageFile.size > 0) {
+		const buffer = Buffer.from(await imageFile.arrayBuffer());
+		imageData = await sharp(buffer)
+			.resize(800, 800, { fit: 'inside', withoutEnlargement: true })
+			.webp({ quality: 80 })
+			.toBuffer();
+		mimeType = 'image/webp';
+	}
+
+	const data = {
+		name_en: formData.get('name_en') as string,
+		name_ru: formData.get('name_ru') as string,
+		country_en: formData.get('country_en') as string,
+		country_ru: formData.get('country_ru') as string,
+		role_en: formData.get('role_en') as string,
+		role_ru: formData.get('role_ru') as string,
+		isActive: formData.get('isActive') === 'true',
+		image: imageData,
+		image_mime_type: mimeType
+	};
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const ambassador = await createAmbassador(data as any);
 	if (!ambassador) {
-		console.error('Ambassador POST failed: createAmbassador returned null');
 		return json({ error: 'Failed to create' }, { status: 500 });
 	}
 	return json(ambassador, { status: 201 });
 };
 
-export const PUT: RequestHandler = async ({ request, cookies }) => {
-	const token = cookies.get('admin_session');
-	const contentType = request.headers.get('content-type');
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	let data: any;
-	let id: string;
-
-	if (contentType?.includes('multipart/form-data')) {
-		const formData = await request.formData();
-		id = formData.get('id') as string;
-		data = formData;
-	} else {
-		const jsonData = await request.json();
-		id = jsonData.id;
-		data = jsonData;
+export const PUT: RequestHandler = async ({ request, locals }) => {
+	if (!locals.user) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
+
+	const formData = await request.formData();
+	const id = formData.get('id') as string;
 
 	if (!id) {
 		return json({ error: 'Missing ID' }, { status: 400 });
 	}
 
-	const ambassador = await updateAmbassador(id, data, token);
+	const imageFile = formData.get('image') as File | null;
+	let imageData: Buffer | null = null;
+	let mimeType: string | null = null;
+
+	if (imageFile && imageFile.size > 0) {
+		const buffer = Buffer.from(await imageFile.arrayBuffer());
+		imageData = await sharp(buffer)
+			.resize(800, 800, { fit: 'inside', withoutEnlargement: true })
+			.webp({ quality: 80 })
+			.toBuffer();
+		mimeType = 'image/webp';
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const data: any = {
+		name_en: formData.get('name_en') as string,
+		name_ru: formData.get('name_ru') as string,
+		country_en: formData.get('country_en') as string,
+		country_ru: formData.get('country_ru') as string,
+		role_en: formData.get('role_en') as string,
+		role_ru: formData.get('role_ru') as string,
+		isActive: formData.get('isActive') === 'true'
+	};
+
+	if (imageData) {
+		data.image = imageData;
+		data.image_mime_type = mimeType;
+	}
+
+	const ambassador = await updateAmbassador(id, data);
 	if (!ambassador) {
 		return json({ error: 'Not found' }, { status: 404 });
 	}
 	return json(ambassador);
 };
 
-export const DELETE: RequestHandler = async ({ request, cookies }) => {
+export const DELETE: RequestHandler = async ({ request, locals }) => {
+	if (!locals.user) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
 	const { id } = await request.json();
-	const token = cookies.get('admin_session');
-	const success = await deleteAmbassador(id, token);
+	const success = await deleteAmbassador(id);
 	if (!success) {
 		return json({ error: 'Not found' }, { status: 404 });
 	}

@@ -65,9 +65,7 @@
 			form.description_ru = event.description_ru;
 			form.image = null;
 
-			existingImageUrl = event.image
-				? getImageUrl(event.collectionId || 'events', event.id, event.image)
-				: '';
+			existingImageUrl = event.image ? getImageUrl('events', event.id, event.image) : '';
 		} else {
 			editingId = null;
 			form.title_en = '';
@@ -195,7 +193,7 @@
 											<div class="mask h-16 w-16 rounded-lg bg-base-300 mask-squircle">
 												{#if event.image}
 													<img
-														src={getImageUrl(event.collectionId || 'events', event.id, event.image)}
+														src={getImageUrl('events', event.id, event.image)}
 														alt={event.title_en}
 														class="object-cover"
 													/>

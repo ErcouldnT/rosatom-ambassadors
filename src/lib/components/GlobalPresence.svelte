@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import type { Country } from '$lib/types';
 

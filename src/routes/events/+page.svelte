@@ -1,6 +1,6 @@
 <script>
 	import { ArrowRight, MapPin, Clock } from '@lucide/svelte';
-	import { language } from '$lib/stores/language';
+	import { language } from '$lib/services/language';
 	import { getImageUrl } from '$lib/utils';
 
 	let { data } = $props();
@@ -28,7 +28,7 @@
 					<!-- Event Image -->
 					<figure class="h-40 md:h-48">
 						<img
-							src={getImageUrl(event.collectionId, event.id, event.image)}
+							src={getImageUrl('events', event.id, event.image)}
 							alt={$language === 'en' ? event.title_en : event.title_ru}
 							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
 							loading="lazy"
@@ -81,6 +81,10 @@
 						</div>
 					</div>
 				</a>
+			{:else}
+				<div class="col-span-full py-12 text-center text-base-content/50">
+					<p class="text-lg">No events found.</p>
+				</div>
 			{/each}
 		</div>
 	</div>

@@ -1,23 +1,22 @@
-export interface PocketBaseModel {
+export interface BaseModel {
 	id: string;
-	collectionId: string;
-	collectionName: string;
 	created: string;
 	updated: string;
 }
 
-export interface Ambassador extends PocketBaseModel {
+export interface Ambassador extends BaseModel {
 	name_en: string;
 	name_ru: string;
 	country_en: string;
 	country_ru: string;
 	role_en: string;
 	role_ru: string;
-	image: string;
+	image: string | Uint8Array | null;
+	image_mime_type?: string | null;
 	isActive: boolean;
 }
 
-export interface Event extends PocketBaseModel {
+export interface Event extends BaseModel {
 	title_en: string;
 	title_ru: string;
 	date_day: string;
@@ -28,10 +27,11 @@ export interface Event extends PocketBaseModel {
 	location_ru: string;
 	description_en: string;
 	description_ru: string;
-	image: string;
+	image: string | Uint8Array | null;
+	image_mime_type?: string | null;
 }
 
-export interface NewsItem extends PocketBaseModel {
+export interface NewsItem extends BaseModel {
 	category_en: string;
 	category_ru: string;
 	date: string;
@@ -39,10 +39,11 @@ export interface NewsItem extends PocketBaseModel {
 	title_ru: string;
 	excerpt_en: string;
 	excerpt_ru: string;
-	image: string;
+	image: string | Uint8Array | null;
+	image_mime_type?: string | null;
 }
 
-export interface Stat extends PocketBaseModel {
+export interface Stat extends BaseModel {
 	key: string;
 	value: string;
 	label_en: string;
@@ -50,13 +51,13 @@ export interface Stat extends PocketBaseModel {
 	icon: string;
 }
 
-export interface Country extends PocketBaseModel {
+export interface Country extends BaseModel {
 	name_en: string;
 	name_ru: string;
 	flag_emoji: string;
 }
 
-export interface Ticker extends PocketBaseModel {
+export interface Ticker extends BaseModel {
 	text_en: string;
 	text_ru: string;
 	isActive: boolean;
