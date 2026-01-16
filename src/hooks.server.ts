@@ -1,6 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
+import { validateSession } from '$lib/server/dataStore';
 
-export const handle: Handle = async ({ event, resolve }) => {
+// Language handling hook
+const languageHandle: Handle = async ({ event, resolve }) => {
 	// Try to get language from cookie, otherwise fallback to accept-language header or default to 'en'
 	const lang =
 		event.cookies.get('lang') ||
@@ -10,3 +14,35 @@ export const handle: Handle = async ({ event, resolve }) => {
 		transformPageChunk: ({ html }) => html.replace('%lang%', lang)
 	});
 };
+
+// Admin authentication hook
+const authHandle: Handle = async ({ event, resolve }) => {
+	const sessionId = event.cookies.get('admin_session');
+
+	// Check if authenticated
+	const isAuthenticated = sessionId ? validateSession(sessionId) : false;
+
+	// Store auth state in locals
+	event.locals.isAuthenticated = isAuthenticated;
+
+	// Protect admin routes (except login page)
+	if (event.url.pathname.startsWith('/admin')) {
+		// Allow access to login page
+		if (event.url.pathname === '/admin/login') {
+			// If already authenticated, redirect to dashboard
+			if (isAuthenticated) {
+				throw redirect(303, '/admin');
+			}
+		} else {
+			// All other admin pages require authentication
+			if (!isAuthenticated) {
+				throw redirect(303, '/admin/login');
+			}
+		}
+	}
+
+	return resolve(event);
+};
+
+// Combine hooks with sequence
+export const handle = sequence(languageHandle, authHandle);
