@@ -103,9 +103,5 @@
 				</form>
 			</div>
 		</div>
-
-		<p class="mt-4 text-center text-sm text-base-content/50">
-			Demo: admin@rneambassadors.org / admin123
-		</p>
 	</div>
 </div>
