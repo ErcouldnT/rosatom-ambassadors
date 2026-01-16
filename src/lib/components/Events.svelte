@@ -1,34 +1,16 @@
-<script>
+<script lang="ts">
 	import { MapPin, ArrowRight } from '@lucide/svelte';
 	import { language } from '$lib/stores/language';
 	import { translations } from '$lib/services/translations';
+	import type { Event } from '$lib/types';
 
-	$: t = translations[$language].events;
+	interface Props {
+		events: Event[];
+	}
 
-	// Placeholder events data - usually this would come from an API or the translation file
-	const events = [
-		{
-			day: '15',
-			month: 'OCT',
-			title: 'Nuclear Science Week',
-			location: 'Moscow, Russia',
-			time: '10:00 AM'
-		},
-		{
-			day: '22',
-			month: 'NOV',
-			title: 'Global Energy Summit',
-			location: 'Dubai, UAE',
-			time: '09:00 AM'
-		},
-		{
-			day: '05',
-			month: 'DEC',
-			title: 'Youth Ambassadors Meetup',
-			location: 'Online',
-			time: '14:00 PM'
-		}
-	];
+	let { events }: Props = $props();
+
+	let t = $derived(translations[$language].events);
 </script>
 
 <section id="events" class="bg-base-100 py-20">
@@ -41,15 +23,15 @@
 		</div>
 
 		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-			{#each events as event (event.title)}
+			{#each events as event (event.id)}
 				<div
 					class="group card border border-base-200 bg-base-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
 				>
 					<div class="card-body p-6">
 						<div class="mb-4 flex items-start justify-between">
 							<div class="flex flex-col items-center rounded-xl bg-primary/10 p-3 text-primary">
-								<span class="text-xl leading-none font-bold">{event.day}</span>
-								<span class="text-xs font-bold uppercase">{event.month}</span>
+								<span class="text-xl leading-none font-bold">{event.date_day}</span>
+								<span class="text-xs font-bold uppercase">{event.date_month}</span>
 							</div>
 							<div class="badge badge-ghost">{event.time}</div>
 						</div>
@@ -62,10 +44,11 @@
 						</div>
 
 						<div class="mt-auto card-actions justify-end">
-							<button class="btn btn-ghost btn-sm group-hover:text-primary">
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a href="/events" class="btn btn-ghost btn-sm group-hover:text-primary">
 								Register
 								<ArrowRight class="h-4 w-4 transition-transform group-hover:translate-x-1" />
-							</button>
+							</a>
 						</div>
 					</div>
 				</div>
@@ -73,7 +56,8 @@
 		</div>
 
 		<div class="mt-12 text-center">
-			<button class="btn rounded-full btn-outline">View Full Calendar</button>
+			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+			<a href="/events" class="btn rounded-full btn-outline">View Full Calendar</a>
 		</div>
 	</div>
 </section>

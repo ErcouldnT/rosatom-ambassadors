@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Save, RefreshCw } from '@lucide/svelte';
-	import type { Stat } from '$lib/services/mockApi';
+	import type { Stat } from '$lib/types';
 
 	let stats: Stat[] = [];
 	let loading = true;
@@ -23,13 +23,16 @@
 		}
 	}
 
-	async function updateStat(index: number) {
+	async function updateStat(id: string) {
+		const stat = stats.find((s) => s.id === id);
+		if (!stat) return;
+
 		saving = true;
 		try {
 			await fetch('/api/admin/stats', {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ index, ...stats[index] })
+				body: JSON.stringify(stat)
 			});
 		} catch (error) {
 			console.error('Failed to update stat:', error);
@@ -88,7 +91,11 @@
 										bind:value={stats[i].value}
 										class="input-bordered input flex-1"
 									/>
-									<button class="btn btn-primary" on:click={() => updateStat(i)} disabled={saving}>
+									<button
+										class="btn btn-primary"
+										on:click={() => updateStat(stat.id)}
+										disabled={saving}
+									>
 										<Save class="h-4 w-4" />
 									</button>
 								</div>

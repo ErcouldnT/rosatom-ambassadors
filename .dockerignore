@@ -1,0 +1,9 @@
+# Docker
+node_modules
+npm-debug.log
+.git
+.gitignore
+.svelte-kit
+build
+.env*.local
+*.log

@@ -1,20 +1,35 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, X } from '@lucide/svelte';
-	import type { Event } from '$lib/services/mockApi';
+	import { Plus, Pencil, Trash2, X, X as XIcon, Calendar, MapPin, Upload } from '@lucide/svelte';
+	import type { Event } from '$lib/types';
+	import { language } from '$lib/services/language';
+	import { translations } from '$lib/services/translations';
+	import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
-	let events: Event[] = [];
-	let loading = true;
-	let showModal = false;
-	let editingId: number | null = null;
+	let events = $state<Event[]>([]);
+	let loading = $state(true);
+	let showModal = $state(false);
+	let editingId = $state<string | null>(null);
+	let activeTab = $state<'en' | 'ru'>('en');
+
+	let t = $derived(translations[$language].admin);
 
 	// Form fields
-	let title = '';
-	let day = '';
-	let month = '';
-	let time = '';
-	let location = '';
-	let description = '';
+	let form = $state({
+		title_en: '',
+		title_ru: '',
+		date_day: '',
+		date_month_en: '',
+		date_month_ru: '',
+		time: '',
+		location_en: '',
+		location_ru: '',
+		description_en: '',
+		description_ru: '',
+		image: null as File | null
+	});
+
+	let existingImageUrl = $state('');
 
 	onMount(async () => {
 		await fetchEvents();
@@ -32,24 +47,45 @@
 		}
 	}
 
+	function getImageUrl(collectionId: string, recordId: string, filename: string) {
+		if (!filename) return '';
+		return `${PUBLIC_POCKETBASE_URL}/api/files/${collectionId}/${recordId}/${filename}`;
+	}
+
 	function openModal(event?: Event) {
 		if (event) {
 			editingId = event.id;
-			title = event.title;
-			day = event.date.day;
-			month = event.date.month;
-			time = event.time;
-			location = event.location;
-			description = event.description;
+			form.title_en = event.title_en;
+			form.title_ru = event.title_ru;
+			form.date_day = event.date_day;
+			form.date_month_en = event.date_month_en;
+			form.date_month_ru = event.date_month_ru;
+			form.time = event.time;
+			form.location_en = event.location_en;
+			form.location_ru = event.location_ru;
+			form.description_en = event.description_en;
+			form.description_ru = event.description_ru;
+			form.image = null;
+
+			existingImageUrl = event.image
+				? getImageUrl((event as any).collectionId || 'events', event.id, event.image)
+				: '';
 		} else {
 			editingId = null;
-			title = '';
-			day = '';
-			month = '';
-			time = '';
-			location = '';
-			description = '';
+			form.title_en = '';
+			form.title_ru = '';
+			form.date_day = '';
+			form.date_month_en = '';
+			form.date_month_ru = '';
+			form.time = '';
+			form.location_en = '';
+			form.location_ru = '';
+			form.description_en = '';
+			form.description_ru = '';
+			form.image = null;
+			existingImageUrl = '';
 		}
+		activeTab = 'en';
 		showModal = true;
 	}
 
@@ -59,25 +95,32 @@
 	}
 
 	async function handleSubmit() {
-		const data = {
-			title,
-			date: { day, month },
-			time,
-			location,
-			description
-		};
+		const formData = new FormData();
+		if (editingId) formData.append('id', editingId);
+		formData.append('title_en', form.title_en);
+		formData.append('title_ru', form.title_ru);
+		formData.append('date_day', form.date_day);
+		formData.append('date_month_en', form.date_month_en);
+		formData.append('date_month_ru', form.date_month_ru);
+		formData.append('time', form.time);
+		formData.append('location_en', form.location_en);
+		formData.append('location_ru', form.location_ru);
+		formData.append('description_en', form.description_en);
+		formData.append('description_ru', form.description_ru);
+
+		if (form.image) {
+			formData.append('image', form.image);
+		}
 
 		if (editingId) {
 			await fetch('/api/admin/events', {
 				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id: editingId, ...data })
+				body: formData
 			});
 		} else {
 			await fetch('/api/admin/events', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(data)
+				body: formData
 			});
 		}
 
@@ -85,7 +128,7 @@
 		await fetchEvents();
 	}
 
-	async function handleDelete(id: number) {
+	async function handleDelete(id: string) {
 		if (!confirm('Are you sure you want to delete this event?')) return;
 
 		await fetch('/api/admin/events', {
@@ -96,71 +139,117 @@
 
 		await fetchEvents();
 	}
+
+	function handleFileChange(e: Event) {
+		const target = e.target as HTMLInputElement;
+		if (target.files && target.files.length > 0) {
+			form.image = target.files[0];
+		}
+	}
 </script>
 
 <svelte:head>
-	<title>Events - Admin</title>
+	<title>{t.events} - Admin</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<!-- Header -->
 	<div class="flex items-center justify-between">
 		<div>
-			<h1 class="text-2xl font-bold text-base-content">Events</h1>
-			<p class="text-base-content/70">Manage your upcoming events</p>
+			<h1 class="text-3xl font-bold tracking-tight text-base-content">{t.events}</h1>
+			<p class="mt-1 text-base-content/60">Manage upcoming company events and schedule</p>
 		</div>
-		<button class="btn btn-primary" on:click={() => openModal()}>
-			<Plus class="h-4 w-4" />
+		<button class="btn btn-primary" onclick={() => openModal()}>
+			<Plus class="h-5 w-5" />
 			Add Event
 		</button>
 	</div>
 
 	<!-- Table -->
-	<div class="card bg-base-100 shadow-sm">
+	<div class="card overflow-hidden rounded-xl border border-base-200 bg-base-100 shadow-sm">
 		<div class="overflow-x-auto">
-			<table class="table">
-				<thead>
+			<table class="table table-lg">
+				<thead class="bg-base-200/50">
 					<tr>
-						<th>Date</th>
-						<th>Title</th>
+						<th>Event Info</th>
 						<th>Location</th>
-						<th>Time</th>
+						<th>Date & Time</th>
 						<th class="text-right">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					{#if loading}
 						<tr>
-							<td colspan="5" class="py-8 text-center">
-								<span class="loading loading-md loading-spinner"></span>
+							<td colspan="4" class="py-12 text-center">
+								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
 					{:else if events.length === 0}
 						<tr>
-							<td colspan="5" class="py-8 text-center text-base-content/50"> No events found </td>
+							<td colspan="4" class="py-12 text-center text-base-content/50"> No events found </td>
 						</tr>
 					{:else}
 						{#each events as event (event.id)}
-							<tr>
+							<tr class="hover">
 								<td>
-									<div class="badge badge-lg badge-primary">
-										{event.date.day}
-										{event.date.month}
+									<div class="flex items-center gap-4">
+										<div class="avatar">
+											<div class="mask h-16 w-16 rounded-lg bg-base-300 mask-squircle">
+												{#if event.image}
+													<img
+														src={getImageUrl(
+															(event as any).collectionId || 'events',
+															event.id,
+															event.image
+														)}
+														alt={event.title_en}
+														class="object-cover"
+													/>
+												{:else}
+													<div
+														class="flex h-full w-full flex-col items-center justify-center text-base-content/30"
+													>
+														<Calendar class="h-6 w-6" />
+													</div>
+												{/if}
+											</div>
+										</div>
+										<div>
+											<div class="font-bold">{event.title_en}</div>
+											<div class="text-xs opacity-60">{event.title_ru}</div>
+										</div>
 									</div>
 								</td>
-								<td class="font-medium">{event.title}</td>
-								<td>{event.location}</td>
-								<td>{event.time}</td>
+								<td>
+									<div class="flex items-center gap-2">
+										<MapPin class="h-4 w-4 text-base-content/40" />
+										<div>
+											<div>{event.location_en}</div>
+											<div class="text-xs opacity-60">{event.location_ru}</div>
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="badge font-mono badge-lg badge-neutral">
+										{event.date_day}
+										{event.date_month_en}
+									</div>
+									<div class="mt-1 text-center font-mono text-xs opacity-60">
+										{event.time}
+									</div>
+								</td>
 								<td class="text-right">
-									<button class="btn btn-ghost btn-sm" on:click={() => openModal(event)}>
-										<Pencil class="h-4 w-4" />
-									</button>
-									<button
-										class="btn text-error btn-ghost btn-sm"
-										on:click={() => handleDelete(event.id)}
-									>
-										<Trash2 class="h-4 w-4" />
-									</button>
+									<div class="join">
+										<button class="btn join-item btn-ghost btn-sm" onclick={() => openModal(event)}>
+											<Pencil class="h-4 w-4" />
+										</button>
+										<button
+											class="btn join-item text-error btn-ghost btn-sm"
+											onclick={() => handleDelete(event.id)}
+										>
+											<Trash2 class="h-4 w-4" />
+										</button>
+									</div>
 								</td>
 							</tr>
 						{/each}
@@ -172,102 +261,255 @@
 </div>
 
 <!-- Modal -->
-{#if showModal}
-	<div class="modal-open modal">
-		<div class="modal-box">
-			<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm" on:click={closeModal}>
-				<X class="h-4 w-4" />
-			</button>
-
-			<h3 class="text-lg font-bold">
-				{editingId ? 'Edit Event' : 'Add Event'}
+<dialog class="modal" class:modal-open={showModal}>
+	<div class="modal-box w-11/12 max-w-3xl overflow-hidden bg-base-100 p-0">
+		<div class="flex items-center justify-between border-b border-base-200 p-6">
+			<h3 class="text-xl font-bold">
+				{editingId ? 'Edit Event' : 'New Event'}
 			</h3>
+			<form method="dialog">
+				<button class="btn btn-circle btn-ghost btn-sm" onclick={closeModal}>✕</button>
+			</form>
+		</div>
 
-			<form on:submit|preventDefault={handleSubmit} class="mt-4 space-y-4">
-				<div class="form-control">
-					<label class="label" for="title">
-						<span class="label-text">Title</span>
-					</label>
-					<input type="text" id="title" bind:value={title} class="input-bordered input" required />
-				</div>
+		<div class="max-h-[80vh] overflow-y-auto p-6">
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				class="space-y-6"
+			>
+				<!-- Main Image Upload -->
+				<div class="grid grid-cols-1 gap-6 md:grid-cols-[1fr_200px]">
+					<div class="space-y-4">
+						<div class="form-control">
+							<label class="label pb-1 font-medium" for="image"> Event Image </label>
+							<input
+								type="file"
+								id="image"
+								class="file-input-bordered file-input w-full"
+								accept="image/*"
+								onchange={handleFileChange}
+							/>
+							{#if existingImageUrl && !form.image}
+								<div class="mt-2 text-xs opacity-60">
+									Current file: <a href={existingImageUrl} target="_blank" class="link">View</a>
+								</div>
+							{/if}
+						</div>
 
-				<div class="grid grid-cols-2 gap-4">
-					<div class="form-control">
-						<label class="label" for="day">
-							<span class="label-text">Day</span>
-						</label>
-						<input
-							type="text"
-							id="day"
-							bind:value={day}
-							class="input-bordered input"
-							placeholder="21"
-							required
-						/>
+						<div class="grid grid-cols-2 gap-4">
+							<div class="form-control">
+								<label class="label" for="date_day">
+									<span class="label-text">Day (e.g. 21)</span>
+								</label>
+								<input
+									type="text"
+									id="date_day"
+									bind:value={form.date_day}
+									class="input-bordered input w-full"
+									placeholder="21"
+									required
+								/>
+							</div>
+							<div class="form-control">
+								<label class="label" for="time">
+									<span class="label-text">Time (e.g. 10:00 AM)</span>
+								</label>
+								<input
+									type="text"
+									id="time"
+									bind:value={form.time}
+									class="input-bordered input w-full"
+									placeholder="10:00 AM"
+									required
+								/>
+							</div>
+						</div>
 					</div>
-					<div class="form-control">
-						<label class="label" for="month">
-							<span class="label-text">Month</span>
-						</label>
-						<input
-							type="text"
-							id="month"
-							bind:value={month}
-							class="input-bordered input"
-							placeholder="OCT"
-							required
-						/>
+
+					<div
+						class="flex flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-base-200/50 p-4"
+					>
+						{#if existingImageUrl || form.image}
+							<div class="avatar">
+								<div class="mask h-32 w-40 rounded-xl mask-squircle object-cover">
+									{#if form.image}
+										<img
+											src={URL.createObjectURL(form.image)}
+											alt="Preview"
+											class="h-full w-full object-cover"
+										/>
+									{:else if existingImageUrl}
+										<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+									{/if}
+								</div>
+							</div>
+						{:else}
+							<div
+								class="flex h-32 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-base-300 text-base-content/30"
+							>
+								<Upload class="mb-2 h-8 w-8" />
+								<span class="text-xs">No image</span>
+							</div>
+						{/if}
 					</div>
 				</div>
 
-				<div class="form-control">
-					<label class="label" for="time">
-						<span class="label-text">Time</span>
-					</label>
-					<input
-						type="text"
-						id="time"
-						bind:value={time}
-						class="input-bordered input"
-						placeholder="10:00 AM"
-						required
-					/>
+				<div class="divider">Language & Details</div>
+
+				<div role="tablist" class="tabs-lifted tabs">
+					<button
+						type="button"
+						role="tab"
+						class="tab {activeTab === 'en'
+							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
+							: ''}"
+						onclick={() => (activeTab = 'en')}
+					>
+						🇬🇧 English
+					</button>
+					<button
+						type="button"
+						role="tab"
+						class="tab {activeTab === 'ru'
+							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
+							: ''}"
+						onclick={() => (activeTab = 'ru')}
+					>
+						🇷🇺 Russian
+					</button>
 				</div>
 
-				<div class="form-control">
-					<label class="label" for="location">
-						<span class="label-text">Location</span>
-					</label>
-					<input
-						type="text"
-						id="location"
-						bind:value={location}
-						class="input-bordered input"
-						required
-					/>
+				<div
+					class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+				>
+					<div class={activeTab === 'en' ? 'block space-y-4' : 'hidden'}>
+						<div class="form-control">
+							<label class="label" for="title_en">
+								<span class="label-text">Event Title (EN)</span>
+							</label>
+							<input
+								type="text"
+								id="title_en"
+								bind:value={form.title_en}
+								class="input-bordered input w-full"
+								placeholder="Annual Exhibition"
+								required
+							/>
+						</div>
+
+						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+							<div class="form-control">
+								<label class="label" for="location_en">
+									<span class="label-text">Location (EN)</span>
+								</label>
+								<input
+									type="text"
+									id="location_en"
+									bind:value={form.location_en}
+									class="input-bordered input w-full"
+									placeholder="Moscow, Russia"
+									required
+								/>
+							</div>
+							<div class="form-control">
+								<label class="label" for="date_month_en">
+									<span class="label-text">Month (EN)</span>
+								</label>
+								<input
+									type="text"
+									id="date_month_en"
+									bind:value={form.date_month_en}
+									class="input-bordered input w-full"
+									placeholder="OCT"
+									required
+								/>
+							</div>
+						</div>
+
+						<div class="form-control">
+							<label class="label" for="description_en">
+								<span class="label-text">Description (EN)</span>
+							</label>
+							<textarea
+								id="description_en"
+								bind:value={form.description_en}
+								class="textarea-bordered textarea h-24"
+								placeholder="Event details..."
+							></textarea>
+						</div>
+					</div>
+
+					<div class={activeTab === 'ru' ? 'block space-y-4' : 'hidden'}>
+						<div class="form-control">
+							<label class="label" for="title_ru">
+								<span class="label-text">Event Title (RU)</span>
+							</label>
+							<input
+								type="text"
+								id="title_ru"
+								bind:value={form.title_ru}
+								class="input-bordered input w-full"
+								placeholder="Ежегодная выставка"
+								required
+							/>
+						</div>
+
+						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+							<div class="form-control">
+								<label class="label" for="location_ru">
+									<span class="label-text">Location (RU)</span>
+								</label>
+								<input
+									type="text"
+									id="location_ru"
+									bind:value={form.location_ru}
+									class="input-bordered input w-full"
+									placeholder="Москва, Россия"
+									required
+								/>
+							</div>
+							<div class="form-control">
+								<label class="label" for="date_month_ru">
+									<span class="label-text">Month (RU)</span>
+								</label>
+								<input
+									type="text"
+									id="date_month_ru"
+									bind:value={form.date_month_ru}
+									class="input-bordered input w-full"
+									placeholder="ОКТ"
+									required
+								/>
+							</div>
+						</div>
+
+						<div class="form-control">
+							<label class="label" for="description_ru">
+								<span class="label-text">Description (RU)</span>
+							</label>
+							<textarea
+								id="description_ru"
+								bind:value={form.description_ru}
+								class="textarea-bordered textarea h-24"
+								placeholder="Детали события..."
+							></textarea>
+						</div>
+					</div>
 				</div>
 
-				<div class="form-control">
-					<label class="label" for="description">
-						<span class="label-text">Description</span>
-					</label>
-					<textarea
-						id="description"
-						bind:value={description}
-						class="textarea-bordered textarea"
-						rows="3"
-						required
-					></textarea>
-				</div>
-
-				<div class="modal-action">
-					<button type="button" class="btn btn-ghost" on:click={closeModal}>Cancel</button>
-					<button type="submit" class="btn btn-primary">
-						{editingId ? 'Update' : 'Create'}
+				<div class="modal-action pt-4">
+					<button type="button" class="btn" onclick={closeModal}>Cancel</button>
+					<button type="submit" class="btn px-8 btn-primary">
+						{editingId ? 'Save Changes' : 'Create Event'}
 					</button>
 				</div>
 			</form>
 		</div>
-		<button class="modal-backdrop" on:click={closeModal}></button>
 	</div>
-{/if}
+	<form method="dialog" class="modal-backdrop">
+		<button onclick={closeModal}>close</button>
+	</form>
+</dialog>

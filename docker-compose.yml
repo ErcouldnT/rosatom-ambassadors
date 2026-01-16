@@ -1,0 +1,43 @@
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - ORIGIN=http://localhost:3000
+      - POCKETBASE_URL=http://pocketbase:8090
+    depends_on:
+      pocketbase:
+        condition: service_healthy
+    networks:
+      - app-network
+
+
+  pocketbase:
+    image: ghcr.io/muchobien/pocketbase:latest
+    ports:
+      - '8090:8090'
+    env_file:
+      - .env
+    environment:
+      - PB_ADMIN_EMAIL=${POCKETBASE_ADMIN_EMAIL}
+      - PB_ADMIN_PASSWORD=${POCKETBASE_ADMIN_PASSWORD}
+    volumes:
+      - pocketbase_data:/pb_data
+    networks:
+      - app-network
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pocketbase_data:

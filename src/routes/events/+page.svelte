@@ -1,69 +1,84 @@
 <script>
-	import { getEventsList } from '$lib/services/mockApi';
 	import { ArrowRight, MapPin, Clock } from '@lucide/svelte';
 
-	const events = getEventsList();
+	let { data } = $props();
+	let events = $derived(data.events);
 </script>
+
+<svelte:head>
+	<title>Events | RNE Ambassadors</title>
+</svelte:head>
 
 <div class="min-h-screen bg-base-100 pt-24 pb-20">
 	<div class="container mx-auto px-6">
-		<div class="mb-16 text-center">
+		<div class="mb-12 text-center">
 			<h1 class="mb-4 text-3xl font-bold tracking-tight text-base-content md:text-4xl lg:text-5xl">
 				Upcoming Events
 			</h1>
 		</div>
 
-		<div class="mx-auto flex max-w-4xl flex-col gap-6">
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each events as event (event.id)}
-				<div
-					class="group relative overflow-hidden rounded-2xl border border-base-content/10 bg-base-200 p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 lg:p-8"
+				<a
+					href="/events/{event.id}"
+					class="group card overflow-hidden bg-base-200 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
 				>
-					<div class="flex flex-col items-start gap-8 md:flex-row md:items-center">
+					<!-- Event Image -->
+					<figure class="h-40 md:h-48">
+						<img
+							src={event.image}
+							alt={event.title}
+							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+							loading="lazy"
+						/>
+					</figure>
+
+					<div class="card-body p-4 md:p-6">
 						<!-- Date Badge -->
-						<div
-							class="flex h-20 w-16 flex-shrink-0 flex-col items-center justify-center rounded-xl border border-primary/20 bg-gradient-to-br from-primary/20 to-primary/5"
-						>
-							<span class="text-2xl font-bold text-primary">{event.date.day}</span>
-							<span class="text-xs font-bold tracking-wider text-primary/80 uppercase"
-								>{event.date.month}</span
+						<div class="mb-2 flex items-center gap-3">
+							<div
+								class="flex h-12 w-12 flex-col items-center justify-center rounded-lg bg-primary/10"
 							>
-						</div>
-
-						<!-- Content -->
-						<div class="flex-grow">
-							<h3
-								class="mb-2 text-xl font-bold text-base-content transition-colors group-hover:text-primary lg:text-2xl"
-							>
-								{event.title}
-							</h3>
-
-							<div class="mb-3 flex flex-wrap gap-4 text-sm text-base-content/70">
-								<div class="flex items-center gap-1.5">
-									<Clock class="h-4 w-4 text-primary" />
+								<span class="text-lg leading-none font-bold text-primary">{event.date_day}</span>
+								<span class="text-[10px] font-bold text-primary/80 uppercase"
+									>{event.date_month}</span
+								>
+							</div>
+							<div class="flex flex-col gap-1 text-xs text-base-content/60">
+								<div class="flex items-center gap-1">
+									<Clock class="h-3 w-3" />
 									<span>{event.time}</span>
 								</div>
-								<div class="flex items-center gap-1.5">
-									<MapPin class="h-4 w-4 text-primary" />
+								<div class="flex items-center gap-1">
+									<MapPin class="h-3 w-3" />
 									<span>{event.location}</span>
 								</div>
 							</div>
-
-							<p class="text-sm leading-relaxed text-base-content/70 lg:text-base">
-								{event.description}
-							</p>
 						</div>
+
+						<!-- Title -->
+						<h3
+							class="card-title line-clamp-2 text-base font-bold text-base-content transition-colors group-hover:text-primary md:text-lg"
+						>
+							{event.title}
+						</h3>
+
+						<!-- Description -->
+						<p class="line-clamp-2 text-sm text-base-content/70">
+							{event.description}
+						</p>
 
 						<!-- Action -->
-						<div class="mt-4 flex-shrink-0 md:mt-0">
-							<button
-								class="flex items-center gap-2 rounded-full border border-base-content/10 bg-base-300 px-6 py-2.5 font-medium text-base-content transition-all group-hover:border-primary group-hover:bg-primary group-hover:text-primary-content"
+						<div class="mt-auto card-actions pt-3">
+							<span
+								class="flex items-center gap-1 text-sm font-medium text-primary transition-transform group-hover:translate-x-1"
 							>
-								Register
+								View Details
 								<ArrowRight class="h-4 w-4" />
-							</button>
+							</span>
 						</div>
 					</div>
-				</div>
+				</a>
 			{/each}
 		</div>
 	</div>

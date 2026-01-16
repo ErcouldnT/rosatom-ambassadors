@@ -1,32 +1,36 @@
 <script lang="ts">
-	import { getStats, type Stat } from '$lib/services/mockApi';
 	import { Users, Globe, Calendar, GraduationCap } from '@lucide/svelte';
 	import type { Component } from 'svelte';
 	import { language } from '$lib/stores/language';
 	import { translations } from '$lib/services/translations';
+	import type { Stat } from '$lib/types';
+
+	interface Props {
+		stats: Stat[];
+	}
+
+	let { stats = [] }: Props = $props();
 
 	// Reactive translations
-	$: t = translations[$language].stats;
-
-	const stats: Stat[] = getStats();
+	let t = $derived(translations[$language].stats);
 
 	const icons: Record<string, Component> = {
-		users: Users,
-		globe: Globe,
-		calendar: Calendar,
-		'academic-cap': GraduationCap
+		Users: Users,
+		Globe: Globe,
+		Calendar: Calendar,
+		GraduationCap: GraduationCap
 	};
 
-	// Helper to get translated label based on stat id/icon
+	// Helper to get translated label based on stat key/icon
 	function getLabel(stat: Stat): string {
-		switch (stat.icon) {
-			case 'users':
+		switch (stat.key) {
+			case 'ambassadors':
 				return t.members;
-			case 'globe':
+			case 'countries':
 				return t.countries;
-			case 'calendar':
+			case 'events':
 				return t.events;
-			case 'academic-cap':
+			case 'universities':
 				return t.universities;
 			default:
 				return stat.label;
@@ -37,7 +41,7 @@
 <section class="relative bg-base-100 py-16">
 	<div class="container mx-auto px-6">
 		<div class="grid grid-cols-2 gap-8 md:grid-cols-4">
-			{#each stats as stat (stat.label)}
+			{#each stats as stat (stat.id)}
 				<div
 					class="group flex flex-col items-center rounded-2xl p-6 text-center transition-colors duration-300 hover:bg-base-200"
 				>
@@ -47,6 +51,8 @@
 						{#if icons[stat.icon]}
 							{@const Icon = icons[stat.icon]}
 							<Icon class="h-8 w-8" />
+						{:else}
+							<Globe class="h-8 w-8" />
 						{/if}
 					</div>
 					<h3 class="mb-2 text-4xl font-bold text-base-content">{stat.value}</h3>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Globe, Zap, Handshake, Atom, GraduationCap, BookOpen } from '@lucide/svelte';
+	import { Globe, Zap, Handshake, Atom, GraduationCap, BookOpen, Radiation } from '@lucide/svelte';
 
 	import { language } from '$lib/stores/language';
 	import { translations } from '$lib/services/translations';
@@ -12,6 +12,7 @@
 		{ text: t.internationalCoop, icon: Handshake },
 		{ text: t.rosatom, icon: Atom },
 		{ text: t.mephi, icon: GraduationCap },
+		{ text: t.mpei, icon: Radiation },
 		{ text: t.tomsk, icon: BookOpen }
 	];
 </script>

@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { validateSession } from '$lib/server/dataStore';
+import { validateSession } from '$lib/server/pocketbase';
 
 // Language handling hook
 const languageHandle: Handle = async ({ event, resolve }) => {
@@ -20,7 +20,7 @@ const authHandle: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get('admin_session');
 
 	// Check if authenticated
-	const isAuthenticated = sessionId ? validateSession(sessionId) : false;
+	const isAuthenticated = sessionId ? await validateSession(sessionId) : false;
 
 	// Store auth state in locals
 	event.locals.isAuthenticated = isAuthenticated;

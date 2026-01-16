@@ -1,11 +1,11 @@
-<script>
-	import { getCountries } from '$lib/services/mockApi';
+<script lang="ts">
 	import { language } from '$lib/stores/language';
 	import { translations } from '$lib/services/translations';
+	import type { Country } from '$lib/types';
 
-	$: t = translations[$language].impact;
+	let { countries = [] } = $props<{ countries: Country[] }>();
 
-	const countries = getCountries();
+	let t = $derived(translations[$language].impact);
 </script>
 
 <section id="ambassadors" class="relative overflow-hidden bg-base-100 py-20">
@@ -26,12 +26,12 @@
 			class="rounded-[2rem] border border-base-200 bg-base-100/70 p-8 shadow-xl backdrop-blur-xl lg:p-12"
 		>
 			<div class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
-				{#each countries as country (country.name)}
+				{#each countries as country (country.id)}
 					<div
 						class="flex cursor-default items-center gap-3 rounded-lg p-3 transition-all duration-300 hover:bg-base-200 hover:shadow-md"
 					>
 						<div class="h-2 w-2 rounded-full bg-primary"></div>
-						<span class="font-medium text-base-content">{country.name}</span>
+						<span class="font-medium text-base-content">{country.name} {country.flag}</span>
 					</div>
 				{/each}
 			</div>

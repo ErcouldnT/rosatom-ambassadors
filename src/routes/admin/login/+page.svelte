@@ -21,7 +21,6 @@
 			const data = await response.json();
 
 			if (data.success) {
-				// eslint-disable-next-line svelte/no-navigation-without-resolve
 				goto('/admin');
 			} else {
 				error = 'Invalid email or password';

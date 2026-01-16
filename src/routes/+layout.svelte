@@ -1,6 +1,5 @@
 <script lang="ts">
 	import './app.css';
-	import favicon from '$lib/assets/favicon.svg';
 	import { page } from '$app/stores';
 
 	import Header from '$lib/components/Header.svelte';
@@ -12,10 +11,6 @@
 	// Hide header/footer on admin pages
 	let isAdminRoute = $derived($page.url.pathname.startsWith('/admin'));
 </script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
 
 {#if isAdminRoute}
 	<!-- Admin pages have their own layout -->

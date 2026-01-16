@@ -1,75 +1,85 @@
 <script>
-	import { getNews } from '$lib/services/mockApi';
 	import { ArrowRight, Calendar } from '@lucide/svelte';
 
-	const news = getNews();
+	let { data } = $props();
+	let news = $derived(data.news);
 </script>
+
+<svelte:head>
+	<title>News | RNE Ambassadors</title>
+</svelte:head>
 
 <div class="min-h-screen bg-base-100 pt-24 pb-20">
 	<div class="container mx-auto px-6">
-		<div class="mb-16 text-center">
+		<div class="mb-12 text-center">
 			<div
-				class="mb-6 inline-block rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary"
+				class="mb-4 inline-block rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary"
 			>
 				News & Updates
 			</div>
 			<h1 class="mb-4 text-3xl font-bold tracking-tight text-base-content md:text-4xl lg:text-5xl">
 				Latest from RNE Ambassadors
 			</h1>
-			<p class="mx-auto max-w-2xl text-lg text-base-content/70">
-				Stay informed about our latest activities, events, and success stories from around the
-				globe.
+			<p class="mx-auto max-w-2xl text-base text-base-content/70 md:text-lg">
+				Stay informed about our latest activities, events, and success stories.
 			</p>
 		</div>
 
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each news as item (item.id)}
-				<div
-					class="group relative flex h-[400px] flex-col overflow-hidden rounded-2xl border border-base-content/10 bg-base-200 transition-all duration-300 hover:border-primary/30"
+				<a
+					href="/news/{item.id}"
+					class="group card overflow-hidden bg-base-200 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
 				>
-					<!-- Content Container -->
-					<div class="relative z-10 flex h-full flex-col p-8 text-base-content">
+					<!-- News Image -->
+					<figure class="h-40 md:h-48">
+						<img
+							src={item.image}
+							alt={item.title}
+							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+							loading="lazy"
+						/>
+					</figure>
+
+					<div class="card-body p-4 md:p-6">
 						<!-- Category Badge -->
-						<div class="mb-auto">
+						<div class="mb-2">
 							<span
-								class="inline-block rounded-lg bg-base-300 px-3 py-1 text-xs font-bold tracking-wider text-base-content/90 uppercase transition-colors group-hover:bg-primary group-hover:text-primary-content"
+								class="inline-block rounded-lg bg-base-300 px-2 py-1 text-xs font-bold tracking-wider text-base-content/80 uppercase transition-colors group-hover:bg-primary group-hover:text-primary-content"
 							>
 								{item.category}
 							</span>
 						</div>
 
 						<!-- Date -->
-						<div class="mb-3 flex items-center gap-2 text-sm font-medium text-primary">
-							<Calendar class="h-4 w-4" />
+						<div class="mb-2 flex items-center gap-2 text-xs text-base-content/60">
+							<Calendar class="h-3 w-3" />
 							<span>{item.date}</span>
 						</div>
 
 						<!-- Title -->
 						<h3
-							class="mb-2 line-clamp-2 text-xl leading-tight font-bold transition-colors group-hover:text-primary"
+							class="card-title line-clamp-2 text-base font-bold text-base-content transition-colors group-hover:text-primary md:text-lg"
 						>
 							{item.title}
 						</h3>
 
 						<!-- Excerpt -->
-						<p class="mb-6 line-clamp-2 text-sm text-base-content/70">
+						<p class="line-clamp-2 text-sm text-base-content/70">
 							{item.excerpt}
 						</p>
 
-						<!-- Link -->
-						<div
-							class="flex items-center gap-2 text-sm font-medium text-base-content/70 transition-colors group-hover:text-primary"
-						>
-							Read Article
-							<ArrowRight class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+						<!-- Action -->
+						<div class="mt-auto card-actions pt-3">
+							<span
+								class="flex items-center gap-1 text-sm font-medium text-primary transition-transform group-hover:translate-x-1"
+							>
+								Read Article
+								<ArrowRight class="h-4 w-4" />
+							</span>
 						</div>
 					</div>
-
-					<!-- Subtle Gradient Background -->
-					<div
-						class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-					></div>
-				</div>
+				</a>
 			{/each}
 		</div>
 	</div>

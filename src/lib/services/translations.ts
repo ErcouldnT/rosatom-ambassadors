@@ -28,6 +28,7 @@ export const translations = {
 			internationalCoop: 'International Cooperation',
 			rosatom: 'Rosatom',
 			mephi: 'MEPhI',
+			mpei: 'MPEI',
 			tomsk: 'Tomsk Polytechnic'
 		},
 		stats: {
@@ -110,6 +111,16 @@ export const translations = {
 				contact: 'Contact Support'
 			},
 			copyright: 'RNE Ambassadors. All rights reserved.'
+		},
+		admin: {
+			dashboard: 'Dashboard',
+			ambassadors: 'Ambassadors',
+			events: 'Events',
+			news: 'News',
+			stats: 'Stats',
+			countries: 'Countries',
+			tickers: 'Tickers',
+			logout: 'Logout'
 		}
 	},
 	ru: {
@@ -141,6 +152,7 @@ export const translations = {
 			internationalCoop: 'Международное Сотрудничество',
 			rosatom: 'Росатом',
 			mephi: 'НИЯУ МИФИ',
+			mpei: 'МЭИ',
 			tomsk: 'Томский Политех'
 		},
 		stats: {
@@ -223,6 +235,16 @@ export const translations = {
 				contact: 'Поддержка'
 			},
 			copyright: 'RNE Ambassadors. Все права защищены.'
+		},
+		admin: {
+			dashboard: 'Панель управления',
+			ambassadors: 'Амбассадоры',
+			events: 'События',
+			news: 'Новости',
+			stats: 'Статистика',
+			countries: 'Страны',
+			tickers: 'Бегущая строка',
+			logout: 'Выйти'
 		}
 	}
 };

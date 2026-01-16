@@ -1,11 +1,11 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { validateAdmin } from '$lib/server/dataStore';
+import { loginAdmin } from '$lib/server/pocketbase';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const { email, password } = await request.json();
 
-	const sessionId = validateAdmin(email, password);
+	const sessionId = await loginAdmin(email, password);
 
 	if (sessionId) {
 		cookies.set('admin_session', sessionId, {
