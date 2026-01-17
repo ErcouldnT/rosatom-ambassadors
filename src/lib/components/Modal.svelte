@@ -65,47 +65,65 @@
 	onkeydown={handleKeydown}
 	onclick={handleBackdropClick}
 >
-	<div
-		class="modal-box w-full {maxWidthClasses[
-			maxWidth
-		]} flex max-h-[90vh] flex-col overflow-hidden p-0"
-	>
-		<!-- Header -->
+	<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
 		<div
-			class="flex shrink-0 items-center justify-between border-b border-base-200 bg-base-100 px-4 py-4 sm:px-6"
+			class="relative modal-box flex max-h-[90vh] w-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#121212]/80 p-0 shadow-2xl backdrop-blur-3xl {maxWidthClasses[
+				maxWidth
+			]}"
+			style="animation: modal-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)"
 		>
-			<div>
-				<h3 class="text-lg font-bold text-base-content sm:text-xl">{title}</h3>
-				{#if subtitle}
-					<p class="mt-0.5 text-sm text-base-content/60">{subtitle}</p>
-				{/if}
-			</div>
-			<button
-				type="button"
-				class="btn btn-circle btn-ghost btn-sm"
-				onclick={onClose}
-				aria-label="Close modal"
-			>
-				<X class="h-5 w-5" />
-			</button>
-		</div>
-
-		<!-- Content -->
-		<div class="grow overflow-y-auto px-4 py-4 sm:px-6 sm:py-6">
-			{@render children()}
-		</div>
-
-		<!-- Actions -->
-		{#if actions}
+			<!-- Header -->
 			<div
-				class="flex shrink-0 flex-col-reverse gap-2 border-t border-base-200 bg-base-100 px-4 py-4 sm:flex-row sm:justify-end sm:px-6"
+				class="flex shrink-0 items-center justify-between border-b border-white/5 bg-white/5 px-8 py-6 backdrop-blur-md"
 			>
-				{@render actions()}
+				<div class="space-y-1">
+					<h3 class="text-2xl font-bold tracking-tight text-white">{title}</h3>
+					{#if subtitle}
+						<p class="text-sm font-medium text-white/50">{subtitle}</p>
+					{/if}
+				</div>
+				<button
+					type="button"
+					class="btn btn-circle text-white/40 btn-ghost btn-sm hover:bg-white/10 hover:text-white"
+					onclick={onClose}
+					aria-label="Close modal"
+				>
+					<X class="h-5 w-5" />
+				</button>
 			</div>
-		{/if}
+
+			<!-- Content -->
+			<div
+				class="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 grow overflow-y-auto px-8 py-8"
+			>
+				{@render children()}
+			</div>
+
+			<!-- Actions -->
+			{#if actions}
+				<div
+					class="flex shrink-0 flex-col-reverse gap-3 border-t border-white/5 bg-white/5 px-8 py-6 backdrop-blur-md sm:flex-row sm:justify-end"
+				>
+					{@render actions()}
+				</div>
+			{/if}
+		</div>
 	</div>
 
-	<form method="dialog" class="modal-backdrop bg-black/50">
+	<form method="dialog" class="modal-backdrop bg-black/60 backdrop-blur-sm">
 		<button onclick={onClose}>close</button>
 	</form>
 </dialog>
+
+<style>
+	@keyframes modal-pop {
+		0% {
+			opacity: 0;
+			transform: scale(0.95) translateY(10px);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1) translateY(0);
+		}
+	}
+</style>

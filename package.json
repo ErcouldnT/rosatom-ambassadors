@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "npm run db:seed && vite dev",
+		"dev": "npm run db:migrate && npm run db:seed && vite dev",
 		"build": "npm run db:migrate && npm run db:seed && vite build",
 		"preview": "vite preview",
 		"prepare": "husky",

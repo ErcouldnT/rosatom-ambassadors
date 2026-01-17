@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Plus, Pencil, Trash2, Upload, X } from '@lucide/svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import AdminInput from '$lib/components/admin/AdminInput.svelte';
 	import type { Ambassador } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -291,102 +293,105 @@
 </div>
 
 <!-- Modal -->
-<dialog
-	class="modal modal-bottom sm:modal-middle"
-	class:modal-open={showModal}
-	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+<!-- Modal -->
+<Modal
+	bind:open={showModal}
+	title={editingId ? 'Edit Ambassador' : 'New Ambassador'}
+	subtitle={editingId ? 'Update ambassador details' : 'Add a new ambassador to the program'}
+	onClose={closeModal}
+	maxWidth="4xl"
 >
-	<div class="modal-box w-full max-w-2xl overflow-hidden bg-base-100 p-0 sm:w-11/12">
-		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
-			<div>
-				<h3 class="text-lg font-bold sm:text-xl">
-					{editingId ? 'Edit Ambassador' : 'New Ambassador'}
-				</h3>
-				<p class="mt-0.5 text-sm text-base-content/60">
-					{editingId ? 'Update ambassador details' : 'Add a new ambassador to the program'}
-				</p>
-			</div>
-			<button
-				class="btn btn-circle btn-ghost btn-sm"
-				onclick={closeModal}
-				type="button"
-				aria-label="Close"
-			>
-				<X class="h-5 w-5" />
-			</button>
-		</div>
+	<form
+		id="ambassador-form"
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+		class="space-y-6"
+	>
+		<!-- Main Grid -->
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-[250px_1fr]">
+			<!-- Sidebar: Photo & Status -->
+			<div class="space-y-6">
+				<!-- Image Upload -->
+				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+						>Profile Photo</legend
+					>
 
-		<div class="max-h-[80vh] overflow-y-auto p-6">
-			<form
-				onsubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-				class="space-y-6"
-			>
-				<!-- Main Status & Image -->
-				<div class="grid grid-cols-1 gap-6 md:grid-cols-[1fr_200px]">
-					<div class="space-y-4">
-						<div class="form-control">
-							<label class="label pb-1 font-medium" for="image"> Profile Photo </label>
+					<div class="flex flex-col items-center gap-4">
+						<div class="avatar shadow-xl">
+							<div
+								class="mask h-40 w-40 rounded-2xl bg-base-300 mask-squircle object-cover ring-4 ring-white/10"
+							>
+								{#if form.image}
+									<img
+										src={URL.createObjectURL(form.image)}
+										alt="Preview"
+										class="h-full w-full object-cover"
+									/>
+								{:else if existingImageUrl}
+									<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+								{:else}
+									<div
+										class="flex h-full w-full flex-col items-center justify-center text-base-content/20"
+									>
+										<Upload class="mb-2 h-10 w-10" />
+										<span class="text-xs font-medium">No Image</span>
+									</div>
+								{/if}
+							</div>
+						</div>
+
+						<label
+							class="btn btn-block border-white/20 font-medium btn-outline btn-sm hover:border-white/40"
+						>
+							Choose File
 							<input
 								type="file"
 								id="image"
-								class="file-input-bordered file-input w-full"
+								class="hidden"
 								accept="image/*"
 								onchange={handleFileChange}
 							/>
-							{#if existingImageUrl && !form.image}
-								<div class="mt-2 text-xs opacity-60">
-									Current file: <a href={existingImageUrl} target="_blank" class="link">View</a>
-								</div>
-							{/if}
-						</div>
-
-						<div class="form-control">
-							<label class="label cursor-pointer justify-start gap-3">
-								<span class="label-text font-medium">Active Status</span>
-								<input type="checkbox" bind:checked={form.isActive} class="toggle toggle-success" />
-							</label>
-							<p class="ml-1 text-xs text-base-content/50">
-								Only active ambassadors are visible to the public.
-							</p>
-						</div>
-					</div>
-
-					<div
-						class="flex flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-base-200/50 p-4"
-					>
-						{#if existingImageUrl || form.image}
-							<div class="avatar">
-								<div class="mask h-32 w-32 rounded-xl mask-squircle">
-									{#if form.image}
-										<img src={URL.createObjectURL(form.image)} alt="Preview" />
-									{:else if existingImageUrl}
-										<img src={existingImageUrl} alt="Current" />
-									{/if}
-								</div>
-							</div>
-						{:else}
-							<div
-								class="flex h-32 w-32 flex-col items-center justify-center rounded-xl border-2 border-dashed border-base-300 text-base-content/30"
+						</label>
+						{#if existingImageUrl && !form.image}
+							<a href={existingImageUrl} target="_blank" class="link text-xs link-hover opacity-60"
+								>View Current</a
 							>
-								<Upload class="mb-2 h-8 w-8" />
-								<span class="text-xs">No image</span>
-							</div>
 						{/if}
 					</div>
-				</div>
+				</fieldset>
 
-				<div class="divider">Details</div>
+				<!-- Status Switch -->
+				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+						>Status</legend
+					>
+					<label class="label cursor-pointer justify-between">
+						<span class="label-text font-medium">Public Visibility</span>
+						<input
+							type="checkbox"
+							bind:checked={form.isActive}
+							class="toggle toggle-sm toggle-success"
+						/>
+					</label>
+					<p class="mt-1 text-xs text-base-content/40">
+						Controls profile visibility on the public map.
+					</p>
+				</fieldset>
+			</div>
 
-				<div role="tablist" class="tabs-lifted tabs">
+			<!-- Main Content Area -->
+			<div class="space-y-6">
+				<!-- Tabs -->
+				<div role="tablist" class="tabs-lifted tabs tabs-lg">
 					<button
 						type="button"
 						role="tab"
 						class="tab {activeTab === 'en'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
+							? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+							: 'opacity-60 hover:opacity-100'}"
 						onclick={() => (activeTab = 'en')}
 					>
 						🇬🇧 English
@@ -395,58 +400,58 @@
 						type="button"
 						role="tab"
 						class="tab {activeTab === 'ru'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
+							? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+							: 'opacity-60 hover:opacity-100'}"
 						onclick={() => (activeTab = 'ru')}
 					>
 						🇷🇺 Russian
 					</button>
+					<!-- Filler Tab for border continuity -->
+					<div role="tab" class="tab w-full cursor-default border-b-transparent"></div>
 				</div>
 
 				<div
-					class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
 				>
-					<div class={activeTab === 'en' ? 'block space-y-4' : 'hidden'}>
+					<!-- English Fields -->
+					<div class={activeTab === 'en' ? 'block space-y-6' : 'hidden'}>
 						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-							<div class="form-control">
-								<label class="label" for="name_en">
-									<span class="label-text">Full Name (EN)</span>
-								</label>
-								<input
-									type="text"
-									id="name_en"
-									bind:value={form.name_en}
-									class="input-bordered input w-full"
-									placeholder="e.g. John Doe"
-								/>
-							</div>
+							<AdminInput
+								id="name_en"
+								label="Full Name (EN)"
+								bind:value={form.name_en}
+								placeholder="e.g. John Doe"
+							/>
 
-							<div class="form-control">
-								<label class="label" for="country_en">
-									<span class="label-text">Country</span>
-								</label>
+							<!-- Country Selector with Dropdown Override -->
+							<fieldset class="fieldset">
+								<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+									>Country</legend
+								>
 								<div class="dropdown w-full">
 									<input
 										type="text"
 										placeholder="Search countries..."
-										class="input-bordered input w-full"
+										class="input w-full border-white/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
 										bind:value={countrySearch}
 										onfocus={() => (countrySearch = '')}
 									/>
 									{#if countrySearch && filteredCountries.length > 0}
 										<ul
-											class="dropdown-content menu z-50 max-h-48 w-full overflow-y-auto rounded-box border border-base-200 bg-base-100 p-2 shadow-lg"
+											class="dropdown-content menu z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-box border border-white/10 bg-[#1a1a1a] p-2 shadow-2xl"
 										>
 											{#each filteredCountries.slice(0, 10) as country (country.id)}
 												<li>
 													<button
 														type="button"
 														onclick={() => selectCountry(country)}
-														class="flex items-center gap-2"
+														class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/5"
 													>
-														<span class="text-lg">{country.flag}</span>
-														<span>{country.name_en}</span>
-														<span class="text-xs opacity-50">({country.name_ru})</span>
+														<span class="text-xl">{country.flag}</span>
+														<div class="text-left leading-tight">
+															<div class="font-medium">{country.name_en}</div>
+															<div class="text-[10px] text-white/40">{country.name_ru}</div>
+														</div>
 													</button>
 												</li>
 											{/each}
@@ -454,99 +459,86 @@
 									{/if}
 								</div>
 								{#if form.country_en}
-									<div class="mt-2 badge gap-2 badge-primary">
-										{form.country_en} / {form.country_ru}
-										<button
-											type="button"
-											class="btn btn-ghost btn-xs"
-											onclick={() => {
-												form.country_en = '';
-												form.country_ru = '';
-											}}>×</button
+									<div class="mt-2 flex items-center gap-2">
+										<div
+											class="badge gap-2 border-white/10 bg-white/5 py-4 pr-1 pl-3 badge-lg badge-neutral"
 										>
+											<span class="font-medium">{form.country_en}</span>
+											<span class="px-1 opacity-40">/</span>
+											<span class="opacity-60">{form.country_ru}</span>
+											<button
+												type="button"
+												class="btn btn-circle text-white/50 btn-ghost btn-xs hover:text-white"
+												onclick={() => {
+													form.country_en = '';
+													form.country_ru = '';
+												}}><X size={14} /></button
+											>
+										</div>
 									</div>
 								{/if}
-							</div>
+							</fieldset>
 						</div>
 
-						<div class="form-control">
-							<label class="label" for="role_en">
-								<span class="label-text">Role/Title (EN)</span>
-							</label>
-							<input
-								type="text"
-								id="role_en"
-								bind:value={form.role_en}
-								class="input-bordered input w-full"
-								placeholder="e.g. Student"
-							/>
-						</div>
+						<AdminInput
+							id="role_en"
+							label="Role / Title (EN)"
+							bind:value={form.role_en}
+							placeholder="e.g. Student, Nuclear Physics"
+						/>
 					</div>
 
-					<div class={activeTab === 'ru' ? 'block space-y-4' : 'hidden'}>
+					<!-- Russian Fields -->
+					<div class={activeTab === 'ru' ? 'block space-y-6' : 'hidden'}>
 						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-							<div class="form-control">
-								<label class="label" for="name_ru">
-									<span class="label-text">Full Name (RU)</span>
-								</label>
-								<input
-									type="text"
-									id="name_ru"
-									bind:value={form.name_ru}
-									class="input-bordered input w-full"
-									placeholder="Иван Иванов"
-								/>
-							</div>
-
-							<div class="form-control">
-								<label class="label" for="country_ru">
-									<span class="label-text">Country (RU)</span>
-								</label>
-								<input
-									type="text"
-									id="country_ru"
-									bind:value={form.country_ru}
-									class="input-bordered input w-full"
-									placeholder="Россия"
-								/>
-							</div>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="role_ru">
-								<span class="label-text">Role/Title (RU)</span>
-							</label>
-							<input
-								type="text"
-								id="role_ru"
-								bind:value={form.role_ru}
-								class="input-bordered input w-full"
-								placeholder="Студент"
+							<AdminInput
+								id="name_ru"
+								label="Full Name (RU)"
+								bind:value={form.name_ru}
+								placeholder="Иван Иванов"
+							/>
+							<AdminInput
+								id="country_ru"
+								label="Country (RU)"
+								bind:value={form.country_ru}
+								placeholder="Россия"
+								disabled={true}
+								class="opacity-70"
 							/>
 						</div>
+						<AdminInput
+							id="role_ru"
+							label="Role / Title (RU)"
+							bind:value={form.role_ru}
+							placeholder="Студент"
+						/>
 					</div>
 				</div>
-
-				<div class="modal-action pt-4">
-					{#if formError}
-						<div class="mb-4 rounded-lg bg-error/10 p-3 text-sm text-error">
-							{formError}
-						</div>
-					{/if}
-					<button type="button" class="btn" onclick={closeModal} disabled={submitting}
-						>Cancel</button
-					>
-					<button type="submit" class="btn px-8 btn-primary" disabled={submitting}>
-						{#if submitting}
-							<span class="loading loading-sm loading-spinner"></span>
-						{/if}
-						{editingId ? 'Save Changes' : 'Create Ambassador'}
-					</button>
-				</div>
-			</form>
+			</div>
 		</div>
-	</div>
-	<form method="dialog" class="modal-backdrop">
-		<button onclick={closeModal}>close</button>
+
+		{#if formError}
+			<div
+				class="flex items-center gap-3 rounded-xl border border-error/20 bg-error/5 p-4 text-sm font-medium text-error"
+			>
+				<div class="h-2 w-2 rounded-full bg-error"></div>
+				{formError}
+			</div>
+		{/if}
 	</form>
-</dialog>
+
+	{#snippet actions()}
+		<button
+			type="button"
+			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			onclick={closeModal}
+			disabled={submitting}>Cancel</button
+		>
+		<button type="submit" form="ambassador-form" class="btn px-8 btn-primary" disabled={submitting}>
+			{#if submitting}
+				<span class="loading loading-sm loading-spinner"></span>
+			{/if}
+			{editingId ? 'Save Changes' : 'Create Ambassador'}
+		</button>
+	{/snippet}
+</Modal>

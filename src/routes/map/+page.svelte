@@ -235,6 +235,7 @@
 			<!-- Legend Toggle (Mobile) -->
 			<button
 				class="btn btn-circle border-white/20 bg-base-100/60 shadow-lg backdrop-blur-xl btn-sm hover:bg-base-100/80 sm:hidden"
+				aria-label="Toggle Legend"
 				onclick={() => {
 					const legendContent = document.getElementById('legend-content');
 					if (legendContent) legendContent.classList.toggle('hidden');

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, X } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2 } from '@lucide/svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import AdminTextarea from '$lib/components/admin/AdminTextarea.svelte';
 	import type { Ticker } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -61,23 +63,32 @@
 		editingId = null;
 	}
 
-	async function handleSubmit() {
-		if (editingId) {
-			await fetch('/api/admin/tickers', {
-				method: 'PUT',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ id: editingId, ...form })
-			});
-		} else {
-			await fetch('/api/admin/tickers', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(form)
-			});
-		}
+	let submitting = $state(false);
 
-		closeModal();
-		await fetchTickers();
+	async function handleSubmit() {
+		submitting = true;
+		try {
+			if (editingId) {
+				await fetch('/api/admin/tickers', {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ id: editingId, ...form })
+				});
+			} else {
+				await fetch('/api/admin/tickers', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(form)
+				});
+			}
+
+			closeModal();
+			await fetchTickers();
+		} catch (error) {
+			console.error('Failed to save ticker:', error);
+		} finally {
+			submitting = false;
+		}
 	}
 
 	async function handleDelete(id: string) {
@@ -101,20 +112,20 @@
 	<!-- Header -->
 	<div class="flex items-center justify-between">
 		<div>
-			<h1 class="text-2xl font-bold text-base-content">{t.tickers}</h1>
-			<p class="text-base-content/70">Manage homepage ticker messages</p>
+			<h1 class="text-3xl font-bold tracking-tight text-base-content">{t.tickers}</h1>
+			<p class="mt-1 text-base-content/60">Manage homepage ticker messages</p>
 		</div>
 		<button class="btn btn-primary" onclick={() => openModal()}>
-			<Plus class="h-4 w-4" />
+			<Plus class="h-5 w-5" />
 			Add Ticker
 		</button>
 	</div>
 
 	<!-- Table -->
-	<div class="card border border-base-200 bg-base-100 shadow-sm">
+	<div class="card overflow-hidden rounded-xl border border-base-200 bg-base-100 shadow-sm">
 		<div class="overflow-x-auto">
-			<table class="table">
-				<thead>
+			<table class="table table-lg">
+				<thead class="bg-base-200/50">
 					<tr>
 						<th>Text (EN)</th>
 						<th>Text (RU)</th>
@@ -125,24 +136,24 @@
 				<tbody>
 					{#if loading}
 						<tr>
-							<td colspan="4" class="py-8 text-center">
-								<span class="loading loading-md loading-spinner"></span>
+							<td colspan="4" class="py-12 text-center">
+								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
 					{:else if tickers.length === 0}
 						<tr>
-							<td colspan="4" class="py-8 text-center text-base-content/50"> No tickers found </td>
+							<td colspan="4" class="py-12 text-center text-base-content/50"> No tickers found </td>
 						</tr>
 					{:else}
 						{#each tickers as ticker (ticker.id)}
-							<tr>
+							<tr class="hover">
 								<td class="max-w-xs truncate">{ticker.text_en}</td>
 								<td class="max-w-xs truncate">{ticker.text_ru}</td>
 								<td>
 									{#if ticker.isActive}
-										<div class="badge gap-1 text-white badge-success">Active</div>
+										<div class="badge gap-2 text-white badge-success">Active</div>
 									{:else}
-										<div class="badge gap-1 badge-ghost">Inactive</div>
+										<div class="badge gap-2 badge-neutral">Inactive</div>
 									{/if}
 								</td>
 								<td class="text-right">
@@ -171,111 +182,101 @@
 </div>
 
 <!-- Modal -->
-<dialog
-	class="modal modal-bottom sm:modal-middle"
-	class:modal-open={showModal}
-	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+<Modal
+	bind:open={showModal}
+	title={editingId ? 'Edit Ticker' : 'Add Ticker'}
+	subtitle={editingId ? 'Update ticker message' : 'Create a new ticker message for the homepage'}
+	onClose={closeModal}
+	maxWidth="3xl"
 >
-	<div class="modal-box w-full max-w-3xl p-0 sm:w-11/12">
-		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
-			<div>
-				<h3 class="text-lg font-bold sm:text-xl">
-					{editingId ? 'Edit Ticker' : 'Add Ticker'}
-				</h3>
-				<p class="mt-0.5 text-sm text-base-content/60">
-					{editingId ? 'Update ticker message' : 'Create a new ticker message for the homepage'}
-				</p>
-			</div>
-			<button
-				class="btn btn-circle btn-ghost btn-sm"
-				onclick={closeModal}
-				type="button"
-				aria-label="Close"
-			>
-				<X class="h-5 w-5" />
-			</button>
-		</div>
+	<form
+		id="ticker-form"
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+		class="space-y-6"
+	>
+		<!-- Status Switch -->
+		<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+			<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70">Status</legend>
+			<label class="label cursor-pointer justify-between">
+				<span class="label-text font-medium">Active Status</span>
+				<input
+					type="checkbox"
+					bind:checked={form.isActive}
+					class="toggle toggle-sm toggle-success"
+				/>
+			</label>
+			<p class="mt-1 text-xs text-base-content/40">Controls visibility on the homepage ticker.</p>
+		</fieldset>
 
-		<div class="px-4 py-4 sm:px-6">
-			<form
-				onsubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-				class="space-y-6"
-			>
-				<div class="form-control">
-					<label class="label cursor-pointer justify-start gap-4">
-						<span class="label-text">Active Status</span>
-						<input type="checkbox" bind:checked={form.isActive} class="toggle toggle-success" />
-					</label>
-				</div>
-
-				<div role="tablist" class="tabs-lifted tabs">
-					<button
-						type="button"
-						role="tab"
-						class="tab {activeTab === 'en'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
-						onclick={() => (activeTab = 'en')}
-					>
-						🇬🇧 English
-					</button>
-					<button
-						type="button"
-						role="tab"
-						class="tab {activeTab === 'ru'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
-						onclick={() => (activeTab = 'ru')}
-					>
-						🇷🇺 Russian
-					</button>
-				</div>
-
-				<div
-					class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+		<div class="space-y-6">
+			<!-- Tabs -->
+			<div role="tablist" class="tabs-lifted tabs tabs-lg">
+				<button
+					type="button"
+					role="tab"
+					class="tab {activeTab === 'en'
+						? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+						: 'opacity-60 hover:opacity-100'}"
+					onclick={() => (activeTab = 'en')}
 				>
-					<div class={activeTab === 'en' ? 'block' : 'hidden'}>
-						<div class="form-control">
-							<label class="label" for="text_en">
-								<span class="label-text">Text (EN)</span>
-							</label>
-							<textarea
-								id="text_en"
-								bind:value={form.text_en}
-								class="textarea-bordered textarea h-24"
-								required
-							></textarea>
-						</div>
-					</div>
+					🇬🇧 English
+				</button>
+				<button
+					type="button"
+					role="tab"
+					class="tab {activeTab === 'ru'
+						? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+						: 'opacity-60 hover:opacity-100'}"
+					onclick={() => (activeTab = 'ru')}
+				>
+					🇷🇺 Russian
+				</button>
+				<!-- Filler -->
+				<div role="tab" class="tab w-full cursor-default border-b-transparent"></div>
+			</div>
 
-					<div class={activeTab === 'ru' ? 'block' : 'hidden'}>
-						<div class="form-control">
-							<label class="label" for="text_ru">
-								<span class="label-text">Text (RU)</span>
-							</label>
-							<textarea
-								id="text_ru"
-								bind:value={form.text_ru}
-								class="textarea-bordered textarea h-24"
-								required
-							></textarea>
-						</div>
-					</div>
+			<div
+				class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
+			>
+				<div class={activeTab === 'en' ? 'block' : 'hidden'}>
+					<AdminTextarea
+						id="text_en"
+						label="Message (EN)"
+						bind:value={form.text_en}
+						rows={3}
+						placeholder="Ticker message..."
+						required
+					/>
 				</div>
-
-				<div class="modal-action">
-					<button type="button" class="btn" onclick={closeModal}>Cancel</button>
-					<button type="submit" class="btn px-8 btn-primary">
-						{editingId ? 'Update' : 'Create'}
-					</button>
+				<div class={activeTab === 'ru' ? 'block' : 'hidden'}>
+					<AdminTextarea
+						id="text_ru"
+						label="Message (RU)"
+						bind:value={form.text_ru}
+						rows={3}
+						placeholder="Сообщение..."
+						required
+					/>
 				</div>
-			</form>
+			</div>
 		</div>
-		<form method="dialog" class="modal-backdrop">
-			<button onclick={closeModal}>close</button>
-		</form>
-	</div>
-</dialog>
+	</form>
+
+	{#snippet actions()}
+		<button
+			type="button"
+			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			onclick={closeModal}
+			disabled={submitting}>Cancel</button
+		>
+		<button type="submit" form="ticker-form" class="btn px-8 btn-primary" disabled={submitting}>
+			{#if submitting}
+				<span class="loading loading-sm loading-spinner"></span>
+			{/if}
+			{editingId ? 'Update' : 'Create'}
+		</button>
+	{/snippet}
+</Modal>

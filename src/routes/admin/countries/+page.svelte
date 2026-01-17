@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, MapPin, Globe, X } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, MapPin, Globe, Search } from '@lucide/svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import AdminInput from '$lib/components/admin/AdminInput.svelte';
 	import type { Country } from '$lib/types';
+	import { language } from '$lib/services/language';
+	import { translations } from '$lib/services/translations';
 
 	let countries = $state<Country[]>([]);
 	let loading = $state(true);
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
+
+	let t = $derived(translations[$language].admin);
 
 	// Form fields
 	let form = $state({
@@ -113,17 +119,27 @@
 			console.error('Failed to delete country:', error);
 		}
 	}
+
+	let searchQuery = $state('');
+	let filteredCountries = $derived(
+		countries.filter(
+			(c) =>
+				c.name_en.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				c.name_ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				(c.code && c.code.toLowerCase().includes(searchQuery.toLowerCase()))
+		)
+	);
 </script>
 
 <svelte:head>
-	<title>Countries - Admin</title>
+	<title>{t.countries} - Admin</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<!-- Header -->
 	<div class="flex items-center justify-between">
 		<div>
-			<h1 class="text-3xl font-bold tracking-tight text-base-content">Countries</h1>
+			<h1 class="text-3xl font-bold tracking-tight text-base-content">{t.countries}</h1>
 			<p class="mt-1 text-base-content/60">
 				Manage countries with coordinates for the interactive map
 			</p>
@@ -144,6 +160,20 @@
 				world map. If a country is not in the list, add it manually with its capital city
 				coordinates.
 			</p>
+		</div>
+	</div>
+
+	<!-- Search -->
+	<div class="card border border-base-200 bg-base-100 shadow-sm">
+		<div class="card-body flex-row items-center gap-4 p-4">
+			<Search class="h-5 w-5 text-base-content/40" />
+			<input
+				type="text"
+				class="input w-full border-none input-ghost p-0 text-base focus:bg-transparent"
+				placeholder="Search by name or code..."
+				bind:value={searchQuery}
+			/>
+			<div class="font-mono text-xs opacity-50">{filteredCountries.length} found</div>
 		</div>
 	</div>
 
@@ -168,14 +198,14 @@
 								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
-					{:else if countries.length === 0}
+					{:else if filteredCountries.length === 0}
 						<tr>
 							<td colspan="6" class="py-12 text-center text-base-content/50">
-								No countries found. Add one to get started.
+								No countries found.
 							</td>
 						</tr>
 					{:else}
-						{#each countries as country (country.id)}
+						{#each filteredCountries as country (country.id)}
 							<tr class="hover">
 								<td>
 									<span class="text-2xl">{country.flag || '🌍'}</span>
@@ -225,153 +255,124 @@
 </div>
 
 <!-- Modal -->
-{#if showModal}
-	<dialog
-		class="modal-open modal modal-bottom sm:modal-middle"
-		onkeydown={(e) => e.key === 'Escape' && closeModal()}
+<Modal
+	bind:open={showModal}
+	title={editingId ? 'Edit Country' : 'Add New Country'}
+	subtitle={editingId
+		? 'Update country details and coordinates'
+		: 'Add a new country with coordinates for the interactive map'}
+	onClose={closeModal}
+	maxWidth="lg"
+>
+	<form
+		id="country-form"
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+		class="space-y-6"
 	>
-		<div class="modal-box w-full max-w-lg p-0 sm:w-11/12">
-			<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
-				<div>
-					<h3 class="text-lg font-bold sm:text-xl">
-						{editingId ? 'Edit Country' : 'Add New Country'}
-					</h3>
-					<p class="mt-0.5 text-sm text-base-content/60">
-						{editingId
-							? 'Update country details and coordinates'
-							: 'Add a new country with coordinates for the interactive map'}
-					</p>
-				</div>
-				<button
-					class="btn btn-circle btn-ghost btn-sm"
-					onclick={closeModal}
-					type="button"
-					aria-label="Close"
-				>
-					<X class="h-5 w-5" />
-				</button>
-			</div>
-
-			<form
-				onsubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-				class="mt-6 space-y-4"
+		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+			<!-- Names -->
+			<fieldset
+				class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4 md:col-span-2"
 			>
-				{#if formError}
-					<div class="alert alert-error">
-						<span>{formError}</span>
-					</div>
-				{/if}
-
-				<div class="grid grid-cols-2 gap-4">
-					<div class="form-control">
-						<label class="label" for="name_en">
-							<span class="label-text">Name (English) *</span>
-						</label>
-						<input
-							type="text"
-							id="name_en"
-							bind:value={form.name_en}
-							class="input-bordered input w-full"
-							placeholder="e.g. Turkey"
-							required
-						/>
-					</div>
-
-					<div class="form-control">
-						<label class="label" for="name_ru">
-							<span class="label-text">Name (Russian) *</span>
-						</label>
-						<input
-							type="text"
-							id="name_ru"
-							bind:value={form.name_ru}
-							class="input-bordered input w-full"
-							placeholder="e.g. Турция"
-							required
-						/>
-					</div>
+				<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70">Names</legend>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<AdminInput
+						id="name_en"
+						label="Name (English)"
+						bind:value={form.name_en}
+						placeholder="e.g. Turkey"
+						required
+					/>
+					<AdminInput
+						id="name_ru"
+						label="Name (Russian)"
+						bind:value={form.name_ru}
+						placeholder="e.g. Турция"
+						required
+					/>
 				</div>
+			</fieldset>
 
-				<div class="grid grid-cols-2 gap-4">
-					<div class="form-control">
-						<label class="label" for="code">
-							<span class="label-text">ISO Code (2 letter)</span>
-						</label>
-						<input
-							type="text"
-							id="code"
-							bind:value={form.code}
-							class="input-bordered input w-full uppercase"
-							placeholder="e.g. TR"
-							maxlength="2"
-						/>
-					</div>
-
-					<div class="form-control">
-						<label class="label" for="flag">
-							<span class="label-text">Flag Emoji</span>
-						</label>
-						<input
-							type="text"
-							id="flag"
-							bind:value={form.flag}
-							class="input-bordered input w-full text-2xl"
-							placeholder="🇹🇷"
-						/>
-					</div>
+			<!-- Details -->
+			<fieldset
+				class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4 md:col-span-2"
+			>
+				<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+					>Details</legend
+				>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<AdminInput
+						id="code"
+						label="ISO Code (2 letter)"
+						bind:value={form.code}
+						class="font-mono uppercase"
+						placeholder="e.g. TR"
+						maxlength={2}
+						required
+					/>
+					<AdminInput
+						id="flag"
+						label="Flag Emoji"
+						bind:value={form.flag}
+						class="text-2xl"
+						placeholder="🇹🇷"
+					/>
 				</div>
+			</fieldset>
 
-				<div class="divider">Map Coordinates</div>
-
-				<div class="grid grid-cols-2 gap-4">
-					<div class="form-control">
-						<label class="label" for="latitude">
-							<span class="label-text">Latitude</span>
-						</label>
-						<input
-							type="text"
-							id="latitude"
-							bind:value={form.latitude}
-							class="input-bordered input w-full font-mono"
-							placeholder="e.g. 39.9334"
-						/>
-					</div>
-
-					<div class="form-control">
-						<label class="label" for="longitude">
-							<span class="label-text">Longitude</span>
-						</label>
-						<input
-							type="text"
-							id="longitude"
-							bind:value={form.longitude}
-							class="input-bordered input w-full font-mono"
-							placeholder="e.g. 32.8597"
-						/>
-					</div>
+			<!-- Map Coordinates -->
+			<fieldset
+				class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4 md:col-span-2"
+			>
+				<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+					>Coordinates</legend
+				>
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<AdminInput
+						id="latitude"
+						label="Latitude"
+						bind:value={form.latitude}
+						class="font-mono"
+						placeholder="e.g. 39.9334"
+					/>
+					<AdminInput
+						id="longitude"
+						label="Longitude"
+						bind:value={form.longitude}
+						class="font-mono"
+						placeholder="e.g. 32.8597"
+					/>
 				</div>
-
-				<p class="text-xs text-base-content/50">
-					💡 Tip: You can find coordinates by searching for "[Capital City Name] coordinates" on
-					Google.
+				<p class="mt-2 px-1 text-xs text-base-content/40">
+					💡 Tip: Find coordinates by searching "[Capital Name] coordinates" on Google.
 				</p>
-
-				<div class="modal-action">
-					<button type="button" class="btn btn-ghost" onclick={closeModal}>Cancel</button>
-					<button type="submit" class="btn btn-primary" disabled={submitting}>
-						{#if submitting}
-							<span class="loading loading-sm loading-spinner"></span>
-						{/if}
-						{editingId ? 'Update' : 'Create'}
-					</button>
-				</div>
-			</form>
+			</fieldset>
 		</div>
-		<form method="dialog" class="modal-backdrop">
-			<button onclick={closeModal}>close</button>
-		</form>
-	</dialog>
-{/if}
+
+		{#if formError}
+			<div
+				class="flex items-center gap-3 rounded-xl border border-error/20 bg-error/5 p-4 text-sm font-medium text-error"
+			>
+				<div class="h-2 w-2 rounded-full bg-error"></div>
+				{formError}
+			</div>
+		{/if}
+	</form>
+
+	{#snippet actions()}
+		<button
+			type="button"
+			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			onclick={closeModal}>Cancel</button
+		>
+		<button type="submit" form="country-form" class="btn px-8 btn-primary" disabled={submitting}>
+			{#if submitting}
+				<span class="loading loading-sm loading-spinner"></span>
+			{/if}
+			{editingId ? 'Update' : 'Create'}
+		</button>
+	{/snippet}
+</Modal>

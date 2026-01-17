@@ -1,16 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+
 	import type { Stat } from '$lib/types';
 	import { language } from '$lib/services/language';
+	import { translations } from '$lib/services/translations';
 
-	import { Edit, Plus, Trash2, X } from '@lucide/svelte';
+	import { Edit, Plus, Trash2 } from '@lucide/svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import AdminInput from '$lib/components/admin/AdminInput.svelte';
 
 	let stats = $state<Stat[]>([]);
 	let loading = $state(true);
 	let error = $state<string | null>(null);
 
 	// Translation
+	let t = $derived(translations[$language].admin);
 
 	// Modal state
 	let isModalOpen = $state(false);
@@ -140,14 +144,21 @@
 	}
 </script>
 
+<svelte:head>
+	<title>{t.stats} - Admin</title>
+</svelte:head>
+
 <div class="space-y-6">
 	<div class="flex items-center justify-between">
-		<h1 class="text-3xl font-bold text-base-content">
-			{$language === 'en' ? 'Statistics' : 'Статистика'}
-		</h1>
+		<div>
+			<h1 class="text-3xl font-bold text-base-content">
+				{t.stats}
+			</h1>
+			<p class="mt-1 text-base-content/60">Manage homepage statistics numbers</p>
+		</div>
 		<button class="btn btn-primary" onclick={openAddModal}>
 			<Plus size={20} />
-			{$language === 'en' ? 'Add Stat' : 'Добавить'}
+			Add Stat
 		</button>
 	</div>
 
@@ -160,9 +171,9 @@
 			<span>{error}</span>
 		</div>
 	{:else}
-		<div class="overflow-x-auto rounded-box border border-base-300 bg-base-100 shadow-sm">
-			<table class="table">
-				<thead class="bg-base-200">
+		<div class="overflow-x-auto rounded-xl border border-base-200 bg-base-100 shadow-sm">
+			<table class="table table-lg">
+				<thead class="bg-base-200/50">
 					<tr>
 						<th>Key</th>
 						<th>Value</th>
@@ -178,16 +189,21 @@
 							<td class="font-bold">{stat.value}</td>
 							<td>{stat.label_en}</td>
 							<td>{stat.label_ru}</td>
-							<td class="flex justify-end gap-2">
-								<button class="btn btn-square btn-ghost btn-sm" onclick={() => openEditModal(stat)}>
-									<Edit size={18} />
-								</button>
-								<button
-									class="btn btn-square text-error btn-ghost btn-sm"
-									onclick={() => promptDelete(stat.id)}
-								>
-									<Trash2 size={18} />
-								</button>
+							<td>
+								<div class="join justify-end">
+									<button
+										class="btn join-item btn-square btn-ghost btn-sm"
+										onclick={() => openEditModal(stat)}
+									>
+										<Edit size={16} />
+									</button>
+									<button
+										class="btn join-item btn-square text-error btn-ghost btn-sm"
+										onclick={() => promptDelete(stat.id)}
+									>
+										<Trash2 size={16} />
+									</button>
+								</div>
 							</td>
 						</tr>
 					{/each}
@@ -198,174 +214,146 @@
 </div>
 
 <!-- Edit/Add Modal -->
-<dialog
-	class="modal modal-bottom sm:modal-middle"
-	class:modal-open={isModalOpen}
-	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+<Modal
+	bind:open={isModalOpen}
+	title={editingStat ? 'Edit Statistic' : 'Add Statistic'}
+	subtitle={editingStat ? 'Update statistic value and labels' : 'Create a new statistic'}
+	onClose={closeModal}
+	maxWidth="lg"
 >
-	<div class="modal-box w-full max-w-lg p-0 sm:w-11/12">
-		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
-			<div>
-				<h3 class="text-lg font-bold sm:text-xl">
-					{editingStat ? 'Edit Statistic' : 'Add Statistic'}
-				</h3>
-				<p class="mt-0.5 text-sm text-base-content/60">
-					{editingStat ? 'Update statistic value and labels' : 'Create a new statistic'}
-				</p>
-			</div>
-			<button
-				class="btn btn-circle btn-ghost btn-sm"
-				onclick={closeModal}
-				type="button"
-				aria-label="Close"
+	<form
+		id="stats-form"
+		onsubmit={(e) => {
+			e.preventDefault();
+			saveStat();
+		}}
+		class="space-y-6"
+	>
+		<!-- Common Fields -->
+		<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+			<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+				>Configuration</legend
 			>
-				<X class="h-5 w-5" />
-			</button>
-		</div>
-
-		<div class="px-4 py-4 sm:px-6">
-			<!-- Tabs -->
-			<div role="tablist" class="tabs-bordered mt-4 tabs">
-				<button
-					role="tab"
-					class="tab"
-					class:tab-active={activeTab === 'en'}
-					onclick={() => (activeTab = 'en')}
-				>
-					English
-				</button>
-				<button
-					role="tab"
-					class="tab"
-					class:tab-active={activeTab === 'ru'}
-					onclick={() => (activeTab = 'ru')}
-				>
-					Russian
-				</button>
-			</div>
-
-			<div class="space-y-4 py-4">
-				<!-- Common Fields -->
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<div class="form-control">
-					<label class="label" for="key">
-						<span class="label-text">Key (Unique ID)</span>
-					</label>
-					<input
+					<AdminInput
 						id="key"
-						type="text"
+						label="Key (Unique ID)"
 						bind:value={formData.key}
-						class="input-bordered input w-full font-mono"
+						class="font-mono"
 						disabled={!!editingStat}
 						placeholder="e.g. active_members"
+						required
 					/>
-					<label class="label" for="key">
-						<span class="label-text-alt text-base-content/60"
+					<label class="label pt-1" for="key">
+						<span class="label-text-alt text-base-content/40"
 							>Used in code to identify this stat</span
 						>
 					</label>
 				</div>
 
 				<div class="form-control">
-					<label class="label" for="value">
-						<span class="label-text">Value</span>
-					</label>
-					<input
-						id="value"
-						type="text"
-						bind:value={formData.value}
-						class="input-bordered input w-full"
-						placeholder="e.g. 150+"
-					/>
-				</div>
-
-				<div class="form-control">
-					<label class="label" for="icon">
-						<span class="label-text">Icon (Lucide Name)</span>
-					</label>
-					<input
+					<AdminInput
 						id="icon"
-						type="text"
+						label="Icon (Lucide Name)"
 						bind:value={formData.icon}
-						class="input-bordered input w-full"
 						placeholder="e.g. Users"
 					/>
-					<div class="mt-1 flex items-center gap-2 text-xs text-base-content/60">
-						<span>Preview:</span>
-						{#if formData.icon}
-							<!-- Dynamic icon check would go here, simplistic for now -->
-							<span class="badge badge-neutral">{formData.icon}</span>
-						{/if}
-					</div>
+					<label class="label pt-1" for="icon">
+						<span class="label-text-alt text-base-content/40">Name of the Lucide icon</span>
+					</label>
 				</div>
-
-				<!-- Language Specific Fields -->
-				{#if activeTab === 'en'}
-					<div class="form-control" in:fade={{ duration: 200 }}>
-						<label class="label" for="label_en">
-							<span class="label-text">Label (English)</span>
-						</label>
-						<input
-							id="label_en"
-							type="text"
-							bind:value={formData.label_en}
-							class="input-bordered input w-full"
-							placeholder="e.g. Active Members"
-						/>
-					</div>
-				{/if}
-
-				{#if activeTab === 'ru'}
-					<div class="form-control" in:fade={{ duration: 200 }}>
-						<label class="label" for="label_ru">
-							<span class="label-text">Label (Russian)</span>
-						</label>
-						<input
-							id="label_ru"
-							type="text"
-							bind:value={formData.label_ru}
-							class="input-bordered input w-full"
-							placeholder="e.g. Активных Участников"
-						/>
-					</div>
-				{/if}
 			</div>
 
-			<div class="modal-action">
-				<button class="btn" onclick={closeModal} disabled={isSaving}>Cancel</button>
-				<button class="btn btn-primary" onclick={saveStat} disabled={isSaving}>
-					{#if isSaving}
-						<span class="loading loading-sm loading-spinner"></span>
-					{/if}
-					Save
+			<div class="mt-4">
+				<AdminInput
+					id="value"
+					label="Value"
+					bind:value={formData.value}
+					placeholder="e.g. 150+"
+					required
+				/>
+			</div>
+		</fieldset>
+
+		<div class="space-y-6">
+			<div role="tablist" class="tabs-lifted tabs tabs-lg">
+				<button
+					type="button"
+					role="tab"
+					class="tab {activeTab === 'en'
+						? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+						: 'opacity-60 hover:opacity-100'}"
+					onclick={() => (activeTab = 'en')}
+				>
+					🇬🇧 English
 				</button>
+				<button
+					type="button"
+					role="tab"
+					class="tab {activeTab === 'ru'
+						? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+						: 'opacity-60 hover:opacity-100'}"
+					onclick={() => (activeTab = 'ru')}
+				>
+					🇷🇺 Russian
+				</button>
+				<!-- Filler -->
+				<div role="tab" class="tab w-full cursor-default border-b-transparent"></div>
+			</div>
+
+			<div
+				class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
+			>
+				<div class={activeTab === 'en' ? 'block' : 'hidden'}>
+					<AdminInput
+						id="label_en"
+						label="Label (English)"
+						bind:value={formData.label_en}
+						placeholder="e.g. Active Members"
+						required
+					/>
+				</div>
+				<div class={activeTab === 'ru' ? 'block' : 'hidden'}>
+					<AdminInput
+						id="label_ru"
+						label="Label (Russian)"
+						bind:value={formData.label_ru}
+						placeholder="e.g. Активных Участников"
+						required
+					/>
+				</div>
 			</div>
 		</div>
-		<form method="dialog" class="modal-backdrop">
-			<button onclick={closeModal}>close</button>
-		</form>
-	</div>
-</dialog>
+	</form>
+
+	{#snippet actions()}
+		<button
+			type="button"
+			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			onclick={closeModal}
+			disabled={isSaving}>Cancel</button
+		>
+		<button type="submit" form="stats-form" class="btn px-8 btn-primary" disabled={isSaving}>
+			{#if isSaving}
+				<span class="loading loading-sm loading-spinner"></span>
+			{/if}
+			Save
+		</button>
+	{/snippet}
+</Modal>
 
 <!-- Delete Confirmation Modal -->
-<dialog
-	class="modal modal-bottom sm:modal-middle"
-	class:modal-open={!!deletingStatId}
-	onkeydown={(e) => e.key === 'Escape' && cancelDelete()}
->
-	<div class="modal-box w-full max-w-sm p-0 sm:w-11/12">
-		<div class="px-4 py-4 sm:px-6">
-			<h3 class="text-lg font-bold text-error">Delete Statistic</h3>
-			<p class="mt-2 text-sm text-base-content/70">
-				Are you sure you want to delete this statistic? This action cannot be undone.
-			</p>
-			<div class="modal-action">
-				<button class="btn" onclick={cancelDelete}>Cancel</button>
-				<button class="btn btn-error" onclick={confirmDelete}>Delete</button>
-			</div>
-		</div>
-	</div>
+<!-- Note: We use a separate snippet or boolean but since Modal uses a bound open prop, we can just wrap this -->
+{#if deletingStatId}
+	<Modal open={true} title="Delete Statistic" onClose={cancelDelete} maxWidth="sm">
+		<p class="text-base-content/70">
+			Are you sure you want to delete this statistic? This action cannot be undone.
+		</p>
 
-	<form method="dialog" class="modal-backdrop">
-		<button onclick={cancelDelete}>close</button>
-	</form>
-</dialog>
+		{#snippet actions()}
+			<button class="btn btn-ghost" onclick={cancelDelete}>Cancel</button>
+			<button class="btn btn-error" onclick={confirmDelete}>Delete</button>
+		{/snippet}
+	</Modal>
+{/if}

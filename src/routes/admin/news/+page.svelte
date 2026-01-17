@@ -1,16 +1,22 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, FileText, Upload, X } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, FileText, Upload } from '@lucide/svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import AdminInput from '$lib/components/admin/AdminInput.svelte';
+	import AdminTextarea from '$lib/components/admin/AdminTextarea.svelte';
 	import type { NewsItem } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	import { getImageUrl } from '$lib/utils';
 
 	let news = $state<NewsItem[]>([]);
 	let loading = $state(true);
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 	let activeTab = $state<'en' | 'ru'>('en');
+	let formError = $state('');
+	let submitting = $state(false);
 
 	let t = $derived(translations[$language].admin);
 
@@ -28,16 +34,6 @@
 
 	let existingImageUrl = $state('');
 
-	// Standard categories (EN) - we might want to map them or allow free text.
-	// For now, let's allow free input or a predefined list for EN and RU.
-	const categoryOptions = [
-		{ en: 'Events', ru: 'События' },
-		{ en: 'Education', ru: 'Образование' },
-		{ en: 'Ambassadors', ru: 'Амбассадоры' },
-		{ en: 'Technology', ru: 'Технологии' },
-		{ en: 'Research', ru: 'Исследования' }
-	];
-
 	onMount(async () => {
 		await fetchNews();
 	});
@@ -54,7 +50,7 @@
 		}
 	}
 
-	import { getImageUrl } from '$lib/utils';
+	// function getImageUrl ... removed
 	// function getImageUrl ... removed
 
 	function openModal(item?: NewsItem) {
@@ -238,110 +234,82 @@
 </div>
 
 <!-- Modal -->
-<dialog
-	class="modal modal-bottom sm:modal-middle"
-	class:modal-open={showModal}
-	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+<Modal
+	bind:open={showModal}
+	title={editingId ? 'Edit Article' : 'New Article'}
+	subtitle={editingId ? 'Update article details' : 'Create a new article'}
+	onClose={closeModal}
+	maxWidth="4xl"
 >
-	<div class="modal-box w-full max-w-3xl overflow-hidden bg-base-100 p-0 sm:w-11/12">
-		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
-			<div>
-				<h3 class="text-lg font-bold sm:text-xl">
-					{editingId ? 'Edit Article' : 'New Article'}
-				</h3>
-				<p class="mt-0.5 text-sm text-base-content/60">
-					{editingId ? 'Update article details' : 'Create a new article'}
-				</p>
-			</div>
-			<button
-				class="btn btn-circle btn-ghost btn-sm"
-				onclick={closeModal}
-				type="button"
-				aria-label="Close"
-			>
-				<X class="h-5 w-5" />
-			</button>
-		</div>
+	<form
+		id="news-form"
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+		class="space-y-6"
+	>
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-[250px_1fr]">
+			<!-- Sidebar: Cover Image & Date -->
+			<div class="space-y-6">
+				<!-- Image Upload -->
+				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+						>Cover Image</legend
+					>
+					<div class="flex flex-col items-center gap-4">
+						<div class="avatar aspect-video w-full shadow-xl">
+							<div
+								class="mask h-full w-full rounded-2xl bg-base-300 object-cover ring-1 ring-white/10"
+							>
+								{#if form.image}
+									<img
+										src={URL.createObjectURL(form.image)}
+										alt="Preview"
+										class="h-full w-full object-cover"
+									/>
+								{:else if existingImageUrl}
+									<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+								{:else}
+									<div
+										class="flex h-full w-full flex-col items-center justify-center text-base-content/20"
+									>
+										<Upload class="mb-2 h-8 w-8" />
+										<span class="text-xs font-medium">No Image</span>
+									</div>
+								{/if}
+							</div>
+						</div>
 
-		<div class="max-h-[80vh] overflow-y-auto p-6">
-			<form
-				onsubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-				class="space-y-6"
-			>
-				<!-- Main Image Upload -->
-				<div class="grid grid-cols-1 gap-6 md:grid-cols-[1fr_200px]">
-					<div class="space-y-4">
-						<div class="form-control">
-							<label class="label pb-1 font-medium" for="image"> Cover Image </label>
+						<label
+							class="btn btn-block border-white/20 font-medium btn-outline btn-sm hover:border-white/40"
+						>
+							Choose File
 							<input
 								type="file"
 								id="image"
-								class="file-input-bordered file-input w-full"
+								class="hidden"
 								accept="image/*"
 								onchange={handleFileChange}
 							/>
-							{#if existingImageUrl && !form.image}
-								<div class="mt-2 text-xs opacity-60">
-									Current file: <a href={existingImageUrl} target="_blank" class="link">View</a>
-								</div>
-							{/if}
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="date">
-								<span class="label-text">Date (e.g. Oct 24, 2024)</span>
-							</label>
-							<input
-								type="text"
-								id="date"
-								bind:value={form.date}
-								class="input-bordered input w-full"
-								placeholder="MMM DD, YYYY"
-								required
-							/>
-						</div>
+						</label>
 					</div>
+				</fieldset>
 
-					<div
-						class="flex flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-base-200/50 p-4"
-					>
-						{#if existingImageUrl || form.image}
-							<div class="avatar">
-								<div class="mask h-32 w-40 rounded-xl mask-squircle object-cover">
-									{#if form.image}
-										<img
-											src={URL.createObjectURL(form.image)}
-											alt="Preview"
-											class="h-full w-full object-cover"
-										/>
-									{:else if existingImageUrl}
-										<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
-									{/if}
-								</div>
-							</div>
-						{:else}
-							<div
-								class="flex h-32 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-base-300 text-base-content/30"
-							>
-								<Upload class="mb-2 h-8 w-8" />
-								<span class="text-xs">No image</span>
-							</div>
-						{/if}
-					</div>
-				</div>
+				<!-- Date -->
+				<AdminInput type="date" label="Date" bind:value={form.date} required />
+			</div>
 
-				<div class="divider">Content</div>
-
-				<div role="tablist" class="tabs-lifted tabs">
+			<!-- Main Content -->
+			<div class="space-y-6">
+				<!-- Tabs -->
+				<div role="tablist" class="tabs-lifted tabs tabs-lg">
 					<button
 						type="button"
 						role="tab"
 						class="tab {activeTab === 'en'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
+							? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+							: 'opacity-60 hover:opacity-100'}"
 						onclick={() => (activeTab = 'en')}
 					>
 						🇬🇧 English
@@ -350,124 +318,91 @@
 						type="button"
 						role="tab"
 						class="tab {activeTab === 'ru'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
+							? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+							: 'opacity-60 hover:opacity-100'}"
 						onclick={() => (activeTab = 'ru')}
 					>
 						🇷🇺 Russian
 					</button>
+					<!-- Filler -->
+					<div role="tab" class="tab w-full cursor-default border-b-transparent"></div>
 				</div>
 
 				<div
-					class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
 				>
+					<!-- EN Fields -->
 					<div class={activeTab === 'en' ? 'block space-y-4' : 'hidden'}>
-						<div class="form-control">
-							<label class="label" for="title_en">
-								<span class="label-text">Title (EN)</span>
-							</label>
-							<input
-								type="text"
-								id="title_en"
-								bind:value={form.title_en}
-								class="input-bordered input w-full"
-								placeholder="Article headline..."
-								required
-							/>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="category_en">
-								<span class="label-text">Category (EN)</span>
-							</label>
-							<input
-								type="text"
-								id="category_en"
-								bind:value={form.category_en}
-								class="input-bordered input w-full"
-								list="cats-en"
-								required
-							/>
-							<datalist id="cats-en">
-								{#each categoryOptions as opt (opt.en)}
-									<option value={opt.en}></option>
-								{/each}
-							</datalist>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="excerpt_en">
-								<span class="label-text">Excerpt (EN)</span>
-							</label>
-							<textarea
-								id="excerpt_en"
-								bind:value={form.excerpt_en}
-								class="textarea-bordered textarea h-24"
-								required
-								placeholder="Short summary..."
-							></textarea>
-						</div>
+						<AdminInput
+							id="title_en"
+							label="Title (EN)"
+							bind:value={form.title_en}
+							placeholder="Article headline..."
+							required
+						/>
+						<AdminInput
+							id="category_en"
+							label="Category (EN)"
+							bind:value={form.category_en}
+							placeholder="e.g. Technology"
+						/>
+						<AdminTextarea
+							id="excerpt_en"
+							label="Excerpt (EN)"
+							bind:value={form.excerpt_en}
+							rows={3}
+							placeholder="Short summary..."
+						/>
 					</div>
 
+					<!-- RU Fields -->
 					<div class={activeTab === 'ru' ? 'block space-y-4' : 'hidden'}>
-						<div class="form-control">
-							<label class="label" for="title_ru">
-								<span class="label-text">Title (RU)</span>
-							</label>
-							<input
-								type="text"
-								id="title_ru"
-								bind:value={form.title_ru}
-								class="input-bordered input w-full"
-								placeholder="Заголовок статьи..."
-								required
-							/>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="category_ru">
-								<span class="label-text">Category (RU)</span>
-							</label>
-							<input
-								type="text"
-								id="category_ru"
-								bind:value={form.category_ru}
-								class="input-bordered input w-full"
-								list="cats-ru"
-								required
-							/>
-							<datalist id="cats-ru">
-								{#each categoryOptions as opt (opt.ru)}
-									<option value={opt.ru}></option>
-								{/each}
-							</datalist>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="excerpt_ru">
-								<span class="label-text">Excerpt (RU)</span>
-							</label>
-							<textarea
-								id="excerpt_ru"
-								bind:value={form.excerpt_ru}
-								class="textarea-bordered textarea h-24"
-								required
-								placeholder="Краткое содержание..."
-							></textarea>
-						</div>
+						<AdminInput
+							id="title_ru"
+							label="Title (RU)"
+							bind:value={form.title_ru}
+							placeholder="Заголовок статьи..."
+						/>
+						<AdminInput
+							id="category_ru"
+							label="Category (RU)"
+							bind:value={form.category_ru}
+							placeholder="Например: Технологии"
+						/>
+						<AdminTextarea
+							id="excerpt_ru"
+							label="Excerpt (RU)"
+							bind:value={form.excerpt_ru}
+							rows={3}
+							placeholder="Краткое содержание..."
+						/>
 					</div>
 				</div>
-
-				<div class="modal-action pt-4">
-					<button type="button" class="btn" onclick={closeModal}>Cancel</button>
-					<button type="submit" class="btn px-8 btn-primary">
-						{editingId ? 'Save Changes' : 'Create Article'}
-					</button>
-				</div>
-			</form>
+			</div>
 		</div>
-	</div>
-	<form method="dialog" class="modal-backdrop">
-		<button onclick={closeModal}>close</button>
+
+		{#if formError}
+			<div
+				class="flex items-center gap-3 rounded-xl border border-error/20 bg-error/5 p-4 text-sm font-medium text-error"
+			>
+				<div class="h-2 w-2 rounded-full bg-error"></div>
+				{formError}
+			</div>
+		{/if}
 	</form>
-</dialog>
+
+	{#snippet actions()}
+		<button
+			type="button"
+			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			onclick={closeModal}
+			disabled={submitting}>Cancel</button
+		>
+		<button type="submit" form="news-form" class="btn px-8 btn-primary" disabled={submitting}>
+			{#if submitting}
+				<span class="loading loading-sm loading-spinner"></span>
+			{/if}
+			{editingId ? 'Save Article' : 'Create Article'}
+		</button>
+	{/snippet}
+</Modal>

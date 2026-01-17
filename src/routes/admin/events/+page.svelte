@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, Calendar, MapPin, Upload, X } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, Calendar, MapPin, Upload } from '@lucide/svelte';
+	import Modal from '$lib/components/Modal.svelte';
+	import AdminInput from '$lib/components/admin/AdminInput.svelte';
+	import AdminTextarea from '$lib/components/admin/AdminTextarea.svelte';
 	import type { Event as AppEvent } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -253,125 +256,106 @@
 </div>
 
 <!-- Modal -->
-<dialog
-	class="modal modal-bottom sm:modal-middle"
-	class:modal-open={showModal}
-	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+<Modal
+	bind:open={showModal}
+	title={editingId ? 'Edit Event' : 'New Event'}
+	subtitle={editingId ? 'Update event details' : 'Create a new event'}
+	onClose={closeModal}
+	maxWidth="4xl"
 >
-	<div class="modal-box w-full max-w-3xl overflow-hidden bg-base-100 p-0 sm:w-11/12">
-		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
-			<div>
-				<h3 class="text-lg font-bold sm:text-xl">
-					{editingId ? 'Edit Event' : 'New Event'}
-				</h3>
-				<p class="mt-0.5 text-sm text-base-content/60">
-					{editingId ? 'Update event details' : 'Create a new event'}
-				</p>
-			</div>
-			<button
-				class="btn btn-circle btn-ghost btn-sm"
-				onclick={closeModal}
-				type="button"
-				aria-label="Close"
-			>
-				<X class="h-5 w-5" />
-			</button>
-		</div>
+	<form
+		id="event-form"
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+		class="space-y-6"
+	>
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-[250px_1fr]">
+			<!-- Sidebar: Image & Timing -->
+			<div class="space-y-6">
+				<!-- Image Upload -->
+				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+						>Event Image</legend
+					>
+					<div class="flex flex-col items-center gap-4">
+						<div class="avatar aspect-video w-full shadow-xl">
+							<div
+								class="mask h-full w-full rounded-2xl bg-base-300 object-cover ring-1 ring-white/10"
+							>
+								{#if form.image}
+									<img
+										src={URL.createObjectURL(form.image)}
+										alt="Preview"
+										class="h-full w-full object-cover"
+									/>
+								{:else if existingImageUrl}
+									<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+								{:else}
+									<div
+										class="flex h-full w-full flex-col items-center justify-center text-base-content/20"
+									>
+										<Upload class="mb-2 h-8 w-8" />
+										<span class="text-xs font-medium">No Image</span>
+									</div>
+								{/if}
+							</div>
+						</div>
 
-		<div class="max-h-[80vh] overflow-y-auto p-6">
-			<form
-				onsubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}
-				class="space-y-6"
-			>
-				<!-- Main Image Upload -->
-				<div class="grid grid-cols-1 gap-6 md:grid-cols-[1fr_200px]">
-					<div class="space-y-4">
-						<div class="form-control">
-							<label class="label pb-1 font-medium" for="image"> Event Image </label>
+						<label
+							class="btn btn-block border-white/20 font-medium btn-outline btn-sm hover:border-white/40"
+						>
+							Choose File
 							<input
 								type="file"
 								id="image"
-								class="file-input-bordered file-input w-full"
+								class="hidden"
 								accept="image/*"
 								onchange={handleFileChange}
 							/>
-							{#if existingImageUrl && !form.image}
-								<div class="mt-2 text-xs opacity-60">
-									Current file: <a href={existingImageUrl} target="_blank" class="link">View</a>
-								</div>
-							{/if}
-						</div>
-
-						<div class="grid grid-cols-2 gap-4">
-							<div class="form-control">
-								<label class="label" for="date_day">
-									<span class="label-text">Day (e.g. 21)</span>
-								</label>
-								<input
-									type="text"
-									id="date_day"
-									bind:value={form.date_day}
-									class="input-bordered input w-full"
-									placeholder="21"
-									required
-								/>
-							</div>
-							<div class="form-control">
-								<label class="label" for="time">
-									<span class="label-text">Time (e.g. 10:00 AM)</span>
-								</label>
-								<input
-									type="text"
-									id="time"
-									bind:value={form.time}
-									class="input-bordered input w-full"
-									placeholder="10:00 AM"
-									required
-								/>
-							</div>
-						</div>
+						</label>
 					</div>
+				</fieldset>
 
-					<div
-						class="flex flex-col items-center justify-center rounded-box border border-dashed border-base-300 bg-base-200/50 p-4"
+				<!-- Timing -->
+				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+						>Schedule</legend
 					>
-						{#if existingImageUrl || form.image}
-							<div class="avatar">
-								<div class="mask h-32 w-40 rounded-xl mask-squircle object-cover">
-									{#if form.image}
-										<img
-											src={URL.createObjectURL(form.image)}
-											alt="Preview"
-											class="h-full w-full object-cover"
-										/>
-									{:else if existingImageUrl}
-										<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
-									{/if}
-								</div>
-							</div>
-						{:else}
-							<div
-								class="flex h-32 w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-base-300 text-base-content/30"
-							>
-								<Upload class="mb-2 h-8 w-8" />
-								<span class="text-xs">No image</span>
-							</div>
-						{/if}
+					<div class="space-y-4">
+						<div class="grid grid-cols-2 gap-4">
+							<AdminInput
+								id="date_day"
+								label="Day"
+								bind:value={form.date_day}
+								placeholder="21"
+								class="text-center font-mono"
+								required
+							/>
+							<AdminInput
+								id="time"
+								label="Time"
+								bind:value={form.time}
+								placeholder="10:00"
+								class="text-center font-mono"
+								required
+							/>
+						</div>
 					</div>
-				</div>
+				</fieldset>
+			</div>
 
-				<div class="divider">Language & Details</div>
-
-				<div role="tablist" class="tabs-lifted tabs">
+			<!-- Main Content -->
+			<div class="space-y-6">
+				<!-- Tabs -->
+				<div role="tablist" class="tabs-lifted tabs tabs-lg">
 					<button
 						type="button"
 						role="tab"
 						class="tab {activeTab === 'en'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
+							? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+							: 'opacity-60 hover:opacity-100'}"
 						onclick={() => (activeTab = 'en')}
 					>
 						🇬🇧 English
@@ -380,142 +364,99 @@
 						type="button"
 						role="tab"
 						class="tab {activeTab === 'ru'
-							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-							: ''}"
+							? 'tab-active font-bold opacity-100 [--tab-bg:theme(colors.base.100)]'
+							: 'opacity-60 hover:opacity-100'}"
 						onclick={() => (activeTab = 'ru')}
 					>
 						🇷🇺 Russian
 					</button>
+					<!-- Filler -->
+					<div role="tab" class="tab w-full cursor-default border-b-transparent"></div>
 				</div>
 
 				<div
-					class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
 				>
 					<div class={activeTab === 'en' ? 'block space-y-4' : 'hidden'}>
-						<div class="form-control">
-							<label class="label" for="title_en">
-								<span class="label-text">Event Title (EN)</span>
-							</label>
-							<input
-								type="text"
-								id="title_en"
-								bind:value={form.title_en}
-								class="input-bordered input w-full"
-								placeholder="Annual Exhibition"
+						<AdminInput
+							id="title_en"
+							label="Event Title (EN)"
+							bind:value={form.title_en}
+							placeholder="Annual Exhibition"
+							required
+						/>
+						<div class="grid grid-cols-2 gap-4">
+							<AdminInput
+								id="location_en"
+								label="Location (EN)"
+								bind:value={form.location_en}
+								placeholder="Moscow, Russia"
+								required
+							/>
+							<AdminInput
+								id="date_month_en"
+								label="Month (EN)"
+								bind:value={form.date_month_en}
+								placeholder="OCT"
+								class="uppercase"
 								required
 							/>
 						</div>
-
-						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-							<div class="form-control">
-								<label class="label" for="location_en">
-									<span class="label-text">Location (EN)</span>
-								</label>
-								<input
-									type="text"
-									id="location_en"
-									bind:value={form.location_en}
-									class="input-bordered input w-full"
-									placeholder="Moscow, Russia"
-									required
-								/>
-							</div>
-							<div class="form-control">
-								<label class="label" for="date_month_en">
-									<span class="label-text">Month (EN)</span>
-								</label>
-								<input
-									type="text"
-									id="date_month_en"
-									bind:value={form.date_month_en}
-									class="input-bordered input w-full"
-									placeholder="OCT"
-									required
-								/>
-							</div>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="description_en">
-								<span class="label-text">Description (EN)</span>
-							</label>
-							<textarea
-								id="description_en"
-								bind:value={form.description_en}
-								class="textarea-bordered textarea h-24"
-								placeholder="Event details..."
-							></textarea>
-						</div>
+						<AdminTextarea
+							id="description_en"
+							label="Description (EN)"
+							bind:value={form.description_en}
+							rows={4}
+							placeholder="Event details..."
+						/>
 					</div>
 
 					<div class={activeTab === 'ru' ? 'block space-y-4' : 'hidden'}>
-						<div class="form-control">
-							<label class="label" for="title_ru">
-								<span class="label-text">Event Title (RU)</span>
-							</label>
-							<input
-								type="text"
-								id="title_ru"
-								bind:value={form.title_ru}
-								class="input-bordered input w-full"
-								placeholder="Ежегодная выставка"
+						<AdminInput
+							id="title_ru"
+							label="Event Title (RU)"
+							bind:value={form.title_ru}
+							placeholder="Ежегодная выставка"
+							required
+						/>
+						<div class="grid grid-cols-2 gap-4">
+							<AdminInput
+								id="location_ru"
+								label="Location (RU)"
+								bind:value={form.location_ru}
+								placeholder="Москва, Россия"
+								required
+							/>
+							<AdminInput
+								id="date_month_ru"
+								label="Month (RU)"
+								bind:value={form.date_month_ru}
+								placeholder="ОКТ"
+								class="uppercase"
 								required
 							/>
 						</div>
-
-						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-							<div class="form-control">
-								<label class="label" for="location_ru">
-									<span class="label-text">Location (RU)</span>
-								</label>
-								<input
-									type="text"
-									id="location_ru"
-									bind:value={form.location_ru}
-									class="input-bordered input w-full"
-									placeholder="Москва, Россия"
-									required
-								/>
-							</div>
-							<div class="form-control">
-								<label class="label" for="date_month_ru">
-									<span class="label-text">Month (RU)</span>
-								</label>
-								<input
-									type="text"
-									id="date_month_ru"
-									bind:value={form.date_month_ru}
-									class="input-bordered input w-full"
-									placeholder="ОКТ"
-									required
-								/>
-							</div>
-						</div>
-
-						<div class="form-control">
-							<label class="label" for="description_ru">
-								<span class="label-text">Description (RU)</span>
-							</label>
-							<textarea
-								id="description_ru"
-								bind:value={form.description_ru}
-								class="textarea-bordered textarea h-24"
-								placeholder="Детали события..."
-							></textarea>
-						</div>
+						<AdminTextarea
+							id="description_ru"
+							label="Description (RU)"
+							bind:value={form.description_ru}
+							rows={4}
+							placeholder="Детали события..."
+						/>
 					</div>
 				</div>
-
-				<div class="modal-action pt-4">
-					<button type="button" class="btn" onclick={closeModal}>Cancel</button>
-					<button type="submit" class="btn px-8 btn-primary">
-						{editingId ? 'Save Changes' : 'Create Event'}
-					</button>
-				</div>
-			</form>
+			</div>
 		</div>
-	</div>
-	<form method="dialog" class="modal-backdrop">
-		<button onclick={closeModal}>close</button>
 	</form>
-</dialog>
+
+	{#snippet actions()}
+		<button
+			type="button"
+			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			onclick={closeModal}>Cancel</button
+		>
+		<button type="submit" form="event-form" class="btn px-8 btn-primary">
+			{editingId ? 'Save Changes' : 'Create Event'}
+		</button>
+	{/snippet}
+</Modal>
