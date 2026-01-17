@@ -133,7 +133,8 @@ export const translations = {
 			clickInfo: 'Click markers to see details',
 			viewAll: 'View All Ambassadors →',
 			ambassador: 'Ambassador',
-			ambassadors: 'Ambassadors'
+			ambassadors: 'Ambassadors',
+			countries: 'Countries'
 		}
 	},
 	ru: {
@@ -270,7 +271,8 @@ export const translations = {
 			clickInfo: 'Нажмите на маркер для деталей',
 			viewAll: 'Посмотреть всех амбассадоров →',
 			ambassador: 'Амбассадор',
-			ambassadors: 'Амбассадора'
+			ambassadors: 'Амбассадора',
+			countries: 'Стран'
 		}
 	}
 };

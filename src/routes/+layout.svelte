@@ -16,11 +16,13 @@
 		}
 	});
 
-	// Hide header/footer on admin pages
-	let isAdminRoute = $derived($page.url.pathname.startsWith('/admin'));
+	// Hide header/footer on admin pages and map page
+	let isImmersiveRoute = $derived(
+		$page.url.pathname.startsWith('/admin') || $page.url.pathname === '/map'
+	);
 </script>
 
-{#if isAdminRoute}
+{#if isImmersiveRoute}
 	<!-- Admin pages have their own layout -->
 	{@render children()}
 {:else}
