@@ -1,0 +1,2002 @@
+[
+	{
+		"name_en": "Afghanistan",
+		"name_ru": "Афганистан",
+		"code": "AF",
+		"flag": "🇦🇫",
+		"latitude": "33",
+		"longitude": "65"
+	},
+	{
+		"name_en": "Åland Islands",
+		"name_ru": "Аландские острова",
+		"code": "AX",
+		"flag": "🇦🇽",
+		"latitude": "60.116667",
+		"longitude": "19.9"
+	},
+	{
+		"name_en": "Albania",
+		"name_ru": "Албания",
+		"code": "AL",
+		"flag": "🇦🇱",
+		"latitude": "41",
+		"longitude": "20"
+	},
+	{
+		"name_en": "Algeria",
+		"name_ru": "Алжир",
+		"code": "DZ",
+		"flag": "🇩🇿",
+		"latitude": "28",
+		"longitude": "3"
+	},
+	{
+		"name_en": "American Samoa",
+		"name_ru": "Американское Самоа",
+		"code": "AS",
+		"flag": "🇦🇸",
+		"latitude": "-14.33333333",
+		"longitude": "-170"
+	},
+	{
+		"name_en": "Andorra",
+		"name_ru": "Андорра",
+		"code": "AD",
+		"flag": "🇦🇩",
+		"latitude": "42.5",
+		"longitude": "1.5"
+	},
+	{
+		"name_en": "Angola",
+		"name_ru": "Ангола",
+		"code": "AO",
+		"flag": "🇦🇴",
+		"latitude": "-12.5",
+		"longitude": "18.5"
+	},
+	{
+		"name_en": "Anguilla",
+		"name_ru": "Ангилья",
+		"code": "AI",
+		"flag": "🇦🇮",
+		"latitude": "18.25",
+		"longitude": "-63.16666666"
+	},
+	{
+		"name_en": "Antarctica",
+		"name_ru": "Антарктида",
+		"code": "AQ",
+		"flag": "🇦🇶",
+		"latitude": "-90",
+		"longitude": "0"
+	},
+	{
+		"name_en": "Antigua and Barbuda",
+		"name_ru": "Антигуа и Барбуда",
+		"code": "AG",
+		"flag": "🇦🇬",
+		"latitude": "17.05",
+		"longitude": "-61.8"
+	},
+	{
+		"name_en": "Argentina",
+		"name_ru": "Аргентина",
+		"code": "AR",
+		"flag": "🇦🇷",
+		"latitude": "-34",
+		"longitude": "-64"
+	},
+	{
+		"name_en": "Armenia",
+		"name_ru": "Армения",
+		"code": "AM",
+		"flag": "🇦🇲",
+		"latitude": "40",
+		"longitude": "45"
+	},
+	{
+		"name_en": "Aruba",
+		"name_ru": "Аруба",
+		"code": "AW",
+		"flag": "🇦🇼",
+		"latitude": "12.5",
+		"longitude": "-69.96666666"
+	},
+	{
+		"name_en": "Australia",
+		"name_ru": "Австралия",
+		"code": "AU",
+		"flag": "🇦🇺",
+		"latitude": "-27",
+		"longitude": "133"
+	},
+	{
+		"name_en": "Austria",
+		"name_ru": "Австрия",
+		"code": "AT",
+		"flag": "🇦🇹",
+		"latitude": "47.33333333",
+		"longitude": "13.33333333"
+	},
+	{
+		"name_en": "Azerbaijan",
+		"name_ru": "Азербайджан",
+		"code": "AZ",
+		"flag": "🇦🇿",
+		"latitude": "40.5",
+		"longitude": "47.5"
+	},
+	{
+		"name_en": "Bahamas",
+		"name_ru": "Багамские Острова",
+		"code": "BS",
+		"flag": "🇧🇸",
+		"latitude": "24.25",
+		"longitude": "-76"
+	},
+	{
+		"name_en": "Bahrain",
+		"name_ru": "Бахрейн",
+		"code": "BH",
+		"flag": "🇧🇭",
+		"latitude": "26",
+		"longitude": "50.55"
+	},
+	{
+		"name_en": "Bangladesh",
+		"name_ru": "Бангладеш",
+		"code": "BD",
+		"flag": "🇧🇩",
+		"latitude": "24",
+		"longitude": "90"
+	},
+	{
+		"name_en": "Barbados",
+		"name_ru": "Барбадос",
+		"code": "BB",
+		"flag": "🇧🇧",
+		"latitude": "13.16666666",
+		"longitude": "-59.53333333"
+	},
+	{
+		"name_en": "Belarus",
+		"name_ru": "Беларусь",
+		"code": "BY",
+		"flag": "🇧🇾",
+		"latitude": "53",
+		"longitude": "28"
+	},
+	{
+		"name_en": "Belgium",
+		"name_ru": "Бельгия",
+		"code": "BE",
+		"flag": "🇧🇪",
+		"latitude": "50.83333333",
+		"longitude": "4"
+	},
+	{
+		"name_en": "Belize",
+		"name_ru": "Белиз",
+		"code": "BZ",
+		"flag": "🇧🇿",
+		"latitude": "17.25",
+		"longitude": "-88.75"
+	},
+	{
+		"name_en": "Benin",
+		"name_ru": "Бенин",
+		"code": "BJ",
+		"flag": "🇧🇯",
+		"latitude": "9.5",
+		"longitude": "2.25"
+	},
+	{
+		"name_en": "Bermuda",
+		"name_ru": "Бермудские Острова",
+		"code": "BM",
+		"flag": "🇧🇲",
+		"latitude": "32.33333333",
+		"longitude": "-64.75"
+	},
+	{
+		"name_en": "Bhutan",
+		"name_ru": "Бутан",
+		"code": "BT",
+		"flag": "🇧🇹",
+		"latitude": "27.5",
+		"longitude": "90.5"
+	},
+	{
+		"name_en": "Bolivia",
+		"name_ru": "Боливия",
+		"code": "BO",
+		"flag": "🇧🇴",
+		"latitude": "-17",
+		"longitude": "-65"
+	},
+	{
+		"name_en": "Bosnia and Herzegovina",
+		"name_ru": "Босния и Герцеговина",
+		"code": "BA",
+		"flag": "🇧🇦",
+		"latitude": "44",
+		"longitude": "18"
+	},
+	{
+		"name_en": "Botswana",
+		"name_ru": "Ботсвана",
+		"code": "BW",
+		"flag": "🇧🇼",
+		"latitude": "-22",
+		"longitude": "24"
+	},
+	{
+		"name_en": "Bouvet Island",
+		"name_ru": "Остров Буве",
+		"code": "BV",
+		"flag": "🇧🇻",
+		"latitude": "-54.43333333",
+		"longitude": "3.4"
+	},
+	{
+		"name_en": "Brazil",
+		"name_ru": "Бразилия",
+		"code": "BR",
+		"flag": "🇧🇷",
+		"latitude": "-10",
+		"longitude": "-55"
+	},
+	{
+		"name_en": "British Indian Ocean Territory",
+		"name_ru": "Британская территория в Индийском океане",
+		"code": "IO",
+		"flag": "🇮🇴",
+		"latitude": "-6",
+		"longitude": "71.5"
+	},
+	{
+		"name_en": "British Virgin Islands",
+		"name_ru": "Британские Виргинские острова",
+		"code": "VG",
+		"flag": "🇻🇬",
+		"latitude": "18.431383",
+		"longitude": "-64.62305"
+	},
+	{
+		"name_en": "Brunei",
+		"name_ru": "Бруней",
+		"code": "BN",
+		"flag": "🇧🇳",
+		"latitude": "4.5",
+		"longitude": "114.66666666"
+	},
+	{
+		"name_en": "Bulgaria",
+		"name_ru": "Болгария",
+		"code": "BG",
+		"flag": "🇧🇬",
+		"latitude": "43",
+		"longitude": "25"
+	},
+	{
+		"name_en": "Burkina Faso",
+		"name_ru": "Буркина-Фасо",
+		"code": "BF",
+		"flag": "🇧🇫",
+		"latitude": "13",
+		"longitude": "-2"
+	},
+	{
+		"name_en": "Burundi",
+		"name_ru": "Бурунди",
+		"code": "BI",
+		"flag": "🇧🇮",
+		"latitude": "-3.5",
+		"longitude": "30"
+	},
+	{
+		"name_en": "Cambodia",
+		"name_ru": "Камбоджа",
+		"code": "KH",
+		"flag": "🇰🇭",
+		"latitude": "13",
+		"longitude": "105"
+	},
+	{
+		"name_en": "Cameroon",
+		"name_ru": "Камерун",
+		"code": "CM",
+		"flag": "🇨🇲",
+		"latitude": "6",
+		"longitude": "12"
+	},
+	{
+		"name_en": "Canada",
+		"name_ru": "Канада",
+		"code": "CA",
+		"flag": "🇨🇦",
+		"latitude": "60",
+		"longitude": "-95"
+	},
+	{
+		"name_en": "Cape Verde",
+		"name_ru": "Кабо-Верде",
+		"code": "CV",
+		"flag": "🇨🇻",
+		"latitude": "16",
+		"longitude": "-24"
+	},
+	{
+		"name_en": "Caribbean Netherlands",
+		"name_ru": "Карибские Нидерланды",
+		"code": "BQ",
+		"flag": "",
+		"latitude": "12.18",
+		"longitude": "-68.25"
+	},
+	{
+		"name_en": "Cayman Islands",
+		"name_ru": "Каймановы острова",
+		"code": "KY",
+		"flag": "🇰🇾",
+		"latitude": "19.5",
+		"longitude": "-80.5"
+	},
+	{
+		"name_en": "Central African Republic",
+		"name_ru": "Центральноафриканская Республика",
+		"code": "CF",
+		"flag": "🇨🇫",
+		"latitude": "7",
+		"longitude": "21"
+	},
+	{
+		"name_en": "Chad",
+		"name_ru": "Чад",
+		"code": "TD",
+		"flag": "🇹🇩",
+		"latitude": "15",
+		"longitude": "19"
+	},
+	{
+		"name_en": "Chile",
+		"name_ru": "Чили",
+		"code": "CL",
+		"flag": "🇨🇱",
+		"latitude": "-30",
+		"longitude": "-71"
+	},
+	{
+		"name_en": "China",
+		"name_ru": "Китай",
+		"code": "CN",
+		"flag": "🇨🇳",
+		"latitude": "35",
+		"longitude": "105"
+	},
+	{
+		"name_en": "Christmas Island",
+		"name_ru": "Остров Рождества",
+		"code": "CX",
+		"flag": "🇨🇽",
+		"latitude": "-10.5",
+		"longitude": "105.66666666"
+	},
+	{
+		"name_en": "Cocos (Keeling) Islands",
+		"name_ru": "Кокосовые острова",
+		"code": "CC",
+		"flag": "🇨🇨",
+		"latitude": "-12.5",
+		"longitude": "96.83333333"
+	},
+	{
+		"name_en": "Colombia",
+		"name_ru": "Колумбия",
+		"code": "CO",
+		"flag": "🇨🇴",
+		"latitude": "4",
+		"longitude": "-72"
+	},
+	{
+		"name_en": "Comoros",
+		"name_ru": "Коморы",
+		"code": "KM",
+		"flag": "🇰🇲",
+		"latitude": "-12.16666666",
+		"longitude": "44.25"
+	},
+	{
+		"name_en": "Congo",
+		"name_ru": "Республика Конго",
+		"code": "CG",
+		"flag": "🇨🇬",
+		"latitude": "-1",
+		"longitude": "15"
+	},
+	{
+		"name_en": "Cook Islands",
+		"name_ru": "Острова Кука",
+		"code": "CK",
+		"flag": "🇨🇰",
+		"latitude": "-21.23333333",
+		"longitude": "-159.76666666"
+	},
+	{
+		"name_en": "Costa Rica",
+		"name_ru": "Коста-Рика",
+		"code": "CR",
+		"flag": "🇨🇷",
+		"latitude": "10",
+		"longitude": "-84"
+	},
+	{
+		"name_en": "Croatia",
+		"name_ru": "Хорватия",
+		"code": "HR",
+		"flag": "🇭🇷",
+		"latitude": "45.16666666",
+		"longitude": "15.5"
+	},
+	{
+		"name_en": "Cuba",
+		"name_ru": "Куба",
+		"code": "CU",
+		"flag": "🇨🇺",
+		"latitude": "21.5",
+		"longitude": "-80"
+	},
+	{
+		"name_en": "Curaçao",
+		"name_ru": "Кюрасао",
+		"code": "CW",
+		"flag": "🇨🇼",
+		"latitude": "12.116667",
+		"longitude": "-68.933333"
+	},
+	{
+		"name_en": "Cyprus",
+		"name_ru": "Кипр",
+		"code": "CY",
+		"flag": "🇨🇾",
+		"latitude": "35",
+		"longitude": "33"
+	},
+	{
+		"name_en": "Czechia",
+		"name_ru": "Чехия",
+		"code": "CZ",
+		"flag": "🇨🇿",
+		"latitude": "49.75",
+		"longitude": "15.5"
+	},
+	{
+		"name_en": "Denmark",
+		"name_ru": "Дания",
+		"code": "DK",
+		"flag": "🇩🇰",
+		"latitude": "56",
+		"longitude": "10"
+	},
+	{
+		"name_en": "Djibouti",
+		"name_ru": "Джибути",
+		"code": "DJ",
+		"flag": "🇩🇯",
+		"latitude": "11.5",
+		"longitude": "43"
+	},
+	{
+		"name_en": "Dominica",
+		"name_ru": "Доминика",
+		"code": "DM",
+		"flag": "🇩🇲",
+		"latitude": "15.41666666",
+		"longitude": "-61.33333333"
+	},
+	{
+		"name_en": "Dominican Republic",
+		"name_ru": "Доминиканская Республика",
+		"code": "DO",
+		"flag": "🇩🇴",
+		"latitude": "19",
+		"longitude": "-70.66666666"
+	},
+	{
+		"name_en": "DR Congo",
+		"name_ru": "Демократическая Республика Конго",
+		"code": "CD",
+		"flag": "🇨🇩",
+		"latitude": "0",
+		"longitude": "25"
+	},
+	{
+		"name_en": "Ecuador",
+		"name_ru": "Эквадор",
+		"code": "EC",
+		"flag": "🇪🇨",
+		"latitude": "-2",
+		"longitude": "-77.5"
+	},
+	{
+		"name_en": "Egypt",
+		"name_ru": "Египет",
+		"code": "EG",
+		"flag": "🇪🇬",
+		"latitude": "27",
+		"longitude": "30"
+	},
+	{
+		"name_en": "El Salvador",
+		"name_ru": "Сальвадор",
+		"code": "SV",
+		"flag": "🇸🇻",
+		"latitude": "13.83333333",
+		"longitude": "-88.91666666"
+	},
+	{
+		"name_en": "Equatorial Guinea",
+		"name_ru": "Экваториальная Гвинея",
+		"code": "GQ",
+		"flag": "🇬🇶",
+		"latitude": "2",
+		"longitude": "10"
+	},
+	{
+		"name_en": "Eritrea",
+		"name_ru": "Эритрея",
+		"code": "ER",
+		"flag": "🇪🇷",
+		"latitude": "15",
+		"longitude": "39"
+	},
+	{
+		"name_en": "Estonia",
+		"name_ru": "Эстония",
+		"code": "EE",
+		"flag": "🇪🇪",
+		"latitude": "59",
+		"longitude": "26"
+	},
+	{
+		"name_en": "Eswatini",
+		"name_ru": "Свазиленд",
+		"code": "SZ",
+		"flag": "🇸🇿",
+		"latitude": "-26.5",
+		"longitude": "31.5"
+	},
+	{
+		"name_en": "Ethiopia",
+		"name_ru": "Эфиопия",
+		"code": "ET",
+		"flag": "🇪🇹",
+		"latitude": "8",
+		"longitude": "38"
+	},
+	{
+		"name_en": "Falkland Islands",
+		"name_ru": "Фолклендские острова",
+		"code": "FK",
+		"flag": "🇫🇰",
+		"latitude": "-51.75",
+		"longitude": "-59"
+	},
+	{
+		"name_en": "Faroe Islands",
+		"name_ru": "Фарерские острова",
+		"code": "FO",
+		"flag": "🇫🇴",
+		"latitude": "62",
+		"longitude": "-7"
+	},
+	{
+		"name_en": "Fiji",
+		"name_ru": "Фиджи",
+		"code": "FJ",
+		"flag": "🇫🇯",
+		"latitude": "-18",
+		"longitude": "175"
+	},
+	{
+		"name_en": "Finland",
+		"name_ru": "Финляндия",
+		"code": "FI",
+		"flag": "🇫🇮",
+		"latitude": "64",
+		"longitude": "26"
+	},
+	{
+		"name_en": "France",
+		"name_ru": "Франция",
+		"code": "FR",
+		"flag": "🇫🇷",
+		"latitude": "46",
+		"longitude": "2"
+	},
+	{
+		"name_en": "French Guiana",
+		"name_ru": "Французская Гвиана",
+		"code": "GF",
+		"flag": "🇬🇫",
+		"latitude": "4",
+		"longitude": "-53"
+	},
+	{
+		"name_en": "French Polynesia",
+		"name_ru": "Французская Полинезия",
+		"code": "PF",
+		"flag": "🇵🇫",
+		"latitude": "-15",
+		"longitude": "-140"
+	},
+	{
+		"name_en": "French Southern and Antarctic Lands",
+		"name_ru": "Французские Южные и Антарктические территории",
+		"code": "TF",
+		"flag": "🇹🇫",
+		"latitude": "-49.25",
+		"longitude": "69.167"
+	},
+	{
+		"name_en": "Gabon",
+		"name_ru": "Габон",
+		"code": "GA",
+		"flag": "🇬🇦",
+		"latitude": "-1",
+		"longitude": "11.75"
+	},
+	{
+		"name_en": "Gambia",
+		"name_ru": "Гамбия",
+		"code": "GM",
+		"flag": "🇬🇲",
+		"latitude": "13.46666666",
+		"longitude": "-16.56666666"
+	},
+	{
+		"name_en": "Georgia",
+		"name_ru": "Грузия",
+		"code": "GE",
+		"flag": "🇬🇪",
+		"latitude": "42",
+		"longitude": "43.5"
+	},
+	{
+		"name_en": "Germany",
+		"name_ru": "Германия",
+		"code": "DE",
+		"flag": "🇩🇪",
+		"latitude": "51",
+		"longitude": "9"
+	},
+	{
+		"name_en": "Ghana",
+		"name_ru": "Гана",
+		"code": "GH",
+		"flag": "🇬🇭",
+		"latitude": "8",
+		"longitude": "-2"
+	},
+	{
+		"name_en": "Gibraltar",
+		"name_ru": "Гибралтар",
+		"code": "GI",
+		"flag": "🇬🇮",
+		"latitude": "36.13333333",
+		"longitude": "-5.35"
+	},
+	{
+		"name_en": "Greece",
+		"name_ru": "Греция",
+		"code": "GR",
+		"flag": "🇬🇷",
+		"latitude": "39",
+		"longitude": "22"
+	},
+	{
+		"name_en": "Greenland",
+		"name_ru": "Гренландия",
+		"code": "GL",
+		"flag": "🇬🇱",
+		"latitude": "72",
+		"longitude": "-40"
+	},
+	{
+		"name_en": "Grenada",
+		"name_ru": "Гренада",
+		"code": "GD",
+		"flag": "🇬🇩",
+		"latitude": "12.11666666",
+		"longitude": "-61.66666666"
+	},
+	{
+		"name_en": "Guadeloupe",
+		"name_ru": "Гваделупа",
+		"code": "GP",
+		"flag": "🇬🇵",
+		"latitude": "16.25",
+		"longitude": "-61.583333"
+	},
+	{
+		"name_en": "Guam",
+		"name_ru": "Гуам",
+		"code": "GU",
+		"flag": "🇬🇺",
+		"latitude": "13.46666666",
+		"longitude": "144.78333333"
+	},
+	{
+		"name_en": "Guatemala",
+		"name_ru": "Гватемала",
+		"code": "GT",
+		"flag": "🇬🇹",
+		"latitude": "15.5",
+		"longitude": "-90.25"
+	},
+	{
+		"name_en": "Guernsey",
+		"name_ru": "Гернси",
+		"code": "GG",
+		"flag": "🇬🇬",
+		"latitude": "49.46666666",
+		"longitude": "-2.58333333"
+	},
+	{
+		"name_en": "Guinea",
+		"name_ru": "Гвинея",
+		"code": "GN",
+		"flag": "🇬🇳",
+		"latitude": "11",
+		"longitude": "-10"
+	},
+	{
+		"name_en": "Guinea-Bissau",
+		"name_ru": "Гвинея-Бисау",
+		"code": "GW",
+		"flag": "🇬🇼",
+		"latitude": "12",
+		"longitude": "-15"
+	},
+	{
+		"name_en": "Guyana",
+		"name_ru": "Гайана",
+		"code": "GY",
+		"flag": "🇬🇾",
+		"latitude": "5",
+		"longitude": "-59"
+	},
+	{
+		"name_en": "Haiti",
+		"name_ru": "Гаити",
+		"code": "HT",
+		"flag": "🇭🇹",
+		"latitude": "19",
+		"longitude": "-72.41666666"
+	},
+	{
+		"name_en": "Heard Island and McDonald Islands",
+		"name_ru": "Остров Херд и острова Макдональд",
+		"code": "HM",
+		"flag": "🇭🇲",
+		"latitude": "-53.1",
+		"longitude": "72.51666666"
+	},
+	{
+		"name_en": "Honduras",
+		"name_ru": "Гондурас",
+		"code": "HN",
+		"flag": "🇭🇳",
+		"latitude": "15",
+		"longitude": "-86.5"
+	},
+	{
+		"name_en": "Hong Kong",
+		"name_ru": "Гонконг",
+		"code": "HK",
+		"flag": "🇭🇰",
+		"latitude": "22.267",
+		"longitude": "114.188"
+	},
+	{
+		"name_en": "Hungary",
+		"name_ru": "Венгрия",
+		"code": "HU",
+		"flag": "🇭🇺",
+		"latitude": "47",
+		"longitude": "20"
+	},
+	{
+		"name_en": "Iceland",
+		"name_ru": "Исландия",
+		"code": "IS",
+		"flag": "🇮🇸",
+		"latitude": "65",
+		"longitude": "-18"
+	},
+	{
+		"name_en": "India",
+		"name_ru": "Индия",
+		"code": "IN",
+		"flag": "🇮🇳",
+		"latitude": "20",
+		"longitude": "77"
+	},
+	{
+		"name_en": "Indonesia",
+		"name_ru": "Индонезия",
+		"code": "ID",
+		"flag": "🇮🇩",
+		"latitude": "-5",
+		"longitude": "120"
+	},
+	{
+		"name_en": "Iran",
+		"name_ru": "Иран",
+		"code": "IR",
+		"flag": "🇮🇷",
+		"latitude": "32",
+		"longitude": "53"
+	},
+	{
+		"name_en": "Iraq",
+		"name_ru": "Ирак",
+		"code": "IQ",
+		"flag": "🇮🇶",
+		"latitude": "33",
+		"longitude": "44"
+	},
+	{
+		"name_en": "Ireland",
+		"name_ru": "Ирландия",
+		"code": "IE",
+		"flag": "🇮🇪",
+		"latitude": "53",
+		"longitude": "-8"
+	},
+	{
+		"name_en": "Isle of Man",
+		"name_ru": "Остров Мэн",
+		"code": "IM",
+		"flag": "🇮🇲",
+		"latitude": "54.25",
+		"longitude": "-4.5"
+	},
+	{
+		"name_en": "Israel",
+		"name_ru": "Израиль",
+		"code": "IL",
+		"flag": "🇮🇱",
+		"latitude": "31.47",
+		"longitude": "35.13"
+	},
+	{
+		"name_en": "Italy",
+		"name_ru": "Италия",
+		"code": "IT",
+		"flag": "🇮🇹",
+		"latitude": "42.83333333",
+		"longitude": "12.83333333"
+	},
+	{
+		"name_en": "Ivory Coast",
+		"name_ru": "Кот-д’Ивуар",
+		"code": "CI",
+		"flag": "🇨🇮",
+		"latitude": "8",
+		"longitude": "-5"
+	},
+	{
+		"name_en": "Jamaica",
+		"name_ru": "Ямайка",
+		"code": "JM",
+		"flag": "🇯🇲",
+		"latitude": "18.25",
+		"longitude": "-77.5"
+	},
+	{
+		"name_en": "Japan",
+		"name_ru": "Япония",
+		"code": "JP",
+		"flag": "🇯🇵",
+		"latitude": "36",
+		"longitude": "138"
+	},
+	{
+		"name_en": "Jersey",
+		"name_ru": "Джерси",
+		"code": "JE",
+		"flag": "🇯🇪",
+		"latitude": "49.25",
+		"longitude": "-2.16666666"
+	},
+	{
+		"name_en": "Jordan",
+		"name_ru": "Иордания",
+		"code": "JO",
+		"flag": "🇯🇴",
+		"latitude": "31",
+		"longitude": "36"
+	},
+	{
+		"name_en": "Kazakhstan",
+		"name_ru": "Казахстан",
+		"code": "KZ",
+		"flag": "🇰🇿",
+		"latitude": "48",
+		"longitude": "68"
+	},
+	{
+		"name_en": "Kenya",
+		"name_ru": "Кения",
+		"code": "KE",
+		"flag": "🇰🇪",
+		"latitude": "1",
+		"longitude": "38"
+	},
+	{
+		"name_en": "Kiribati",
+		"name_ru": "Кирибати",
+		"code": "KI",
+		"flag": "🇰🇮",
+		"latitude": "1.41666666",
+		"longitude": "173"
+	},
+	{
+		"name_en": "Kosovo",
+		"name_ru": "Республика Косово",
+		"code": "XK",
+		"flag": "🇽🇰",
+		"latitude": "42.666667",
+		"longitude": "21.166667"
+	},
+	{
+		"name_en": "Kuwait",
+		"name_ru": "Кувейт",
+		"code": "KW",
+		"flag": "🇰🇼",
+		"latitude": "29.5",
+		"longitude": "45.75"
+	},
+	{
+		"name_en": "Kyrgyzstan",
+		"name_ru": "Киргизия",
+		"code": "KG",
+		"flag": "🇰🇬",
+		"latitude": "41",
+		"longitude": "75"
+	},
+	{
+		"name_en": "Laos",
+		"name_ru": "Лаос",
+		"code": "LA",
+		"flag": "🇱🇦",
+		"latitude": "18",
+		"longitude": "105"
+	},
+	{
+		"name_en": "Latvia",
+		"name_ru": "Латвия",
+		"code": "LV",
+		"flag": "🇱🇻",
+		"latitude": "57",
+		"longitude": "25"
+	},
+	{
+		"name_en": "Lebanon",
+		"name_ru": "Ливан",
+		"code": "LB",
+		"flag": "🇱🇧",
+		"latitude": "33.83333333",
+		"longitude": "35.83333333"
+	},
+	{
+		"name_en": "Lesotho",
+		"name_ru": "Лесото",
+		"code": "LS",
+		"flag": "🇱🇸",
+		"latitude": "-29.5",
+		"longitude": "28.5"
+	},
+	{
+		"name_en": "Liberia",
+		"name_ru": "Либерия",
+		"code": "LR",
+		"flag": "🇱🇷",
+		"latitude": "6.5",
+		"longitude": "-9.5"
+	},
+	{
+		"name_en": "Libya",
+		"name_ru": "Ливия",
+		"code": "LY",
+		"flag": "🇱🇾",
+		"latitude": "25",
+		"longitude": "17"
+	},
+	{
+		"name_en": "Liechtenstein",
+		"name_ru": "Лихтенштейн",
+		"code": "LI",
+		"flag": "🇱🇮",
+		"latitude": "47.26666666",
+		"longitude": "9.53333333"
+	},
+	{
+		"name_en": "Lithuania",
+		"name_ru": "Литва",
+		"code": "LT",
+		"flag": "🇱🇹",
+		"latitude": "56",
+		"longitude": "24"
+	},
+	{
+		"name_en": "Luxembourg",
+		"name_ru": "Люксембург",
+		"code": "LU",
+		"flag": "🇱🇺",
+		"latitude": "49.75",
+		"longitude": "6.16666666"
+	},
+	{
+		"name_en": "Macau",
+		"name_ru": "Макао",
+		"code": "MO",
+		"flag": "🇲🇴",
+		"latitude": "22.16666666",
+		"longitude": "113.55"
+	},
+	{
+		"name_en": "Madagascar",
+		"name_ru": "Мадагаскар",
+		"code": "MG",
+		"flag": "🇲🇬",
+		"latitude": "-20",
+		"longitude": "47"
+	},
+	{
+		"name_en": "Malawi",
+		"name_ru": "Малави",
+		"code": "MW",
+		"flag": "🇲🇼",
+		"latitude": "-13.5",
+		"longitude": "34"
+	},
+	{
+		"name_en": "Malaysia",
+		"name_ru": "Малайзия",
+		"code": "MY",
+		"flag": "🇲🇾",
+		"latitude": "2.5",
+		"longitude": "112.5"
+	},
+	{
+		"name_en": "Maldives",
+		"name_ru": "Мальдивы",
+		"code": "MV",
+		"flag": "🇲🇻",
+		"latitude": "3.25",
+		"longitude": "73"
+	},
+	{
+		"name_en": "Mali",
+		"name_ru": "Мали",
+		"code": "ML",
+		"flag": "🇲🇱",
+		"latitude": "17",
+		"longitude": "-4"
+	},
+	{
+		"name_en": "Malta",
+		"name_ru": "Мальта",
+		"code": "MT",
+		"flag": "🇲🇹",
+		"latitude": "35.83333333",
+		"longitude": "14.58333333"
+	},
+	{
+		"name_en": "Marshall Islands",
+		"name_ru": "Маршалловы Острова",
+		"code": "MH",
+		"flag": "🇲🇭",
+		"latitude": "9",
+		"longitude": "168"
+	},
+	{
+		"name_en": "Martinique",
+		"name_ru": "Мартиника",
+		"code": "MQ",
+		"flag": "🇲🇶",
+		"latitude": "14.666667",
+		"longitude": "-61"
+	},
+	{
+		"name_en": "Mauritania",
+		"name_ru": "Мавритания",
+		"code": "MR",
+		"flag": "🇲🇷",
+		"latitude": "20",
+		"longitude": "-12"
+	},
+	{
+		"name_en": "Mauritius",
+		"name_ru": "Маврикий",
+		"code": "MU",
+		"flag": "🇲🇺",
+		"latitude": "-20.28333333",
+		"longitude": "57.55"
+	},
+	{
+		"name_en": "Mayotte",
+		"name_ru": "Майотта",
+		"code": "YT",
+		"flag": "🇾🇹",
+		"latitude": "-12.83333333",
+		"longitude": "45.16666666"
+	},
+	{
+		"name_en": "Mexico",
+		"name_ru": "Мексика",
+		"code": "MX",
+		"flag": "🇲🇽",
+		"latitude": "23",
+		"longitude": "-102"
+	},
+	{
+		"name_en": "Micronesia",
+		"name_ru": "Федеративные Штаты Микронезии",
+		"code": "FM",
+		"flag": "🇫🇲",
+		"latitude": "6.91666666",
+		"longitude": "158.25"
+	},
+	{
+		"name_en": "Moldova",
+		"name_ru": "Молдавия",
+		"code": "MD",
+		"flag": "🇲🇩",
+		"latitude": "47",
+		"longitude": "29"
+	},
+	{
+		"name_en": "Monaco",
+		"name_ru": "Монако",
+		"code": "MC",
+		"flag": "🇲🇨",
+		"latitude": "43.73333333",
+		"longitude": "7.4"
+	},
+	{
+		"name_en": "Mongolia",
+		"name_ru": "Монголия",
+		"code": "MN",
+		"flag": "🇲🇳",
+		"latitude": "46",
+		"longitude": "105"
+	},
+	{
+		"name_en": "Montenegro",
+		"name_ru": "Черногория",
+		"code": "ME",
+		"flag": "🇲🇪",
+		"latitude": "42.5",
+		"longitude": "19.3"
+	},
+	{
+		"name_en": "Montserrat",
+		"name_ru": "Монтсеррат",
+		"code": "MS",
+		"flag": "🇲🇸",
+		"latitude": "16.75",
+		"longitude": "-62.2"
+	},
+	{
+		"name_en": "Morocco",
+		"name_ru": "Марокко",
+		"code": "MA",
+		"flag": "🇲🇦",
+		"latitude": "32",
+		"longitude": "-5"
+	},
+	{
+		"name_en": "Mozambique",
+		"name_ru": "Мозамбик",
+		"code": "MZ",
+		"flag": "🇲🇿",
+		"latitude": "-18.25",
+		"longitude": "35"
+	},
+	{
+		"name_en": "Myanmar",
+		"name_ru": "Мьянма",
+		"code": "MM",
+		"flag": "🇲🇲",
+		"latitude": "22",
+		"longitude": "98"
+	},
+	{
+		"name_en": "Namibia",
+		"name_ru": "Намибия",
+		"code": "NA",
+		"flag": "🇳🇦",
+		"latitude": "-22",
+		"longitude": "17"
+	},
+	{
+		"name_en": "Nauru",
+		"name_ru": "Науру",
+		"code": "NR",
+		"flag": "🇳🇷",
+		"latitude": "-0.53333333",
+		"longitude": "166.91666666"
+	},
+	{
+		"name_en": "Nepal",
+		"name_ru": "Непал",
+		"code": "NP",
+		"flag": "🇳🇵",
+		"latitude": "28",
+		"longitude": "84"
+	},
+	{
+		"name_en": "Netherlands",
+		"name_ru": "Нидерланды",
+		"code": "NL",
+		"flag": "🇳🇱",
+		"latitude": "52.5",
+		"longitude": "5.75"
+	},
+	{
+		"name_en": "New Caledonia",
+		"name_ru": "Новая Каледония",
+		"code": "NC",
+		"flag": "🇳🇨",
+		"latitude": "-21.5",
+		"longitude": "165.5"
+	},
+	{
+		"name_en": "New Zealand",
+		"name_ru": "Новая Зеландия",
+		"code": "NZ",
+		"flag": "🇳🇿",
+		"latitude": "-41",
+		"longitude": "174"
+	},
+	{
+		"name_en": "Nicaragua",
+		"name_ru": "Никарагуа",
+		"code": "NI",
+		"flag": "🇳🇮",
+		"latitude": "13",
+		"longitude": "-85"
+	},
+	{
+		"name_en": "Niger",
+		"name_ru": "Нигер",
+		"code": "NE",
+		"flag": "🇳🇪",
+		"latitude": "16",
+		"longitude": "8"
+	},
+	{
+		"name_en": "Nigeria",
+		"name_ru": "Нигерия",
+		"code": "NG",
+		"flag": "🇳🇬",
+		"latitude": "10",
+		"longitude": "8"
+	},
+	{
+		"name_en": "Niue",
+		"name_ru": "Ниуэ",
+		"code": "NU",
+		"flag": "🇳🇺",
+		"latitude": "-19.03333333",
+		"longitude": "-169.86666666"
+	},
+	{
+		"name_en": "Norfolk Island",
+		"name_ru": "Норфолк",
+		"code": "NF",
+		"flag": "🇳🇫",
+		"latitude": "-29.03333333",
+		"longitude": "167.95"
+	},
+	{
+		"name_en": "North Korea",
+		"name_ru": "Северная Корея",
+		"code": "KP",
+		"flag": "🇰🇵",
+		"latitude": "40",
+		"longitude": "127"
+	},
+	{
+		"name_en": "North Macedonia",
+		"name_ru": "Северная Македония",
+		"code": "MK",
+		"flag": "🇲🇰",
+		"latitude": "41.83333333",
+		"longitude": "22"
+	},
+	{
+		"name_en": "Northern Mariana Islands",
+		"name_ru": "Северные Марианские острова",
+		"code": "MP",
+		"flag": "🇲🇵",
+		"latitude": "15.2",
+		"longitude": "145.75"
+	},
+	{
+		"name_en": "Norway",
+		"name_ru": "Норвегия",
+		"code": "NO",
+		"flag": "🇳🇴",
+		"latitude": "62",
+		"longitude": "10"
+	},
+	{
+		"name_en": "Oman",
+		"name_ru": "Оман",
+		"code": "OM",
+		"flag": "🇴🇲",
+		"latitude": "21",
+		"longitude": "57"
+	},
+	{
+		"name_en": "Pakistan",
+		"name_ru": "Пакистан",
+		"code": "PK",
+		"flag": "🇵🇰",
+		"latitude": "30",
+		"longitude": "70"
+	},
+	{
+		"name_en": "Palau",
+		"name_ru": "Палау",
+		"code": "PW",
+		"flag": "🇵🇼",
+		"latitude": "7.5",
+		"longitude": "134.5"
+	},
+	{
+		"name_en": "Palestine",
+		"name_ru": "Палестина",
+		"code": "PS",
+		"flag": "🇵🇸",
+		"latitude": "31.9",
+		"longitude": "35.2"
+	},
+	{
+		"name_en": "Panama",
+		"name_ru": "Панама",
+		"code": "PA",
+		"flag": "🇵🇦",
+		"latitude": "9",
+		"longitude": "-80"
+	},
+	{
+		"name_en": "Papua New Guinea",
+		"name_ru": "Папуа — Новая Гвинея",
+		"code": "PG",
+		"flag": "🇵🇬",
+		"latitude": "-6",
+		"longitude": "147"
+	},
+	{
+		"name_en": "Paraguay",
+		"name_ru": "Парагвай",
+		"code": "PY",
+		"flag": "🇵🇾",
+		"latitude": "-23",
+		"longitude": "-58"
+	},
+	{
+		"name_en": "Peru",
+		"name_ru": "Перу",
+		"code": "PE",
+		"flag": "🇵🇪",
+		"latitude": "-10",
+		"longitude": "-76"
+	},
+	{
+		"name_en": "Philippines",
+		"name_ru": "Филиппины",
+		"code": "PH",
+		"flag": "🇵🇭",
+		"latitude": "13",
+		"longitude": "122"
+	},
+	{
+		"name_en": "Pitcairn Islands",
+		"name_ru": "Острова Питкэрн",
+		"code": "PN",
+		"flag": "🇵🇳",
+		"latitude": "-25.06666666",
+		"longitude": "-130.1"
+	},
+	{
+		"name_en": "Poland",
+		"name_ru": "Польша",
+		"code": "PL",
+		"flag": "🇵🇱",
+		"latitude": "52",
+		"longitude": "20"
+	},
+	{
+		"name_en": "Portugal",
+		"name_ru": "Португалия",
+		"code": "PT",
+		"flag": "🇵🇹",
+		"latitude": "39.5",
+		"longitude": "-8"
+	},
+	{
+		"name_en": "Puerto Rico",
+		"name_ru": "Пуэрто-Рико",
+		"code": "PR",
+		"flag": "🇵🇷",
+		"latitude": "18.25",
+		"longitude": "-66.5"
+	},
+	{
+		"name_en": "Qatar",
+		"name_ru": "Катар",
+		"code": "QA",
+		"flag": "🇶🇦",
+		"latitude": "25.5",
+		"longitude": "51.25"
+	},
+	{
+		"name_en": "Réunion",
+		"name_ru": "Реюньон",
+		"code": "RE",
+		"flag": "🇷🇪",
+		"latitude": "-21.15",
+		"longitude": "55.5"
+	},
+	{
+		"name_en": "Romania",
+		"name_ru": "Румыния",
+		"code": "RO",
+		"flag": "🇷🇴",
+		"latitude": "46",
+		"longitude": "25"
+	},
+	{
+		"name_en": "Russia",
+		"name_ru": "Россия",
+		"code": "RU",
+		"flag": "🇷🇺",
+		"latitude": "60",
+		"longitude": "100"
+	},
+	{
+		"name_en": "Rwanda",
+		"name_ru": "Руанда",
+		"code": "RW",
+		"flag": "🇷🇼",
+		"latitude": "-2",
+		"longitude": "30"
+	},
+	{
+		"name_en": "Saint Barthélemy",
+		"name_ru": "Сен-Бартелеми",
+		"code": "BL",
+		"flag": "🇧🇱",
+		"latitude": "18.5",
+		"longitude": "-63.41666666"
+	},
+	{
+		"name_en": "Saint Helena, Ascension and Tristan da Cunha",
+		"name_ru": "Острова Святой Елены, Вознесения и Тристан-да-Кунья",
+		"code": "SH",
+		"flag": "🇸🇭",
+		"latitude": "-15.95",
+		"longitude": "-5.72"
+	},
+	{
+		"name_en": "Saint Kitts and Nevis",
+		"name_ru": "Сент-Китс и Невис",
+		"code": "KN",
+		"flag": "🇰🇳",
+		"latitude": "17.33333333",
+		"longitude": "-62.75"
+	},
+	{
+		"name_en": "Saint Lucia",
+		"name_ru": "Сент-Люсия",
+		"code": "LC",
+		"flag": "🇱🇨",
+		"latitude": "13.88333333",
+		"longitude": "-60.96666666"
+	},
+	{
+		"name_en": "Saint Martin",
+		"name_ru": "Сен-Мартен",
+		"code": "MF",
+		"flag": "🇲🇫",
+		"latitude": "18.08333333",
+		"longitude": "-63.95"
+	},
+	{
+		"name_en": "Saint Pierre and Miquelon",
+		"name_ru": "Сен-Пьер и Микелон",
+		"code": "PM",
+		"flag": "🇵🇲",
+		"latitude": "46.83333333",
+		"longitude": "-56.33333333"
+	},
+	{
+		"name_en": "Saint Vincent and the Grenadines",
+		"name_ru": "Сент-Винсент и Гренадины",
+		"code": "VC",
+		"flag": "🇻🇨",
+		"latitude": "13.25",
+		"longitude": "-61.2"
+	},
+	{
+		"name_en": "Samoa",
+		"name_ru": "Самоа",
+		"code": "WS",
+		"flag": "🇼🇸",
+		"latitude": "-13.58333333",
+		"longitude": "-172.33333333"
+	},
+	{
+		"name_en": "San Marino",
+		"name_ru": "Сан-Марино",
+		"code": "SM",
+		"flag": "🇸🇲",
+		"latitude": "43.76666666",
+		"longitude": "12.41666666"
+	},
+	{
+		"name_en": "São Tomé and Príncipe",
+		"name_ru": "Сан-Томе и Принсипи",
+		"code": "ST",
+		"flag": "🇸🇹",
+		"latitude": "1",
+		"longitude": "7"
+	},
+	{
+		"name_en": "Saudi Arabia",
+		"name_ru": "Саудовская Аравия",
+		"code": "SA",
+		"flag": "🇸🇦",
+		"latitude": "25",
+		"longitude": "45"
+	},
+	{
+		"name_en": "Senegal",
+		"name_ru": "Сенегал",
+		"code": "SN",
+		"flag": "🇸🇳",
+		"latitude": "14",
+		"longitude": "-14"
+	},
+	{
+		"name_en": "Serbia",
+		"name_ru": "Сербия",
+		"code": "RS",
+		"flag": "🇷🇸",
+		"latitude": "44",
+		"longitude": "21"
+	},
+	{
+		"name_en": "Seychelles",
+		"name_ru": "Сейшельские Острова",
+		"code": "SC",
+		"flag": "🇸🇨",
+		"latitude": "-4.58333333",
+		"longitude": "55.66666666"
+	},
+	{
+		"name_en": "Sierra Leone",
+		"name_ru": "Сьерра-Леоне",
+		"code": "SL",
+		"flag": "🇸🇱",
+		"latitude": "8.5",
+		"longitude": "-11.5"
+	},
+	{
+		"name_en": "Singapore",
+		"name_ru": "Сингапур",
+		"code": "SG",
+		"flag": "🇸🇬",
+		"latitude": "1.36666666",
+		"longitude": "103.8"
+	},
+	{
+		"name_en": "Sint Maarten",
+		"name_ru": "Синт-Мартен",
+		"code": "SX",
+		"flag": "🇸🇽",
+		"latitude": "18.033333",
+		"longitude": "-63.05"
+	},
+	{
+		"name_en": "Slovakia",
+		"name_ru": "Словакия",
+		"code": "SK",
+		"flag": "🇸🇰",
+		"latitude": "48.66666666",
+		"longitude": "19.5"
+	},
+	{
+		"name_en": "Slovenia",
+		"name_ru": "Словения",
+		"code": "SI",
+		"flag": "🇸🇮",
+		"latitude": "46.11666666",
+		"longitude": "14.81666666"
+	},
+	{
+		"name_en": "Solomon Islands",
+		"name_ru": "Соломоновы Острова",
+		"code": "SB",
+		"flag": "🇸🇧",
+		"latitude": "-8",
+		"longitude": "159"
+	},
+	{
+		"name_en": "Somalia",
+		"name_ru": "Сомали",
+		"code": "SO",
+		"flag": "🇸🇴",
+		"latitude": "10",
+		"longitude": "49"
+	},
+	{
+		"name_en": "South Africa",
+		"name_ru": "Южно-Африканская Республика",
+		"code": "ZA",
+		"flag": "🇿🇦",
+		"latitude": "-29",
+		"longitude": "24"
+	},
+	{
+		"name_en": "South Georgia",
+		"name_ru": "Южная Георгия и Южные Сандвичевы острова",
+		"code": "GS",
+		"flag": "🇬🇸",
+		"latitude": "-54.5",
+		"longitude": "-37"
+	},
+	{
+		"name_en": "South Korea",
+		"name_ru": "Южная Корея",
+		"code": "KR",
+		"flag": "🇰🇷",
+		"latitude": "37",
+		"longitude": "127.5"
+	},
+	{
+		"name_en": "South Sudan",
+		"name_ru": "Южный Судан",
+		"code": "SS",
+		"flag": "🇸🇸",
+		"latitude": "7",
+		"longitude": "30"
+	},
+	{
+		"name_en": "Spain",
+		"name_ru": "Испания",
+		"code": "ES",
+		"flag": "🇪🇸",
+		"latitude": "40",
+		"longitude": "-4"
+	},
+	{
+		"name_en": "Sri Lanka",
+		"name_ru": "Шри-Ланка",
+		"code": "LK",
+		"flag": "🇱🇰",
+		"latitude": "7",
+		"longitude": "81"
+	},
+	{
+		"name_en": "Sudan",
+		"name_ru": "Судан",
+		"code": "SD",
+		"flag": "🇸🇩",
+		"latitude": "15",
+		"longitude": "30"
+	},
+	{
+		"name_en": "Suriname",
+		"name_ru": "Суринам",
+		"code": "SR",
+		"flag": "🇸🇷",
+		"latitude": "4",
+		"longitude": "-56"
+	},
+	{
+		"name_en": "Svalbard and Jan Mayen",
+		"name_ru": "Шпицберген и Ян-Майен",
+		"code": "SJ",
+		"flag": "🇸🇯",
+		"latitude": "78",
+		"longitude": "20"
+	},
+	{
+		"name_en": "Sweden",
+		"name_ru": "Швеция",
+		"code": "SE",
+		"flag": "🇸🇪",
+		"latitude": "62",
+		"longitude": "15"
+	},
+	{
+		"name_en": "Switzerland",
+		"name_ru": "Швейцария",
+		"code": "CH",
+		"flag": "🇨🇭",
+		"latitude": "47",
+		"longitude": "8"
+	},
+	{
+		"name_en": "Syria",
+		"name_ru": "Сирия",
+		"code": "SY",
+		"flag": "🇸🇾",
+		"latitude": "35",
+		"longitude": "38"
+	},
+	{
+		"name_en": "Taiwan",
+		"name_ru": "Тайвань",
+		"code": "TW",
+		"flag": "🇹🇼",
+		"latitude": "23.5",
+		"longitude": "121"
+	},
+	{
+		"name_en": "Tajikistan",
+		"name_ru": "Таджикистан",
+		"code": "TJ",
+		"flag": "🇹🇯",
+		"latitude": "39",
+		"longitude": "71"
+	},
+	{
+		"name_en": "Tanzania",
+		"name_ru": "Танзания",
+		"code": "TZ",
+		"flag": "🇹🇿",
+		"latitude": "-6",
+		"longitude": "35"
+	},
+	{
+		"name_en": "Thailand",
+		"name_ru": "Таиланд",
+		"code": "TH",
+		"flag": "🇹🇭",
+		"latitude": "15",
+		"longitude": "100"
+	},
+	{
+		"name_en": "Timor-Leste",
+		"name_ru": "Восточный Тимор",
+		"code": "TL",
+		"flag": "🇹🇱",
+		"latitude": "-8.83333333",
+		"longitude": "125.91666666"
+	},
+	{
+		"name_en": "Togo",
+		"name_ru": "Того",
+		"code": "TG",
+		"flag": "🇹🇬",
+		"latitude": "8",
+		"longitude": "1.16666666"
+	},
+	{
+		"name_en": "Tokelau",
+		"name_ru": "Токелау",
+		"code": "TK",
+		"flag": "🇹🇰",
+		"latitude": "-9",
+		"longitude": "-172"
+	},
+	{
+		"name_en": "Tonga",
+		"name_ru": "Тонга",
+		"code": "TO",
+		"flag": "🇹🇴",
+		"latitude": "-20",
+		"longitude": "-175"
+	},
+	{
+		"name_en": "Trinidad and Tobago",
+		"name_ru": "Тринидад и Тобаго",
+		"code": "TT",
+		"flag": "🇹🇹",
+		"latitude": "11",
+		"longitude": "-61"
+	},
+	{
+		"name_en": "Tunisia",
+		"name_ru": "Тунис",
+		"code": "TN",
+		"flag": "🇹🇳",
+		"latitude": "34",
+		"longitude": "9"
+	},
+	{
+		"name_en": "Türkiye",
+		"name_ru": "Турция",
+		"code": "TR",
+		"flag": "🇹🇷",
+		"latitude": "39",
+		"longitude": "35"
+	},
+	{
+		"name_en": "Turkmenistan",
+		"name_ru": "Туркмения",
+		"code": "TM",
+		"flag": "🇹🇲",
+		"latitude": "40",
+		"longitude": "60"
+	},
+	{
+		"name_en": "Turks and Caicos Islands",
+		"name_ru": "Теркс и Кайкос",
+		"code": "TC",
+		"flag": "🇹🇨",
+		"latitude": "21.75",
+		"longitude": "-71.58333333"
+	},
+	{
+		"name_en": "Tuvalu",
+		"name_ru": "Тувалу",
+		"code": "TV",
+		"flag": "🇹🇻",
+		"latitude": "-8",
+		"longitude": "178"
+	},
+	{
+		"name_en": "Uganda",
+		"name_ru": "Уганда",
+		"code": "UG",
+		"flag": "🇺🇬",
+		"latitude": "1",
+		"longitude": "32"
+	},
+	{
+		"name_en": "Ukraine",
+		"name_ru": "Украина",
+		"code": "UA",
+		"flag": "🇺🇦",
+		"latitude": "49",
+		"longitude": "32"
+	},
+	{
+		"name_en": "United Arab Emirates",
+		"name_ru": "Объединённые Арабские Эмираты",
+		"code": "AE",
+		"flag": "🇦🇪",
+		"latitude": "24",
+		"longitude": "54"
+	},
+	{
+		"name_en": "United Kingdom",
+		"name_ru": "Великобритания",
+		"code": "GB",
+		"flag": "🇬🇧",
+		"latitude": "54",
+		"longitude": "-2"
+	},
+	{
+		"name_en": "United States",
+		"name_ru": "Соединённые Штаты Америки",
+		"code": "US",
+		"flag": "🇺🇸",
+		"latitude": "38",
+		"longitude": "-97"
+	},
+	{
+		"name_en": "United States Minor Outlying Islands",
+		"name_ru": "Внешние малые острова США",
+		"code": "UM",
+		"flag": "🇺🇲",
+		"latitude": "19.3",
+		"longitude": "166.633333"
+	},
+	{
+		"name_en": "United States Virgin Islands",
+		"name_ru": "Виргинские Острова",
+		"code": "VI",
+		"flag": "🇻🇮",
+		"latitude": "18.35",
+		"longitude": "-64.933333"
+	},
+	{
+		"name_en": "Uruguay",
+		"name_ru": "Уругвай",
+		"code": "UY",
+		"flag": "🇺🇾",
+		"latitude": "-33",
+		"longitude": "-56"
+	},
+	{
+		"name_en": "Uzbekistan",
+		"name_ru": "Узбекистан",
+		"code": "UZ",
+		"flag": "🇺🇿",
+		"latitude": "41",
+		"longitude": "64"
+	},
+	{
+		"name_en": "Vanuatu",
+		"name_ru": "Вануату",
+		"code": "VU",
+		"flag": "🇻🇺",
+		"latitude": "-16",
+		"longitude": "167"
+	},
+	{
+		"name_en": "Vatican City",
+		"name_ru": "Ватикан",
+		"code": "VA",
+		"flag": "🇻🇦",
+		"latitude": "41.9",
+		"longitude": "12.45"
+	},
+	{
+		"name_en": "Venezuela",
+		"name_ru": "Венесуэла",
+		"code": "VE",
+		"flag": "🇻🇪",
+		"latitude": "8",
+		"longitude": "-66"
+	},
+	{
+		"name_en": "Vietnam",
+		"name_ru": "Вьетнам",
+		"code": "VN",
+		"flag": "🇻🇳",
+		"latitude": "16.16666666",
+		"longitude": "107.83333333"
+	},
+	{
+		"name_en": "Wallis and Futuna",
+		"name_ru": "Уоллис и Футуна",
+		"code": "WF",
+		"flag": "🇼🇫",
+		"latitude": "-13.3",
+		"longitude": "-176.2"
+	},
+	{
+		"name_en": "Western Sahara",
+		"name_ru": "Западная Сахара",
+		"code": "EH",
+		"flag": "🇪🇭",
+		"latitude": "24.5",
+		"longitude": "-13"
+	},
+	{
+		"name_en": "Yemen",
+		"name_ru": "Йемен",
+		"code": "YE",
+		"flag": "🇾🇪",
+		"latitude": "15",
+		"longitude": "48"
+	},
+	{
+		"name_en": "Zambia",
+		"name_ru": "Замбия",
+		"code": "ZM",
+		"flag": "🇿🇲",
+		"latitude": "-15",
+		"longitude": "30"
+	},
+	{
+		"name_en": "Zimbabwe",
+		"name_ru": "Зимбабве",
+		"code": "ZW",
+		"flag": "🇿🇼",
+		"latitude": "-20",
+		"longitude": "30"
+	}
+]
