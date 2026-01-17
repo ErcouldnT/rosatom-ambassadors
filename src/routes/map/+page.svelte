@@ -25,10 +25,16 @@
 			zoom: 3,
 			minZoom: 2,
 			maxZoom: 10,
-			zoomControl: true,
+			zoomControl: false,
 			scrollWheelZoom: true,
 			attributionControl: false
 		});
+
+		L.control
+			.zoom({
+				position: 'bottomright'
+			})
+			.addTo(map);
 
 		// Define tile layers
 		const lightTiles = L.tileLayer(

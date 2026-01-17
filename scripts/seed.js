@@ -371,10 +371,170 @@ async function seedCountries() {
 	}
 }
 
+const EVENTS_DATA = [
+	{
+		title_en: 'Global Nuclear Education Summit 2024',
+		title_ru: 'Глобальный саммит по ядерному образованию 2024',
+		date_day: '15',
+		date_month_en: 'Aug',
+		date_month_ru: 'Авг',
+		time: '10:00 AM - 4:00 PM',
+		location_en: 'Moscow, Russia',
+		location_ru: 'Москва, Россия',
+		description_en:
+			'Join us for the annual summit bringing together leading experts in nuclear education.',
+		description_ru:
+			'Присоединяйтесь к ежегодному саммиту, собирающему ведущих экспертов в области ядерного образования.'
+	},
+	{
+		title_en: 'International Student Exchange Forum',
+		title_ru: 'Международный форум студенческого обмена',
+		date_day: '22',
+		date_month_en: 'Sep',
+		date_month_ru: 'Сен',
+		time: '09:00 AM - 6:00 PM',
+		location_en: 'Istanbul, Turkey',
+		location_ru: 'Стамбул, Турция',
+		description_en:
+			'A platform for students to share experiences and opportunities in nuclear studies.',
+		description_ru:
+			'Платформа для студентов для обмена опытом и возможностями в области ядерных исследований.'
+	},
+	{
+		title_en: 'Sustainable Energy Workshop',
+		title_ru: 'Воркшоп по устойчивой энергетике',
+		date_day: '05',
+		date_month_en: 'Oct',
+		date_month_ru: 'Окт',
+		time: '11:00 AM - 3:00 PM',
+		location_en: 'Cairo, Egypt',
+		location_ru: 'Каир, Египет',
+		description_en:
+			'Hands-on workshop focusing on the role of nuclear energy in sustainable development.',
+		description_ru: 'Практический семинар, посвященный роли ядерной энергии в устойчивом развитии.'
+	}
+];
+
+const NEWS_DATA = [
+	{
+		category_en: 'Education',
+		category_ru: 'Образование',
+		date: 'July 28, 2024',
+		title_en: 'New Scholarship Opportunities Announced',
+		title_ru: 'Объявлены новые возможности получения стипендий',
+		excerpt_en: 'RNE Ambassadors launches a new scholarship program for international students.',
+		excerpt_ru:
+			'RNE Ambassadors запускает новую стипендиальную программу для иностранных студентов.'
+	},
+	{
+		category_en: 'Technology',
+		category_ru: 'Технологии',
+		date: 'August 10, 2024',
+		title_en: 'Advances in Nuclear Safety Systems',
+		title_ru: 'Достижения в системах ядерной безопасности',
+		excerpt_en: 'Recent developments ensuring the highest standards of safety in modern reactors.',
+		excerpt_ru:
+			'Последние разработки, обеспечивающие высочайшие стандарты безопасности в современных реакторах.'
+	},
+	{
+		category_en: 'Community',
+		category_ru: 'Сообщество',
+		date: 'August 15, 2024',
+		title_en: 'Ambassador Meetup in Latin America',
+		title_ru: 'Встреча амбассадоров в Латинской Америке',
+		excerpt_en: 'Our ambassadors gathered in Brazil to discuss regional initiatives.',
+		excerpt_ru: 'Наши амбассадоры собрались в Бразилии, чтобы обсудить региональные инициативы.'
+	}
+];
+
+async function seedEvents() {
+	console.log('🌱 Seeding events...');
+	try {
+		// Optional: Clear existing events to avoid duplicates if running multiple times without unique constraints
+		// await db.delete(schema.events);
+
+		for (const event of EVENTS_DATA) {
+			const existing = await db
+				.select()
+				.from(schema.events)
+				.where(eq(schema.events.title_en, event.title_en))
+				.get();
+
+			if (existing) {
+				console.log(`Event "${event.title_en}" already exists. Skipping.`);
+			} else {
+				// Fetch a random placeholder image
+				let imageBuffer = null;
+				let mimeType = 'image/jpeg';
+				try {
+					const response = await fetch('https://picsum.photos/800/600');
+					const arrayBuffer = await response.arrayBuffer();
+					imageBuffer = Buffer.from(arrayBuffer);
+				} catch (imgError) {
+					console.warn('Failed to fetch placeholder image for event:', imgError);
+				}
+
+				await db.insert(schema.events).values({
+					id: crypto.randomUUID(),
+					...event,
+					image: imageBuffer,
+					image_mime_type: mimeType
+				});
+				console.log(`✅ Created event: ${event.title_en}`);
+			}
+		}
+	} catch (error) {
+		console.error('❌ Failed to seed events:', error);
+	}
+}
+
+async function seedNews() {
+	console.log('🌱 Seeding news...');
+	try {
+		// Optional: Clear existing news
+		// await db.delete(schema.news);
+
+		for (const item of NEWS_DATA) {
+			const existing = await db
+				.select()
+				.from(schema.news)
+				.where(eq(schema.news.title_en, item.title_en))
+				.get();
+
+			if (existing) {
+				console.log(`News "${item.title_en}" already exists. Skipping.`);
+			} else {
+				// Fetch a random placeholder image
+				let imageBuffer = null;
+				let mimeType = 'image/jpeg';
+				try {
+					const response = await fetch('https://picsum.photos/800/600');
+					const arrayBuffer = await response.arrayBuffer();
+					imageBuffer = Buffer.from(arrayBuffer);
+				} catch (imgError) {
+					console.warn('Failed to fetch placeholder image for news:', imgError);
+				}
+
+				await db.insert(schema.news).values({
+					id: crypto.randomUUID(),
+					...item,
+					image: imageBuffer,
+					image_mime_type: mimeType
+				});
+				console.log(`✅ Created news: ${item.title_en}`);
+			}
+		}
+	} catch (error) {
+		console.error('❌ Failed to seed news:', error);
+	}
+}
+
 async function main() {
 	await seedAdmin();
 	await seedStats();
 	await seedCountries();
+	await seedEvents();
+	await seedNews();
 	console.log('🎉 Seeding completed!');
 }
 

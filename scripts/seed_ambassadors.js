@@ -97,6 +97,10 @@ const SAMPLE_AMBASSADORS = [
 async function seedAmbassadors() {
 	console.log('🌱 Seeding ambassadors...');
 	try {
+		// Clear existing ambassadors to avoid duplicates and remove old data
+		await db.delete(schema.ambassadors);
+		console.log('🗑️ Cleared existing ambassadors.');
+
 		// Fetch all countries to assign ambassadors to them
 		const countries = await db.select().from(schema.countries);
 		if (countries.length === 0) {
@@ -104,35 +108,46 @@ async function seedAmbassadors() {
 			return;
 		}
 
-		console.log(`Found ${countries.length} countries. distributing ambassadors...`);
+		console.log(`Found ${countries.length} countries. Distributing ambassadors...`);
 
-		const TOTAL_AMBASSADORS = 100;
-		const ambassadorsCreated = [];
+		for (const country of countries) {
+			console.log(`🌱 Seeding ambassadors for ${country.name_en}...`);
 
-		for (let i = 0; i < TOTAL_AMBASSADORS; i++) {
-			// Pick a random country
-			const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+			// Generate random ambassadors for this country
+			const count = Math.floor(Math.random() * 3) + 1; // 1-3 ambassadors per country
 
-			// Pick a random sample ambassador for names/roles
-			const sample = SAMPLE_AMBASSADORS[Math.floor(Math.random() * SAMPLE_AMBASSADORS.length)];
+			for (let i = 0; i < count; i++) {
+				const sample = SAMPLE_AMBASSADORS[Math.floor(Math.random() * SAMPLE_AMBASSADORS.length)];
 
-			// Create unique ID
-			const id = crypto.randomUUID();
+				// Fetch a random placeholder image
+				let imageBuffer = null;
+				let mimeType = 'image/jpeg';
+				try {
+					// Use a random image to ensure variety
+					const response = await fetch(`https://picsum.photos/400/400?random=${Math.random()}`);
+					const arrayBuffer = await response.arrayBuffer();
+					imageBuffer = Buffer.from(arrayBuffer);
+				} catch (imgError) {
+					console.warn('Failed to fetch placeholder image for ambassador:', imgError);
+				}
 
-			await db.insert(schema.ambassadors).values({
-				id: id,
-				name_en: `${sample.name_en} ${i + 1}`,
-				name_ru: `${sample.name_ru} ${i + 1}`,
-				country_id: randomCountry.id,
-				country_en: randomCountry.name_en,
-				country_ru: randomCountry.name_ru,
-				role_en: sample.role_en,
-				role_ru: sample.role_ru,
-				isActive: true
-			});
-			ambassadorsCreated.push({ name: sample.name_en, country: randomCountry.name_en });
+				await db.insert(schema.ambassadors).values({
+					id: crypto.randomUUID(),
+					name_en: `${sample.name_en}`,
+					name_ru: `${sample.name_ru}`,
+					country_id: country.id,
+					country_en: country.name_en,
+					country_ru: country.name_ru,
+					role_en: sample.role_en,
+					role_ru: sample.role_ru,
+					image: imageBuffer,
+					image_mime_type: mimeType,
+					isActive: true
+				});
+			}
+			console.log(`✅ Added ${count} ambassadors for ${country.name_en}`);
 		}
-		console.log(`🎉 Added ${TOTAL_AMBASSADORS} ambassadors.`);
+		console.log(`🎉 Finished seeding ambassadors for all countries.`);
 	} catch (error) {
 		console.error('❌ Failed to seed ambassadors:', error);
 	}

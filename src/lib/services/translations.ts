@@ -67,7 +67,7 @@ export const translations = {
 			card3_desc: 'Connecting talent with opportunities in the global nuclear sector.'
 		},
 		news: {
-			title: 'Latest News & Events',
+			title: 'Latest News',
 			readMore: 'Read more'
 		},
 		cta: {
@@ -205,7 +205,7 @@ export const translations = {
 			card3_desc: 'Связь талантов с возможностями в глобальном ядерном секторе.'
 		},
 		news: {
-			title: 'Новости и События',
+			title: 'Новости',
 			readMore: 'Читать далее'
 		},
 		cta: {

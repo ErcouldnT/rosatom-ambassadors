@@ -24,38 +24,44 @@
 
 		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 			{#each events as event (event.id)}
-				<div
-					class="group card border border-base-200 bg-base-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+				<a
+					href="/events/{event.id}"
+					class="group card border border-base-200 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl"
 				>
 					<div class="card-body p-6">
 						<div class="mb-4 flex items-start justify-between">
-							<div class="flex flex-col items-center rounded-xl bg-primary/10 p-3 text-primary">
+							<div
+								class="flex flex-col items-center rounded-xl bg-primary/10 p-3 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-content"
+							>
 								<span class="text-xl leading-none font-bold">{event.date_day}</span>
 								<span class="text-xs font-bold uppercase">
 									{$language === 'en' ? event.date_month_en : event.date_month_ru}
 								</span>
 							</div>
-							<div class="badge badge-ghost">{event.time}</div>
+							<div
+								class="badge badge-ghost transition-colors group-hover:text-primary-content group-hover:badge-primary"
+							>
+								{event.time}
+							</div>
 						</div>
 
-						<h3 class="mb-2 card-title text-xl">
+						<h3 class="mb-2 card-title text-xl transition-colors group-hover:text-primary">
 							{$language === 'en' ? event.title_en : event.title_ru}
 						</h3>
 
 						<div class="mb-4 flex items-center gap-2 text-sm text-base-content/60">
-							<MapPin class="h-4 w-4" />
+							<MapPin class="h-4 w-4 text-accent" />
 							<span>{$language === 'en' ? event.location_en : event.location_ru}</span>
 						</div>
 
 						<div class="mt-auto card-actions justify-end">
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a href="/events" class="btn btn-ghost btn-sm group-hover:text-primary">
+							<span class="btn btn-ghost btn-sm group-hover:text-primary">
 								Register
 								<ArrowRight class="h-4 w-4 transition-transform group-hover:translate-x-1" />
-							</a>
+							</span>
 						</div>
 					</div>
-				</div>
+				</a>
 			{/each}
 		</div>
 
