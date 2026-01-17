@@ -58,7 +58,7 @@ const COUNTRIES_DATA = JSON.parse(
 	fs.readFileSync(path.resolve(__dirname, '../src/lib/data/countries.json'), 'utf-8')
 );
 
-async function seedAdmin() {
+async function _seedAdmin() {
 	console.log('🌱 Seeding admin user...');
 	try {
 		const existing = await db
@@ -210,7 +210,7 @@ const NEWS_DATA = [
 	}
 ];
 
-async function seedEvents() {
+async function _seedEvents() {
 	console.log('🌱 Seeding events...');
 	try {
 		// Optional: Clear existing events to avoid duplicates if running multiple times without unique constraints
@@ -251,7 +251,7 @@ async function seedEvents() {
 	}
 }
 
-async function seedNews() {
+async function _seedNews() {
 	console.log('🌱 Seeding news...');
 	try {
 		// Optional: Clear existing news
@@ -292,12 +292,52 @@ async function seedNews() {
 	}
 }
 
+const TICKER_DATA = [
+	{ text_en: 'Global Nuclear Education', text_ru: 'Глобальное Ядерное Образование', icon: 'Globe' },
+	{ text_en: 'Sustainable Energy', text_ru: 'Устойчивая Энергетика', icon: 'Zap' },
+	{
+		text_en: 'International Cooperation',
+		text_ru: 'Международное Сотрудничество',
+		icon: 'Handshake'
+	},
+	{ text_en: 'Rosatom', text_ru: 'Росатом', icon: 'Atom' },
+	{ text_en: 'MEPhI', text_ru: 'НИЯУ МИФИ', icon: 'GraduationCap' },
+	{ text_en: 'MPEI', text_ru: 'МЭИ', icon: 'Radiation' },
+	{ text_en: 'Tomsk Polytechnic', text_ru: 'Томский Политех', icon: 'BookOpen' }
+];
+
+async function seedTickers() {
+	console.log('🌱 Seeding tickers...');
+	try {
+		for (const item of TICKER_DATA) {
+			const existing = await db
+				.select()
+				.from(schema.tickers)
+				.where(eq(schema.tickers.text_en, item.text_en))
+				.get();
+
+			if (existing) {
+				console.log(`Ticker "${item.text_en}" already exists. Skipping.`);
+			} else {
+				await db.insert(schema.tickers).values({
+					id: crypto.randomUUID(),
+					...item
+				});
+				console.log(`✅ Created ticker: ${item.text_en}`);
+			}
+		}
+	} catch (error) {
+		console.error('❌ Failed to seed tickers:', error);
+	}
+}
+
 async function main() {
-	await seedAdmin();
+	// await _seedAdmin();
 	await seedStats();
 	await seedCountries();
-	await seedEvents();
-	await seedNews();
+	// await _seedEvents();
+	// await _seedNews();
+	await seedTickers();
 	console.log('🎉 Seeding completed!');
 }
 

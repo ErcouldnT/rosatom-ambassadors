@@ -165,6 +165,9 @@
 			});
 		});
 	});
+	let activeCountryCount = $derived(
+		new Set(data.ambassadors.map((a: { country_en: string }) => a.country_en)).size
+	);
 </script>
 
 <svelte:head>
@@ -265,7 +268,7 @@
 							>{translations[$language].map.location}</span
 						>
 						<span class="text-[10px] font-medium text-base-content/60">
-							{data.countries.length}
+							{activeCountryCount}
 							{translations[$language].map.countries || 'Countries'}
 						</span>
 					</div>

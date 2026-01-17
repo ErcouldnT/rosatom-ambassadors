@@ -58,10 +58,12 @@ export interface Country extends BaseModel {
 	code?: string; // ISO 3166-1 alpha-2
 	latitude?: string;
 	longitude?: string;
+	ambassador_count?: number;
 }
 
 export interface Ticker extends BaseModel {
 	text_en: string;
 	text_ru: string;
+	icon?: string | null;
 	isActive: boolean;
 }

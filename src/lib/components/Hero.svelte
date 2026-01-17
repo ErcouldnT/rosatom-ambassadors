@@ -3,11 +3,39 @@
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
+	/** @type {{
+		stats: import('$lib/types').Stat[], 
+		ambassadors?: import('$lib/types').Ambassador[],
+		totalAmbassadors?: number,
+		totalCountries?: number,
+		tickers?: import('$lib/types').Ticker[]
+	}} */
+	let {
+		stats = [],
+		ambassadors = [],
+		totalAmbassadors = 0,
+		totalCountries = 0,
+		tickers = []
+	} = $props();
+
 	// Placeholder for hero image. Using a high-quality academic/global themed image.
 	const heroImage =
 		'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop';
 
-	$: t = translations[$language].hero;
+	let t = $derived(translations[$language].hero);
+
+	let countriesStat = $derived(
+		totalCountries > 0
+			? `${totalCountries}+`
+			: stats.find((s) => s.key === 'countries')?.value || '50+'
+	);
+	let ambassadorsStat = $derived(
+		totalAmbassadors > 0
+			? `${totalAmbassadors}+`
+			: stats.find((s) => s.key === 'members')?.value || '150+'
+	);
+
+	let displayAmbassadors = $derived(ambassadors.length > 0 ? ambassadors : []);
 </script>
 
 <section
@@ -54,7 +82,7 @@
 
 				<div class="flex flex-col items-center justify-center gap-4 sm:flex-row lg:justify-start">
 					<a
-						href="#learn-more"
+						href="#about"
 						class="btn h-auto rounded-full px-8 py-3 text-lg transition-all duration-300 btn-primary hover:-translate-y-1 hover:shadow-xl"
 					>
 						{t.learnMore}
@@ -71,13 +99,13 @@
 					class="mt-10 flex items-center justify-center gap-4 text-sm text-base-content/60 lg:justify-start"
 				>
 					<div class="flex -space-x-3">
-						{#each [1, 2, 3, 4] as i (i)}
+						{#each displayAmbassadors as ambassador (ambassador.id)}
 							<div
 								class="h-10 w-10 overflow-hidden rounded-full border-2 border-base-100 bg-base-300"
 							>
 								<img
-									src={`https://i.pravatar.cc/150?img=${i + 10}`}
-									alt="avatar"
+									src={`/api/images/ambassadors/${ambassador.id}`}
+									alt={$language === 'ru' ? ambassador.name_ru : ambassador.name_en}
 									class="h-full w-full object-cover"
 								/>
 							</div>
@@ -85,10 +113,10 @@
 						<div
 							class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-base-100 bg-base-200 text-xs font-bold text-base-content"
 						>
-							+50
+							{ambassadorsStat}
 						</div>
 					</div>
-					<p>{t.ambassadorsCount}</p>
+					<p>{t.ambassadorsCount.replace('{n}', countriesStat)}</p>
 				</div>
 			</div>
 
@@ -115,7 +143,7 @@
 							>
 						</div>
 						<div>
-							<p class="text-lg font-bold text-base-content">50+ {t.countries}</p>
+							<p class="text-lg font-bold text-base-content">{countriesStat} {t.countries}</p>
 							<p class="text-xs text-base-content/60">{t.cardTag}</p>
 						</div>
 					</div>
@@ -137,7 +165,7 @@
 
 	<!-- Ticker at Bottom -->
 	<div class="absolute bottom-0 z-20 w-full">
-		<Ticker />
+		<Ticker {tickers} />
 	</div>
 </section>
 

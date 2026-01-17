@@ -103,6 +103,7 @@ export const tickers = sqliteTable('tickers', {
 		.$defaultFn(() => crypto.randomUUID()),
 	text_en: text('text_en').notNull(),
 	text_ru: text('text_ru').notNull(),
+	icon: text('icon'), // Lucide icon name
 	isActive: integer('is_active', { mode: 'boolean' }).default(true),
 	created: text('created').default(sql`CURRENT_TIMESTAMP`),
 	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)

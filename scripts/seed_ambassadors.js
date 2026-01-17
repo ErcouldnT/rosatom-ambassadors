@@ -110,11 +110,22 @@ async function seedAmbassadors() {
 
 		console.log(`Found ${countries.length} countries. Distributing ambassadors...`);
 
-		for (const country of countries) {
+		// Shuffle countries to randomize distribution
+		const shuffledCountries = countries.sort(() => 0.5 - Math.random());
+
+		let totalAmbassadors = 0;
+		const MAX_AMBASSADORS = 50;
+
+		for (const country of shuffledCountries) {
+			if (totalAmbassadors >= MAX_AMBASSADORS) break;
+
 			console.log(`🌱 Seeding ambassadors for ${country.name_en}...`);
 
-			// Generate random ambassadors for this country
-			const count = Math.floor(Math.random() * 3) + 1; // 1-3 ambassadors per country
+			// Generate 1-3 random ambassadors for this country, but don't exceed MAX_AMBASSADORS
+			let count = Math.floor(Math.random() * 3) + 1;
+			if (totalAmbassadors + count > MAX_AMBASSADORS) {
+				count = MAX_AMBASSADORS - totalAmbassadors;
+			}
 
 			for (let i = 0; i < count; i++) {
 				const sample = SAMPLE_AMBASSADORS[Math.floor(Math.random() * SAMPLE_AMBASSADORS.length)];
@@ -145,9 +156,12 @@ async function seedAmbassadors() {
 					isActive: true
 				});
 			}
-			console.log(`✅ Added ${count} ambassadors for ${country.name_en}`);
+			totalAmbassadors += count;
+			console.log(
+				`✅ Added ${count} ambassadors for ${country.name_en} (Total: ${totalAmbassadors})`
+			);
 		}
-		console.log(`🎉 Finished seeding ambassadors for all countries.`);
+		console.log(`🎉 Finished seeding. Total ambassadors seeded: ${totalAmbassadors}`);
 	} catch (error) {
 		console.error('❌ Failed to seed ambassadors:', error);
 	}

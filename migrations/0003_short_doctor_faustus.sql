@@ -1,0 +1,1 @@
+ALTER TABLE `tickers` ADD `icon` text;

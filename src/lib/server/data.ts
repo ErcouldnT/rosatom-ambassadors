@@ -1,9 +1,44 @@
 import { db } from '$lib/server/db';
 import { ambassadors, events, news, stats, countries, tickers } from '$lib/server/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, asc, and, isNotNull } from 'drizzle-orm';
 import type { Ambassador, Event, NewsItem, Stat, Country, Ticker } from '$lib/types';
 
-// Helper functions for data fetching
+// ... (getAmbassadors same)
+
+export async function getCountries(onlyWithAmbassadors = false): Promise<Country[]> {
+	try {
+		if (onlyWithAmbassadors) {
+			const records = await db
+				.select({
+					id: countries.id,
+					name_en: countries.name_en,
+					name_ru: countries.name_ru,
+					flag: countries.flag,
+					code: countries.code,
+					latitude: countries.latitude,
+					longitude: countries.longitude,
+					created: countries.created,
+					updated: countries.updated,
+					ambassador_count: sql<number>`count(${ambassadors.id})`
+				})
+				.from(countries)
+				.innerJoin(ambassadors, eq(countries.name_en, ambassadors.country_en))
+				.where(eq(ambassadors.isActive, true))
+				.groupBy(countries.id)
+				.orderBy(asc(countries.name_en));
+
+			return records.map((r) => ({
+				...r,
+				ambassador_count: Number(r.ambassador_count)
+			})) as unknown as Country[];
+		}
+		const records = await db.select().from(countries).orderBy(asc(countries.name_en)).all();
+		return records as unknown as Country[];
+	} catch (error) {
+		console.error('Failed to fetch countries:', error);
+		return [];
+	}
+}
 export async function getAmbassadors(onlyActive = true): Promise<Ambassador[]> {
 	try {
 		const results = await db
@@ -27,6 +62,41 @@ export async function getAmbassadors(onlyActive = true): Promise<Ambassador[]> {
 		return results as unknown as Ambassador[];
 	} catch (error) {
 		console.error('Failed to fetch ambassadors:', error);
+		return [];
+	}
+}
+
+export async function getAmbassadorCount(): Promise<number> {
+	try {
+		const [result] = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(ambassadors)
+			.where(eq(ambassadors.isActive, true));
+		return result.count;
+	} catch (error) {
+		console.error('Failed to fetch ambassador count:', error);
+		return 0;
+	}
+}
+
+export async function getRandomAmbassadorsWithImages(limit = 4): Promise<Ambassador[]> {
+	try {
+		const results = await db
+			.select({
+				id: ambassadors.id,
+				name_en: ambassadors.name_en,
+				name_ru: ambassadors.name_ru,
+				isActive: ambassadors.isActive,
+				image: sql<boolean>`1`
+			})
+			.from(ambassadors)
+			.where(and(eq(ambassadors.isActive, true), isNotNull(ambassadors.image)))
+			.orderBy(sql`RANDOM()`)
+			.limit(limit);
+
+		return results as unknown as Ambassador[];
+	} catch (error) {
+		console.error('Failed to fetch random ambassadors:', error);
 		return [];
 	}
 }
@@ -172,16 +242,6 @@ export async function getStats(): Promise<Stat[]> {
 		return records as unknown as Stat[];
 	} catch (error) {
 		console.error('Failed to fetch stats:', error);
-		return [];
-	}
-}
-
-export async function getCountries(): Promise<Country[]> {
-	try {
-		const records = await db.select().from(countries).all();
-		return records as unknown as Country[];
-	} catch (error) {
-		console.error('Failed to fetch countries:', error);
 		return [];
 	}
 }

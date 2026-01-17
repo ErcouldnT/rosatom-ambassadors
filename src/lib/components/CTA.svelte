@@ -21,13 +21,8 @@
 		</p>
 		<div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
 			<a
-				href="#join"
-				class="btn rounded-full border-none px-10 text-primary-content shadow-lg shadow-primary/30 transition-transform btn-lg btn-primary hover:scale-105"
-				>{t.apply}</a
-			>
-			<a
 				href="#contact"
-				class="btn rounded-full border-neutral-content px-10 text-neutral-content transition-all btn-outline btn-lg hover:bg-neutral-content hover:text-neutral"
+				class="btn rounded-full border-none px-10 text-primary-content shadow-lg shadow-primary/30 transition-transform btn-lg btn-primary hover:scale-105"
 				>{t.contact}</a
 			>
 		</div>

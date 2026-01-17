@@ -62,5 +62,8 @@
 		"*.{js,ts,svelte}": [
 			"eslint"
 		]
-	}
+	},
+	"browserslist": [
+		"last 1 major version"
+	]
 }

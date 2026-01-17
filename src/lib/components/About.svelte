@@ -79,7 +79,7 @@
 				</div>
 
 				<div class="mt-10">
-					<a href="#about-more" class="btn rounded-full px-6 btn-primary">Read Our Mission</a>
+					<a href="#contact" class="btn rounded-full px-6 btn-primary">{t.joinButton}</a>
 				</div>
 			</div>
 		</div>

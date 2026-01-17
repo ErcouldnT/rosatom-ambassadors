@@ -1,15 +1,39 @@
 <script lang="ts">
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	import type { Country } from '$lib/types';
+	import type { Country, Stat } from '$lib/types';
 	import { Globe, Users, Award, MapPin } from '@lucide/svelte';
 
-	let { countries = [] } = $props<{ countries: Country[] }>();
+	let {
+		countries = [],
+		stats = [],
+		totalAmbassadors = 0,
+		totalCountries = 0
+	} = $props<{
+		countries: Country[];
+		stats: Stat[];
+		totalAmbassadors?: number;
+		totalCountries?: number;
+	}>();
 
 	let t = $derived(translations[$language].impact);
 
 	let showAll = $state(false);
 	let displayedCountries = $derived(showAll ? countries : countries.slice(0, 15));
+
+	let countriesStat = $derived(
+		totalCountries > 0
+			? `${totalCountries}+`
+			: stats.find((s: Stat) => s.key === 'countries')?.value || '50+'
+	);
+	let ambassadorsStat = $derived(
+		totalAmbassadors > 0
+			? `${totalAmbassadors}+`
+			: stats.find((s: Stat) => s.key === 'members')?.value || '150+'
+	);
+	let universitiesStat = $derived(
+		stats.find((s: Stat) => s.key === 'universities')?.value || '50+'
+	);
 </script>
 
 <section id="ambassadors" class="relative overflow-hidden bg-base-100 py-24 lg:py-32">
@@ -56,7 +80,7 @@
 					>
 						<Globe size={28} />
 					</div>
-					<div class="mt-4 text-4xl font-black text-primary">{countries.length}+</div>
+					<div class="mt-4 text-4xl font-black text-primary">{countriesStat}</div>
 					<div class="text-sm font-medium text-base-content/60">Countries</div>
 				</div>
 			</div>
@@ -70,7 +94,7 @@
 					>
 						<Users size={28} />
 					</div>
-					<div class="mt-4 text-4xl font-black text-secondary">150+</div>
+					<div class="mt-4 text-4xl font-black text-secondary">{ambassadorsStat}</div>
 					<div class="text-sm font-medium text-base-content/60">Ambassadors</div>
 				</div>
 			</div>
@@ -84,7 +108,7 @@
 					>
 						<Award size={28} />
 					</div>
-					<div class="mt-4 text-4xl font-black text-accent">50+</div>
+					<div class="mt-4 text-4xl font-black text-accent">{universitiesStat}</div>
 					<div class="text-sm font-medium text-base-content/60">Universities</div>
 				</div>
 			</div>
@@ -110,7 +134,7 @@
 				>
 					{#each displayedCountries as country (country.id)}
 						<div
-							class="group bg-base-50 flex cursor-default flex-col items-center justify-center gap-2 rounded-xl border border-base-200 p-4 transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md"
+							class="group bg-base-50 relative flex cursor-default flex-col items-center justify-center gap-2 rounded-xl border border-base-200 p-4 transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md"
 						>
 							<span class="text-3xl transition-transform duration-300 group-hover:scale-110">
 								{country.flag}
@@ -120,6 +144,12 @@
 							>
 								{$language === 'ru' ? country.name_ru : country.name_en}
 							</span>
+							{#if country.ambassador_count}
+								<span
+									class="absolute top-2 right-2 badge badge-soft font-mono badge-xs badge-primary"
+									>{country.ambassador_count}</span
+								>
+							{/if}
 						</div>
 					{/each}
 				</div>

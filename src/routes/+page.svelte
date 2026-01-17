@@ -15,10 +15,21 @@
 	<title>RNE Ambassadors - Russian Nuclear Education</title>
 </svelte:head>
 
-<Hero />
+<Hero
+	stats={data.stats}
+	ambassadors={data.heroAmbassadors}
+	totalAmbassadors={data.totalAmbassadors}
+	totalCountries={data.totalCountries}
+	tickers={data.tickers}
+/>
 <Stats stats={data.stats} />
 <About />
-<GlobalPresence countries={data.countries} />
+<GlobalPresence
+	countries={data.countries}
+	stats={data.stats}
+	totalAmbassadors={data.totalAmbassadors}
+	totalCountries={data.totalCountries}
+/>
 <Events events={data.events} />
 <NewsSlider news={data.news} />
 <CTA />

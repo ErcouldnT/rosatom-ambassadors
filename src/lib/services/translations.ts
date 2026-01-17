@@ -18,7 +18,7 @@ export const translations = {
 			learnMore: 'Learn More',
 			ourAmbassadors: 'Our Ambassadors',
 			countries: 'Countries',
-			ambassadorsCount: 'Ambassadors from 28+ countries',
+			ambassadorsCount: 'Ambassadors from {n} countries',
 			cardTag: 'United by Science',
 			imageTag: 'Empowering the next generation'
 		},
@@ -48,7 +48,8 @@ export const translations = {
 				'Access to top-tier resources and mentorship from leading experts in the Russian nuclear industry.',
 			community: 'Global Community',
 			community_desc:
-				'Connect with like-minded individuals from over 28 countries and build a professional network.'
+				'Connect with like-minded individuals from over 28 countries and build a professional network.',
+			joinButton: 'Join the Community'
 		},
 		events: {
 			title: 'Upcoming Events',
@@ -156,7 +157,7 @@ export const translations = {
 			learnMore: 'Узнать Больше',
 			ourAmbassadors: 'Наши Амбассадоры',
 			countries: 'Стран',
-			ambassadorsCount: 'Амбассадоры из 28+ стран',
+			ambassadorsCount: 'Амбассадоры из {n} стран',
 			cardTag: 'Объединенные Наукой',
 			imageTag: 'Вдохновляя следующее поколение'
 		},
@@ -186,7 +187,8 @@ export const translations = {
 				'Доступ к передовым ресурсам и наставничество от ведущих экспертов российской атомной отрасли.',
 			community: 'Глобальное Сообщество',
 			community_desc:
-				'Общайтесь с единомышленниками из более чем 28 стран и создавайте профессиональную сеть.'
+				'Общайтесь с единомышленниками из более чем 28 стран и создавайте профессиональную сеть.',
+			joinButton: 'Присоединиться к Сообществу'
 		},
 		events: {
 			title: 'Предстоящие События',

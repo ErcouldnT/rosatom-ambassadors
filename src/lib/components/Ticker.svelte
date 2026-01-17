@@ -2,26 +2,36 @@
 	import { Globe, Zap, Handshake, Atom, GraduationCap, BookOpen, Radiation } from '@lucide/svelte';
 
 	import { language } from '$lib/services/language';
-	import { translations } from '$lib/services/translations';
 
-	$: t = translations[$language].ticker;
+	/** @type {{tickers?: import('$lib/types').Ticker[]}} */
+	let { tickers = [] } = $props();
 
-	$: items = [
-		{ text: t.globalEducation, icon: Globe },
-		{ text: t.sustainableEnergy, icon: Zap },
-		{ text: t.internationalCoop, icon: Handshake },
-		{ text: t.rosatom, icon: Atom },
-		{ text: t.mephi, icon: GraduationCap },
-		{ text: t.mpei, icon: Radiation },
-		{ text: t.tomsk, icon: BookOpen }
-	];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const iconMap: any = {
+		Globe,
+		Zap,
+		Handshake,
+		Atom,
+		GraduationCap,
+		Radiation,
+		BookOpen
+	};
+
+	let displayItems = $derived(
+		tickers
+			.filter((t) => t.isActive)
+			.map((t) => ({
+				text: $language === 'ru' ? t.text_ru : t.text_en,
+				icon: t.icon && iconMap[t.icon] ? iconMap[t.icon] : Atom
+			}))
+	);
 </script>
 
 <div
 	class="group relative flex overflow-x-hidden border-t border-base-content/5 bg-base-200 py-4 text-base-content"
 >
 	<div class="animate-marquee flex items-center gap-16 whitespace-nowrap">
-		{#each items as item (item.text)}
+		{#each displayItems as item (item.text)}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
@@ -29,7 +39,7 @@
 				<span>{item.text}</span>
 			</div>
 		{/each}
-		{#each items as item (item.text + 'dup1')}
+		{#each displayItems as item (item.text + 'dup1')}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
@@ -37,7 +47,7 @@
 				<span>{item.text}</span>
 			</div>
 		{/each}
-		{#each items as item (item.text + 'dup2')}
+		{#each displayItems as item (item.text + 'dup2')}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
@@ -50,7 +60,7 @@
 	<div
 		class="animate-marquee2 absolute top-0 ml-16 flex h-full items-center gap-16 whitespace-nowrap"
 	>
-		{#each items as item (item.text + 'mq2')}
+		{#each displayItems as item (item.text + 'mq2')}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
@@ -58,7 +68,7 @@
 				<span>{item.text}</span>
 			</div>
 		{/each}
-		{#each items as item (item.text + 'mq2-dup1')}
+		{#each displayItems as item (item.text + 'mq2-dup1')}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
@@ -66,7 +76,7 @@
 				<span>{item.text}</span>
 			</div>
 		{/each}
-		{#each items as item (item.text + 'mq2-dup2')}
+		{#each displayItems as item (item.text + 'mq2-dup2')}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
