@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, FileText, Upload } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, FileText, Upload, X } from '@lucide/svelte';
 	import type { NewsItem } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -238,15 +238,29 @@
 </div>
 
 <!-- Modal -->
-<dialog class="modal" class:modal-open={showModal}>
-	<div class="modal-box w-11/12 max-w-3xl overflow-hidden bg-base-100 p-0">
-		<div class="flex items-center justify-between border-b border-base-200 p-6">
-			<h3 class="text-xl font-bold">
-				{editingId ? 'Edit Article' : 'New Article'}
-			</h3>
-			<form method="dialog">
-				<button class="btn btn-circle btn-ghost btn-sm" onclick={closeModal}>✕</button>
-			</form>
+<dialog
+	class="modal modal-bottom sm:modal-middle"
+	class:modal-open={showModal}
+	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+>
+	<div class="modal-box w-full max-w-3xl overflow-hidden bg-base-100 p-0 sm:w-11/12">
+		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
+			<div>
+				<h3 class="text-lg font-bold sm:text-xl">
+					{editingId ? 'Edit Article' : 'New Article'}
+				</h3>
+				<p class="mt-0.5 text-sm text-base-content/60">
+					{editingId ? 'Update article details' : 'Create a new article'}
+				</p>
+			</div>
+			<button
+				class="btn btn-circle btn-ghost btn-sm"
+				onclick={closeModal}
+				type="button"
+				aria-label="Close"
+			>
+				<X class="h-5 w-5" />
+			</button>
 		</div>
 
 		<div class="max-h-[80vh] overflow-y-auto p-6">

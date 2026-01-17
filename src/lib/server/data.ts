@@ -186,6 +186,44 @@ export async function getCountries(): Promise<Country[]> {
 	}
 }
 
+export async function createCountry(data: Partial<Country>): Promise<Country | null> {
+	try {
+		const [record] = await db
+			.insert(countries)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.values(data as any)
+			.returning();
+		return record as unknown as Country;
+	} catch (error) {
+		console.error('Failed to create country:', error);
+		return null;
+	}
+}
+
+export async function updateCountry(id: string, data: Partial<Country>): Promise<Country | null> {
+	try {
+		const [record] = await db
+			.update(countries)
+			.set({ ...data, updated: new Date().toISOString() })
+			.where(eq(countries.id, id))
+			.returning();
+		return record as unknown as Country;
+	} catch (error) {
+		console.error('Failed to update country:', error);
+		return null;
+	}
+}
+
+export async function deleteCountry(id: string): Promise<boolean> {
+	try {
+		await db.delete(countries).where(eq(countries.id, id));
+		return true;
+	} catch (error) {
+		console.error('Failed to delete country:', error);
+		return false;
+	}
+}
+
 // Admin CRUD operations (No token needed, auth check should be done in route)
 export async function createAmbassador(data: Partial<Ambassador>): Promise<Ambassador | null> {
 	try {
@@ -338,44 +376,6 @@ export async function deleteStat(id: string): Promise<boolean> {
 		return true;
 	} catch (error) {
 		console.error('Failed to delete stat:', error);
-		return false;
-	}
-}
-
-export async function createCountry(data: Partial<Country>): Promise<Country | null> {
-	try {
-		const [record] = await db
-			.insert(countries)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			.values(data as any)
-			.returning();
-		return record as unknown as Country;
-	} catch (error) {
-		console.error('Failed to create country:', error);
-		return null;
-	}
-}
-
-export async function updateCountry(id: string, data: Partial<Country>): Promise<Country | null> {
-	try {
-		const [record] = await db
-			.update(countries)
-			.set({ ...data, updated: new Date().toISOString() })
-			.where(eq(countries.id, id))
-			.returning();
-		return record as unknown as Country;
-	} catch (error) {
-		console.error('Failed to update country:', error);
-		return null;
-	}
-}
-
-export async function deleteCountry(id: string): Promise<boolean> {
-	try {
-		await db.delete(countries).where(eq(countries.id, id));
-		return true;
-	} catch (error) {
-		console.error('Failed to delete country:', error);
 		return false;
 	}
 }

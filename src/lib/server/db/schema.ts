@@ -21,6 +21,7 @@ export const ambassadors = sqliteTable('ambassadors', {
 		.$defaultFn(() => crypto.randomUUID()),
 	name_en: text('name_en').notNull(),
 	name_ru: text('name_ru').notNull(),
+	country_id: text('country_id').references(() => countries.id),
 	country_en: text('country_en').notNull(),
 	country_ru: text('country_ru').notNull(),
 	role_en: text('role_en').notNull(),
@@ -88,7 +89,10 @@ export const countries = sqliteTable('countries', {
 		.$defaultFn(() => crypto.randomUUID()),
 	name_en: text('name_en').notNull(),
 	name_ru: text('name_ru').notNull(),
-	flag: text('flag'), // emoji or url
+	flag: text('flag'), // emoji
+	code: text('code'), // ISO 3166-1 alpha-2 (e.g. "RU", "TR")
+	latitude: text('latitude'), // e.g. "55.7558"
+	longitude: text('longitude'), // e.g. "37.6173"
 	created: text('created').default(sql`CURRENT_TIMESTAMP`),
 	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
 });

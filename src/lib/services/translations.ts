@@ -91,7 +91,9 @@ export const translations = {
 			title: 'Our Ambassadors',
 			description:
 				'Meet the talented students representing Russian nuclear education across the globe. They are the bridge between cultures and knowledge.',
-			viewProfile: 'View Profile'
+			viewProfile: 'View Profile',
+			searchPlaceholder: 'Search by name, country or role...',
+			noResults: 'No ambassadors found matching your search.'
 		},
 		footer: {
 			desc: 'Promoting Russian nuclear education globally and building a sustainable future through international cooperation.',
@@ -121,6 +123,17 @@ export const translations = {
 			countries: 'Countries',
 			tickers: 'Tickers',
 			logout: 'Logout'
+		},
+		map: {
+			title: 'Ambassador World Map',
+			back: 'Back to Home',
+			count: 'Ambassadors',
+			legend: 'Legend',
+			location: 'Ambassador Location',
+			clickInfo: 'Click markers to see details',
+			viewAll: 'View All Ambassadors →',
+			ambassador: 'Ambassador',
+			ambassadors: 'Ambassadors'
 		}
 	},
 	ru: {
@@ -215,7 +228,9 @@ export const translations = {
 			title: 'Наши Амбассадоры',
 			description:
 				'Познакомьтесь с талантливыми студентами, представляющими российское ядерное образование по всему миру. Они — мост между культурами и знаниями.',
-			viewProfile: 'Посмотреть Профиль'
+			viewProfile: 'Посмотреть Профиль',
+			searchPlaceholder: 'Поиск по имени, стране или роли...',
+			noResults: 'Амбассадоры по вашему запросу не найдены.'
 		},
 		footer: {
 			desc: 'Продвижение российского ядерного образования во всем мире и построение устойчивого будущего через международное сотрудничество.',
@@ -245,6 +260,17 @@ export const translations = {
 			countries: 'Страны',
 			tickers: 'Бегущая строка',
 			logout: 'Выйти'
+		},
+		map: {
+			title: 'Карта Амбассадоров',
+			back: 'Назад на главную',
+			count: 'Амбассадоров',
+			legend: 'Легенда',
+			location: 'Местоположение амбассадора',
+			clickInfo: 'Нажмите на маркер для деталей',
+			viewAll: 'Посмотреть всех амбассадоров →',
+			ambassador: 'Амбассадор',
+			ambassadors: 'Амбассадора'
 		}
 	}
 };

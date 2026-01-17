@@ -54,7 +54,10 @@ export interface Stat extends BaseModel {
 export interface Country extends BaseModel {
 	name_en: string;
 	name_ru: string;
-	flag_emoji: string;
+	flag?: string; // emoji
+	code?: string; // ISO 3166-1 alpha-2
+	latitude?: string;
+	longitude?: string;
 }
 
 export interface Ticker extends BaseModel {

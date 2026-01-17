@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2 } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, X } from '@lucide/svelte';
 	import type { Ticker } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -171,96 +171,111 @@
 </div>
 
 <!-- Modal -->
-<dialog class="modal" class:modal-open={showModal}>
-	<div class="modal-box w-11/12 max-w-3xl">
-		<form method="dialog">
-			<button class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm" onclick={closeModal}
-				>✕</button
-			>
-		</form>
-
-		<h3 class="mb-6 text-lg font-bold">
-			{editingId ? 'Edit Ticker' : 'Add Ticker'}
-		</h3>
-
-		<form
-			onsubmit={(e) => {
-				e.preventDefault();
-				handleSubmit();
-			}}
-			class="space-y-6"
-		>
-			<div class="form-control">
-				<label class="label cursor-pointer justify-start gap-4">
-					<span class="label-text">Active Status</span>
-					<input type="checkbox" bind:checked={form.isActive} class="toggle toggle-success" />
-				</label>
+<dialog
+	class="modal modal-bottom sm:modal-middle"
+	class:modal-open={showModal}
+	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+>
+	<div class="modal-box w-full max-w-3xl p-0 sm:w-11/12">
+		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
+			<div>
+				<h3 class="text-lg font-bold sm:text-xl">
+					{editingId ? 'Edit Ticker' : 'Add Ticker'}
+				</h3>
+				<p class="mt-0.5 text-sm text-base-content/60">
+					{editingId ? 'Update ticker message' : 'Create a new ticker message for the homepage'}
+				</p>
 			</div>
-
-			<div role="tablist" class="tabs-lifted tabs">
-				<button
-					type="button"
-					role="tab"
-					class="tab {activeTab === 'en'
-						? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-						: ''}"
-					onclick={() => (activeTab = 'en')}
-				>
-					🇬🇧 English
-				</button>
-				<button
-					type="button"
-					role="tab"
-					class="tab {activeTab === 'ru'
-						? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
-						: ''}"
-					onclick={() => (activeTab = 'ru')}
-				>
-					🇷🇺 Russian
-				</button>
-			</div>
-
-			<div
-				class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+			<button
+				class="btn btn-circle btn-ghost btn-sm"
+				onclick={closeModal}
+				type="button"
+				aria-label="Close"
 			>
-				<div class={activeTab === 'en' ? 'block' : 'hidden'}>
-					<div class="form-control">
-						<label class="label" for="text_en">
-							<span class="label-text">Text (EN)</span>
-						</label>
-						<textarea
-							id="text_en"
-							bind:value={form.text_en}
-							class="textarea-bordered textarea h-24"
-							required
-						></textarea>
+				<X class="h-5 w-5" />
+			</button>
+		</div>
+
+		<div class="px-4 py-4 sm:px-6">
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				class="space-y-6"
+			>
+				<div class="form-control">
+					<label class="label cursor-pointer justify-start gap-4">
+						<span class="label-text">Active Status</span>
+						<input type="checkbox" bind:checked={form.isActive} class="toggle toggle-success" />
+					</label>
+				</div>
+
+				<div role="tablist" class="tabs-lifted tabs">
+					<button
+						type="button"
+						role="tab"
+						class="tab {activeTab === 'en'
+							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
+							: ''}"
+						onclick={() => (activeTab = 'en')}
+					>
+						🇬🇧 English
+					</button>
+					<button
+						type="button"
+						role="tab"
+						class="tab {activeTab === 'ru'
+							? 'tab-active font-medium [--tab-bg:var(--fallback-b1,oklch(var(--b1)))]'
+							: ''}"
+						onclick={() => (activeTab = 'ru')}
+					>
+						🇷🇺 Russian
+					</button>
+				</div>
+
+				<div
+					class="relative z-10 -mt-px rounded-tr-box rounded-b-box border border-base-300 bg-base-100 p-6"
+				>
+					<div class={activeTab === 'en' ? 'block' : 'hidden'}>
+						<div class="form-control">
+							<label class="label" for="text_en">
+								<span class="label-text">Text (EN)</span>
+							</label>
+							<textarea
+								id="text_en"
+								bind:value={form.text_en}
+								class="textarea-bordered textarea h-24"
+								required
+							></textarea>
+						</div>
+					</div>
+
+					<div class={activeTab === 'ru' ? 'block' : 'hidden'}>
+						<div class="form-control">
+							<label class="label" for="text_ru">
+								<span class="label-text">Text (RU)</span>
+							</label>
+							<textarea
+								id="text_ru"
+								bind:value={form.text_ru}
+								class="textarea-bordered textarea h-24"
+								required
+							></textarea>
+						</div>
 					</div>
 				</div>
 
-				<div class={activeTab === 'ru' ? 'block' : 'hidden'}>
-					<div class="form-control">
-						<label class="label" for="text_ru">
-							<span class="label-text">Text (RU)</span>
-						</label>
-						<textarea
-							id="text_ru"
-							bind:value={form.text_ru}
-							class="textarea-bordered textarea h-24"
-							required
-						></textarea>
-					</div>
+				<div class="modal-action">
+					<button type="button" class="btn" onclick={closeModal}>Cancel</button>
+					<button type="submit" class="btn px-8 btn-primary">
+						{editingId ? 'Update' : 'Create'}
+					</button>
 				</div>
-			</div>
-
-			<div class="modal-action">
-				<button type="button" class="btn" onclick={closeModal}>Cancel</button>
-				<button type="submit" class="btn px-8 btn-primary">
-					{editingId ? 'Update' : 'Create'}
-				</button>
-			</div>
+			</form>
+		</div>
+		<form method="dialog" class="modal-backdrop">
+			<button onclick={closeModal}>close</button>
 		</form>
 	</div>
-	<form method="dialog" class="modal-backdrop">
-		<button onclick={closeModal}>close</button>
-	</form>
 </dialog>

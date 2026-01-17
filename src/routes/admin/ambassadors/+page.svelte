@@ -1,16 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, Upload } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, Upload, X } from '@lucide/svelte';
 	import type { Ambassador } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
 	let ambassadors = $state<Ambassador[]>([]);
+	let countries = $state<
+		{ id: string; name_en: string; name_ru: string; flag: string; code: string }[]
+	>([]);
 	let loading = $state(true);
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 	let activeTab = $state<'en' | 'ru'>('en');
+	let countrySearch = $state('');
 
 	let t = $derived(translations[$language].admin);
 
@@ -30,8 +34,17 @@
 	let existingImageUrl = $state('');
 
 	onMount(async () => {
-		await fetchAmbassadors();
+		await Promise.all([fetchAmbassadors(), fetchCountries()]);
 	});
+
+	async function fetchCountries() {
+		try {
+			const res = await fetch('/api/admin/countries');
+			countries = await res.json();
+		} catch (error) {
+			console.error('Failed to fetch countries:', error);
+		}
+	}
 
 	async function fetchAmbassadors() {
 		loading = true;
@@ -77,7 +90,23 @@
 			existingImageUrl = '';
 		}
 		activeTab = 'en';
+		countrySearch = '';
 		showModal = true;
+	}
+
+	let filteredCountries = $derived(
+		countries.filter(
+			(c) =>
+				c.name_en.toLowerCase().includes(countrySearch.toLowerCase()) ||
+				c.name_ru.toLowerCase().includes(countrySearch.toLowerCase()) ||
+				c.code.toLowerCase().includes(countrySearch.toLowerCase())
+		)
+	);
+
+	function selectCountry(country: (typeof countries)[0]) {
+		form.country_en = country.name_en;
+		form.country_ru = country.name_ru;
+		countrySearch = '';
 	}
 
 	function closeModal() {
@@ -262,15 +291,29 @@
 </div>
 
 <!-- Modal -->
-<dialog class="modal" class:modal-open={showModal}>
-	<div class="modal-box w-11/12 max-w-2xl overflow-hidden bg-base-100 p-0">
-		<div class="flex items-center justify-between border-b border-base-200 p-6">
-			<h3 class="text-xl font-bold">
-				{editingId ? 'Edit Ambassador' : 'New Ambassador'}
-			</h3>
-			<form method="dialog">
-				<button class="btn btn-circle btn-ghost btn-sm" onclick={closeModal}>✕</button>
-			</form>
+<dialog
+	class="modal modal-bottom sm:modal-middle"
+	class:modal-open={showModal}
+	onkeydown={(e) => e.key === 'Escape' && closeModal()}
+>
+	<div class="modal-box w-full max-w-2xl overflow-hidden bg-base-100 p-0 sm:w-11/12">
+		<div class="flex items-center justify-between border-b border-base-200 px-4 py-4 sm:px-6">
+			<div>
+				<h3 class="text-lg font-bold sm:text-xl">
+					{editingId ? 'Edit Ambassador' : 'New Ambassador'}
+				</h3>
+				<p class="mt-0.5 text-sm text-base-content/60">
+					{editingId ? 'Update ambassador details' : 'Add a new ambassador to the program'}
+				</p>
+			</div>
+			<button
+				class="btn btn-circle btn-ghost btn-sm"
+				onclick={closeModal}
+				type="button"
+				aria-label="Close"
+			>
+				<X class="h-5 w-5" />
+			</button>
 		</div>
 
 		<div class="max-h-[80vh] overflow-y-auto p-6">
@@ -380,15 +423,49 @@
 
 							<div class="form-control">
 								<label class="label" for="country_en">
-									<span class="label-text">Country (EN)</span>
+									<span class="label-text">Country</span>
 								</label>
-								<input
-									type="text"
-									id="country_en"
-									bind:value={form.country_en}
-									class="input-bordered input w-full"
-									placeholder="e.g. United Kingdom"
-								/>
+								<div class="dropdown w-full">
+									<input
+										type="text"
+										placeholder="Search countries..."
+										class="input-bordered input w-full"
+										bind:value={countrySearch}
+										onfocus={() => (countrySearch = '')}
+									/>
+									{#if countrySearch && filteredCountries.length > 0}
+										<ul
+											class="dropdown-content menu z-50 max-h-48 w-full overflow-y-auto rounded-box border border-base-200 bg-base-100 p-2 shadow-lg"
+										>
+											{#each filteredCountries.slice(0, 10) as country (country.id)}
+												<li>
+													<button
+														type="button"
+														onclick={() => selectCountry(country)}
+														class="flex items-center gap-2"
+													>
+														<span class="text-lg">{country.flag}</span>
+														<span>{country.name_en}</span>
+														<span class="text-xs opacity-50">({country.name_ru})</span>
+													</button>
+												</li>
+											{/each}
+										</ul>
+									{/if}
+								</div>
+								{#if form.country_en}
+									<div class="mt-2 badge gap-2 badge-primary">
+										{form.country_en} / {form.country_ru}
+										<button
+											type="button"
+											class="btn btn-ghost btn-xs"
+											onclick={() => {
+												form.country_en = '';
+												form.country_ru = '';
+											}}>×</button
+										>
+									</div>
+								{/if}
 							</div>
 						</div>
 
