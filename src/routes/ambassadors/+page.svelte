@@ -92,7 +92,7 @@
 				{#if filteredAmbassadors(ambassadors).length > 0}
 					{#each filteredAmbassadors(ambassadors) as ambassador (ambassador.id)}
 						<a
-							href="/ambassadors/{ambassador.id}"
+							href="/ambassadors/@{ambassador.slug}"
 							class="group relative block h-[400px] overflow-hidden rounded-2xl bg-base-200 shadow-xl"
 						>
 							<img

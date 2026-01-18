@@ -44,12 +44,18 @@ export async function getAmbassadors(onlyActive = true): Promise<Ambassador[]> {
 		const results = await db
 			.select({
 				id: ambassadors.id,
+				slug: ambassadors.slug,
+				email: ambassadors.email,
 				name_en: ambassadors.name_en,
 				name_ru: ambassadors.name_ru,
 				country_en: ambassadors.country_en,
 				country_ru: ambassadors.country_ru,
 				role_en: ambassadors.role_en,
 				role_ru: ambassadors.role_ru,
+				about_en: ambassadors.about_en,
+				about_ru: ambassadors.about_ru,
+				contributions_en: ambassadors.contributions_en,
+				contributions_ru: ambassadors.contributions_ru,
 				isActive: ambassadors.isActive,
 				image_mime_type: ambassadors.image_mime_type,
 				created: ambassadors.created,
@@ -106,12 +112,18 @@ export async function getAmbassadorById(id: string): Promise<Ambassador | null> 
 		const record = await db
 			.select({
 				id: ambassadors.id,
+				slug: ambassadors.slug,
+				email: ambassadors.email,
 				name_en: ambassadors.name_en,
 				name_ru: ambassadors.name_ru,
 				country_en: ambassadors.country_en,
 				country_ru: ambassadors.country_ru,
 				role_en: ambassadors.role_en,
 				role_ru: ambassadors.role_ru,
+				about_en: ambassadors.about_en,
+				about_ru: ambassadors.about_ru,
+				contributions_en: ambassadors.contributions_en,
+				contributions_ru: ambassadors.contributions_ru,
 				isActive: ambassadors.isActive,
 				image_mime_type: ambassadors.image_mime_type,
 				created: ambassadors.created,
@@ -124,6 +136,39 @@ export async function getAmbassadorById(id: string): Promise<Ambassador | null> 
 		return (record as unknown as Ambassador) || null;
 	} catch (error) {
 		console.error('Failed to fetch ambassador:', error);
+		return null;
+	}
+}
+
+export async function getAmbassadorBySlug(slug: string): Promise<Ambassador | null> {
+	try {
+		const record = await db
+			.select({
+				id: ambassadors.id,
+				slug: ambassadors.slug,
+				email: ambassadors.email,
+				name_en: ambassadors.name_en,
+				name_ru: ambassadors.name_ru,
+				country_en: ambassadors.country_en,
+				country_ru: ambassadors.country_ru,
+				role_en: ambassadors.role_en,
+				role_ru: ambassadors.role_ru,
+				about_en: ambassadors.about_en,
+				about_ru: ambassadors.about_ru,
+				contributions_en: ambassadors.contributions_en,
+				contributions_ru: ambassadors.contributions_ru,
+				isActive: ambassadors.isActive,
+				image_mime_type: ambassadors.image_mime_type,
+				created: ambassadors.created,
+				updated: ambassadors.updated,
+				image: sql<boolean>`CASE WHEN ${ambassadors.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(ambassadors)
+			.where(eq(ambassadors.slug, slug))
+			.get();
+		return (record as unknown as Ambassador) || null;
+	} catch (error) {
+		console.error('Failed to fetch ambassador by slug:', error);
 		return null;
 	}
 }

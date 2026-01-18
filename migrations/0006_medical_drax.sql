@@ -1,0 +1,1 @@
+ALTER TABLE `ambassadors` ADD `email` text;

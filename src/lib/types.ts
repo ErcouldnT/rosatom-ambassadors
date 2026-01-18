@@ -5,12 +5,18 @@ export interface BaseModel {
 }
 
 export interface Ambassador extends BaseModel {
+	slug: string;
+	email: string | null;
 	name_en: string;
 	name_ru: string;
 	country_en: string;
 	country_ru: string;
 	role_en: string;
 	role_ru: string;
+	about_en: string | null;
+	about_ru: string | null;
+	contributions_en: string | null;
+	contributions_ru: string | null;
 	image: string | Uint8Array | null;
 	image_mime_type?: string | null;
 	isActive: boolean;

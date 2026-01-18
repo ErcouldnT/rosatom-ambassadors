@@ -3,10 +3,12 @@
 	import { Plus, Pencil, Trash2, Upload, X, Search } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
+	import AdminTextarea from '$lib/components/admin/AdminTextarea.svelte';
 	import type { Ambassador, Country } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	import slugify from 'slugify';
 
 	let { data } = $props();
 
@@ -25,10 +27,16 @@
 	let form = $state({
 		name_en: '',
 		name_ru: '',
+		slug: '',
+		email: '', // Added
 		country_en: '',
 		country_ru: '',
 		role_en: '',
 		role_ru: '',
+		about_en: '',
+		about_ru: '',
+		contributions_en: '',
+		contributions_ru: '',
 		image: null as File | null,
 		isActive: true
 	});
@@ -40,6 +48,12 @@
 		data.streamed.countries.then((res) => {
 			countries = res;
 		});
+	});
+
+	$effect(() => {
+		if (form.name_en) {
+			form.slug = slugify(form.name_en, { lower: true, strict: true });
+		}
 	});
 
 	async function fetchAmbassadors() {
@@ -55,10 +69,16 @@
 			editingId = ambassador.id;
 			form.name_en = ambassador.name_en;
 			form.name_ru = ambassador.name_ru;
+			form.slug = ambassador.slug || '';
+			form.email = ambassador.email || ''; // Added
 			form.country_en = ambassador.country_en;
 			form.country_ru = ambassador.country_ru;
 			form.role_en = ambassador.role_en;
 			form.role_ru = ambassador.role_ru;
+			form.about_en = ambassador.about_en || '';
+			form.about_ru = ambassador.about_ru || '';
+			form.contributions_en = ambassador.contributions_en || '';
+			form.contributions_ru = ambassador.contributions_ru || '';
 			form.isActive = ambassador.isActive;
 			form.image = null; // Reset file input
 
@@ -70,10 +90,16 @@
 			editingId = null;
 			form.name_en = '';
 			form.name_ru = '';
+			form.slug = '';
+			form.email = ''; // Added
 			form.country_en = '';
 			form.country_ru = '';
 			form.role_en = '';
 			form.role_ru = '';
+			form.about_en = '';
+			form.about_ru = '';
+			form.contributions_en = '';
+			form.contributions_ru = '';
 			form.isActive = true;
 			form.image = null;
 			existingImageUrl = '';
@@ -114,10 +140,16 @@
 			if (editingId) formData.append('id', editingId);
 			formData.append('name_en', form.name_en);
 			formData.append('name_ru', form.name_ru);
+			formData.append('slug', form.slug);
+			formData.append('email', form.email); // Added
 			formData.append('country_en', form.country_en);
 			formData.append('country_ru', form.country_ru);
 			formData.append('role_en', form.role_en);
 			formData.append('role_ru', form.role_ru);
+			formData.append('about_en', form.about_en);
+			formData.append('about_ru', form.about_ru);
+			formData.append('contributions_en', form.contributions_en);
+			formData.append('contributions_ru', form.contributions_ru);
 			formData.append('isActive', form.isActive.toString());
 
 			if (form.image) {
@@ -505,6 +537,37 @@
 							bind:value={form.role_en}
 							placeholder="e.g. Student, Nuclear Physics"
 						/>
+
+						<AdminInput
+							id="slug"
+							label="Slug (Auto-generated from name)"
+							bind:value={form.slug}
+							placeholder="e.g. john-doe"
+							disabled={true}
+							class="opacity-70"
+						/>
+
+						<AdminInput
+							id="email"
+							label="Email (for Contact button)"
+							bind:value={form.email}
+							placeholder="e.g. ambassador@example.com"
+							type="email"
+						/>
+
+						<AdminTextarea
+							id="about_en"
+							label="About (EN)"
+							bind:value={form.about_en}
+							placeholder="Brief biography..."
+						/>
+
+						<AdminTextarea
+							id="contributions_en"
+							label="Contributions (EN)"
+							bind:value={form.contributions_en}
+							placeholder="Key achievements..."
+						/>
 					</div>
 
 					<!-- Russian Fields -->
@@ -530,6 +593,20 @@
 							label="Role / Title (RU)"
 							bind:value={form.role_ru}
 							placeholder="Студент"
+						/>
+
+						<AdminTextarea
+							id="about_ru"
+							label="About (RU)"
+							bind:value={form.about_ru}
+							placeholder="Биография..."
+						/>
+
+						<AdminTextarea
+							id="contributions_ru"
+							label="Contributions (RU)"
+							bind:value={form.contributions_ru}
+							placeholder="Достижения..."
 						/>
 					</div>
 				</div>

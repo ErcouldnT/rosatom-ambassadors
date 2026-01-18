@@ -19,6 +19,8 @@ export const ambassadors = sqliteTable('ambassadors', {
 	id: text('id')
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
+	slug: text('slug').unique(),
+	email: text('email'),
 	name_en: text('name_en').notNull(),
 	name_ru: text('name_ru').notNull(),
 	country_id: text('country_id').references(() => countries.id),
@@ -26,6 +28,10 @@ export const ambassadors = sqliteTable('ambassadors', {
 	country_ru: text('country_ru').notNull(),
 	role_en: text('role_en').notNull(),
 	role_ru: text('role_ru').notNull(),
+	about_en: text('about_en'),
+	about_ru: text('about_ru'),
+	contributions_en: text('contributions_en'),
+	contributions_ru: text('contributions_ru'),
 	image: blob('image'), // Binary data
 	image_mime_type: text('image_mime_type'), // e.g. image/webp
 	isActive: integer('is_active', { mode: 'boolean' }).default(true),

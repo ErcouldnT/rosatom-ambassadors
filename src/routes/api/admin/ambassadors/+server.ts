@@ -7,6 +7,7 @@ import {
 	deleteAmbassador
 } from '$lib/server/data';
 import sharp from 'sharp';
+import slugify from 'slugify';
 
 export const GET: RequestHandler = async () => {
 	const ambassadors = await getAmbassadors(false);
@@ -33,24 +34,39 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		mimeType = 'image/webp';
 	}
 
+	const name_en = formData.get('name_en') as string;
+	const slug = (formData.get('slug') as string) || slugify(name_en, { lower: true, strict: true });
+
 	const data = {
-		name_en: formData.get('name_en') as string,
+		name_en,
 		name_ru: formData.get('name_ru') as string,
+		slug,
 		country_en: formData.get('country_en') as string,
 		country_ru: formData.get('country_ru') as string,
 		role_en: formData.get('role_en') as string,
 		role_ru: formData.get('role_ru') as string,
+		about_en: formData.get('about_en') as string,
+		about_ru: formData.get('about_ru') as string,
+		contributions_en: formData.get('contributions_en') as string,
+		contributions_ru: formData.get('contributions_ru') as string,
+		email: formData.get('email') as string,
 		isActive: formData.get('isActive') === 'true',
 		image: imageData,
 		image_mime_type: mimeType
 	};
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const ambassador = await createAmbassador(data as any);
-	if (!ambassador) {
-		return json({ error: 'Failed to create' }, { status: 500 });
+	try {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const ambassador = await createAmbassador(data as any);
+		if (!ambassador) {
+			return json({ error: 'Failed to create ambassador' }, { status: 500 });
+		}
+		return json(ambassador, { status: 201 });
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	} catch (error: any) {
+		console.error('API POST Error:', error);
+		return json({ error: error.message || 'Server error' }, { status: 500 });
 	}
-	return json(ambassador, { status: 201 });
 };
 
 export const PUT: RequestHandler = async ({ request, locals }) => {
@@ -86,19 +102,33 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		country_ru: formData.get('country_ru') as string,
 		role_en: formData.get('role_en') as string,
 		role_ru: formData.get('role_ru') as string,
+		about_en: formData.get('about_en') as string,
+		about_ru: formData.get('about_ru') as string,
+		contributions_en: formData.get('contributions_en') as string,
+		contributions_ru: formData.get('contributions_ru') as string,
+		email: formData.get('email') as string,
 		isActive: formData.get('isActive') === 'true'
 	};
+
+	const slug = formData.get('slug') as string;
+	if (slug) data.slug = slug;
 
 	if (imageData) {
 		data.image = imageData;
 		data.image_mime_type = mimeType;
 	}
 
-	const ambassador = await updateAmbassador(id, data);
-	if (!ambassador) {
-		return json({ error: 'Not found' }, { status: 404 });
+	try {
+		const ambassador = await updateAmbassador(id, data);
+		if (!ambassador) {
+			return json({ error: 'Ambassador not found' }, { status: 404 });
+		}
+		return json(ambassador);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	} catch (error: any) {
+		console.error('API PUT Error:', error);
+		return json({ error: error.message || 'Server error' }, { status: 500 });
 	}
-	return json(ambassador);
 };
 
 export const DELETE: RequestHandler = async ({ request, locals }) => {

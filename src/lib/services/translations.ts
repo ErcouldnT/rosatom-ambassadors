@@ -136,6 +136,24 @@ export const translations = {
 			ambassador: 'Ambassador',
 			ambassadors: 'Ambassadors',
 			countries: 'Countries'
+		},
+		ambassadorProfile: {
+			active: 'Active',
+			inactive: 'Inactive',
+			networkVerified: 'Network Verified',
+			profileDossier: 'Ambassador Profile',
+			professionalManifesto: 'Professional Manifesto',
+			globalImpact: 'Global Impact',
+			sendEmail: 'Send Email',
+			share: 'Share',
+			copied: 'Copied',
+			initializingProfile: 'Initializing Profile',
+			profileUnavailable: 'Profile Unavailable',
+			profileUnavailableDesc:
+				'The ambassador you are looking for has departed the network or the link is invalid.',
+			backToNetwork: 'Back to Network',
+			shareTitle: 'Ambassador Profile',
+			shareText: 'Check out this ambassador profile on RNE'
 		}
 	},
 	ru: {
@@ -273,8 +291,26 @@ export const translations = {
 			clickInfo: 'Нажмите на маркер для деталей',
 			viewAll: 'Посмотреть всех амбассадоров →',
 			ambassador: 'Амбассадор',
-			ambassadors: 'Амбассадора',
+			ambassadors: 'Амбассадоры',
 			countries: 'Стран'
+		},
+		ambassadorProfile: {
+			active: 'Активен',
+			inactive: 'Неактивен',
+			networkVerified: 'Верифицирован в сети',
+			profileDossier: 'Профиль Амбассадора',
+			professionalManifesto: 'Профессиональный Манифест',
+			globalImpact: 'Глобальное Влияние',
+			sendEmail: 'Написать письмо',
+			share: 'Поделиться',
+			copied: 'Скопировано',
+			initializingProfile: 'Инициализация профиля',
+			profileUnavailable: 'Профиль недоступен',
+			profileUnavailableDesc:
+				'Амбассадор, которого вы ищете, покинул сеть или ссылка недействительна.',
+			backToNetwork: 'Назад к списку',
+			shareTitle: 'Профиль Амбассадора',
+			shareText: 'Посмотрите профиль амбассадора на RNE'
 		}
 	}
 };
