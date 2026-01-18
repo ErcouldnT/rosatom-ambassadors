@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { browser } from '$app/environment';
 	import {
 		Atom,
 		LayoutDashboard,
@@ -14,13 +15,18 @@
 		BarChart3,
 		MessageSquare,
 		Image as ImageIcon,
-		User
+		User,
+		Sun,
+		Moon
 	} from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import ToastContainer from '$lib/components/ToastContainer.svelte';
+	import { onMount } from 'svelte';
 
 	let { children, data } = $props();
+
+	let theme = $state('light');
 
 	// Sync language with server data to avoid FOUC
 	$effect.pre(() => {
@@ -29,9 +35,29 @@
 		}
 	});
 
+	onMount(() => {
+		// Sync local state with the theme applied by app.html
+		const currentTheme = document.documentElement.getAttribute('data-theme');
+		if (currentTheme) {
+			theme = currentTheme;
+		}
+	});
+
+	function toggleTheme() {
+		theme = theme === 'light' ? 'dark' : 'light';
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
+	}
+
+	function toggleLanguage() {
+		language.update((l) => (l === 'en' ? 'ru' : 'en'));
+	}
+
 	let sidebarOpen = $state(false);
 
-	let t = $derived(translations[$language].admin);
+	// Use server-provided language if available (SSR), otherwise client store
+	let currentLang = $derived(!browser && data.lang ? data.lang : $language);
+	let t = $derived(translations[currentLang].admin);
 
 	let navItems = $derived([
 		{ name: t.dashboard, href: '/admin', icon: LayoutDashboard },
@@ -157,23 +183,29 @@
 					{/if}
 				</button>
 
-				<div class="flex items-center gap-4">
+				<div class="ml-auto flex items-center gap-4">
 					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-					<!-- Language Switcher -->
-					<div class="flex items-center gap-2">
-						<button
-							class="btn btn-sm {$language === 'en' ? 'btn-primary' : 'btn-ghost'}"
-							onclick={() => language.set('en')}
-						>
-							EN
-						</button>
-						<button
-							class="btn btn-sm {$language === 'ru' ? 'btn-primary' : 'btn-ghost'}"
-							onclick={() => language.set('ru')}
-						>
-							RU
-						</button>
-					</div>
+					<label class="btn swap btn-circle swap-rotate btn-ghost btn-sm">
+						<!-- this hidden checkbox controls the state -->
+						<input
+							type="checkbox"
+							class="theme-controller"
+							value="dark"
+							checked={theme === 'dark'}
+							onchange={toggleTheme}
+						/>
+
+						<!-- moon icon (show when light, to switch to dark) -->
+						<Moon class="swap-off h-5 w-5" />
+
+						<!-- sun icon (show when dark, to switch to light) -->
+						<Sun class="swap-on h-5 w-5" />
+					</label>
+
+					<!-- Language Toggle -->
+					<button class="btn w-10 font-bold btn-ghost btn-sm" onclick={toggleLanguage}>
+						{$language === 'en' ? 'RU' : 'EN'}
+					</button>
 
 					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 					<a href="/" target="_blank" class="btn btn-ghost btn-sm">View Site →</a>

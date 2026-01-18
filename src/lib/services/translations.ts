@@ -117,6 +117,7 @@ export const translations = {
 		},
 		admin: {
 			dashboard: 'Dashboard',
+			welcome: "Welcome back! Here's an overview of your site.",
 			ambassadors: 'Ambassadors',
 			events: 'Events',
 			news: 'News',
@@ -126,7 +127,35 @@ export const translations = {
 			content: 'Content',
 			messages: 'Messages',
 			profile: 'Profile',
-			logout: 'Logout'
+			logout: 'Logout',
+			recentMessages: 'Recent Messages',
+			recentNews: 'Recent News',
+			upcomingEvents: 'Upcoming Events',
+			topCountries: 'Top Countries',
+			ambassadorRoles: 'Ambassador Roles',
+			quickActions: 'Quick Actions',
+			viewAll: 'View All',
+			manage: 'Manage',
+			viewLiveSite: 'View Live Site',
+			manageAmbassadors: 'Manage Ambassadors',
+			manageEvents: 'Manage Events',
+			manageNews: 'Manage News',
+			totalAmbassadors: 'Total Ambassadors',
+			activeEvents: 'Active Events',
+			newsArticles: 'News Articles',
+			sub: {
+				active: 'Active',
+				upcoming: 'Upcoming',
+				published: 'Published',
+				represented: 'Represented',
+				unread: 'Unread'
+			},
+			empty: {
+				noMessages: 'No recent messages',
+				noNews: 'No recent news',
+				noEvents: 'No upcoming events',
+				noData: 'No data available'
+			}
 		},
 		map: {
 			title: 'Ambassador World Map',
@@ -277,6 +306,7 @@ export const translations = {
 		},
 		admin: {
 			dashboard: 'Панель управления',
+			welcome: 'С возвращением! Вот обзор вашего сайта.',
 			ambassadors: 'Амбассадоры',
 			events: 'События',
 			news: 'Новости',
@@ -286,7 +316,35 @@ export const translations = {
 			content: 'Контент',
 			messages: 'Сообщения',
 			profile: 'Профиль',
-			logout: 'Выйти'
+			logout: 'Выйти',
+			recentMessages: 'Последние Сообщения',
+			recentNews: 'Последние Новости',
+			upcomingEvents: 'Предстоящие События',
+			topCountries: 'Топ Стран',
+			ambassadorRoles: 'Роли Амбассадоров',
+			quickActions: 'Быстрые Действия',
+			viewAll: 'Смотреть Все',
+			manage: 'Управлять',
+			viewLiveSite: 'Открыть Сайт',
+			manageAmbassadors: 'Управлять Амбассадорами',
+			manageEvents: 'Управлять Событиями',
+			manageNews: 'Управлять Новостями',
+			totalAmbassadors: 'Всего Амбассадоров',
+			activeEvents: 'Активные События',
+			newsArticles: 'Новости',
+			sub: {
+				active: 'Активных',
+				upcoming: 'Предстоящих',
+				published: 'Опубликовано',
+				represented: 'Представлено',
+				unread: 'Непрочитанных'
+			},
+			empty: {
+				noMessages: 'Нет новых сообщений',
+				noNews: 'Нет новых новостей',
+				noEvents: 'Нет предстоящих событий',
+				noData: 'Нет данных'
+			}
 		},
 		map: {
 			title: 'Карта Амбассадоров',
