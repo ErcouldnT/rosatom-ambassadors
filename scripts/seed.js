@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Argon2id } from 'oslo/password';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,6 +62,9 @@ const COUNTRIES_DATA = JSON.parse(
 async function _seedAdmin() {
 	console.log('🌱 Seeding admin user...');
 	try {
+		const argon2id = new Argon2id();
+		const hashedPassword = await argon2id.hash(ADMIN_PASSWORD);
+
 		const existing = await db
 			.select()
 			.from(schema.user)
@@ -70,14 +74,14 @@ async function _seedAdmin() {
 			console.log('Admin user already exists. Updating password...');
 			await db
 				.update(schema.user)
-				.set({ password_hash: ADMIN_PASSWORD })
+				.set({ password_hash: hashedPassword })
 				.where(eq(schema.user.id, existing.id));
-			console.log('✅ Admin password updated.');
+			console.log('✅ Admin password updated (hashed).');
 		} else {
 			await db.insert(schema.user).values({
 				id: crypto.randomUUID(),
 				username: ADMIN_EMAIL,
-				password_hash: ADMIN_PASSWORD
+				password_hash: hashedPassword
 			});
 			console.log(`✅ Admin user created: ${ADMIN_EMAIL}`);
 		}

@@ -5,6 +5,8 @@ import { user } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { lucia } from '$lib/server/auth';
 
+import { Argon2id } from 'oslo/password';
+
 export const POST: RequestHandler = async ({ request, cookies }) => {
 	const { email, password } = await request.json();
 
@@ -15,8 +17,8 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		return json({ success: false, error: 'Invalid credentials' }, { status: 401 });
 	}
 
-	// Verify password (simplistic comparison for migration)
-	const validPassword = existingUser.password_hash === password;
+	// Verify password
+	const validPassword = await new Argon2id().verify(existingUser.password_hash, password);
 
 	if (!validPassword) {
 		return json({ success: false, error: 'Invalid credentials' }, { status: 401 });
