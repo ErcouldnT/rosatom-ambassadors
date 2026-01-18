@@ -86,7 +86,7 @@ async function _seedAdmin() {
 	}
 }
 
-async function seedStats() {
+async function _seedStats() {
 	console.log('🌱 Seeding stats...');
 	try {
 		for (const stat of STATS_DATA) {
@@ -110,7 +110,7 @@ async function seedStats() {
 	}
 }
 
-async function seedCountries() {
+async function _seedCountries() {
 	console.log('🌱 Seeding countries...');
 	try {
 		for (const country of COUNTRIES_DATA) {
@@ -306,7 +306,7 @@ const TICKER_DATA = [
 	{ text_en: 'Tomsk Polytechnic', text_ru: 'Томский Политех', icon: 'BookOpen' }
 ];
 
-async function seedTickers() {
+async function _seedTickers() {
 	console.log('🌱 Seeding tickers...');
 	try {
 		for (const item of TICKER_DATA) {
@@ -333,11 +333,11 @@ async function seedTickers() {
 
 async function main() {
 	// await _seedAdmin();
-	await seedStats();
-	await seedCountries();
+	// await _seedStats();
+	// await _seedCountries();
 	// await _seedEvents();
 	// await _seedNews();
-	await seedTickers();
+	// await _seedTickers();
 	console.log('🎉 Seeding completed!');
 }
 
