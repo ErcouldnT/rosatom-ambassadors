@@ -4,36 +4,80 @@ import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, request }) => {
 	const { type, id } = params;
+	const ifNoneMatch = request.headers.get('if-none-match');
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	let record: any;
+	type ImageTable = typeof ambassadors | typeof events | typeof news;
+
+	const getMetaAndImage = async (table: ImageTable) => {
+		const meta = await db
+			.select({
+				updated: table.updated,
+				mimeType: table.image_mime_type
+			})
+			.from(table)
+			.where(eq(table.id, id!))
+			.get();
+
+		if (!meta) return null;
+
+		const etag = `"${meta.updated}"`;
+		if (ifNoneMatch === etag) {
+			return { status: 304, image: null, mimeType: null, etag };
+		}
+
+		const result = await db
+			.select({ image: table.image })
+			.from(table)
+			.where(eq(table.id, id!))
+			.get();
+
+		if (!result || !result.image) return null;
+
+		return {
+			image: result.image as Uint8Array,
+			mimeType: meta.mimeType,
+			etag,
+			status: 200
+		};
+	};
 
 	try {
+		let result: {
+			image: Uint8Array | null;
+			mimeType: string | null;
+			etag: string;
+			status: number;
+		} | null = null;
+
 		if (type === 'ambassadors') {
-			record = await db.select().from(ambassadors).where(eq(ambassadors.id, id!)).get();
+			result = await getMetaAndImage(ambassadors);
 		} else if (type === 'events') {
-			record = await db.select().from(events).where(eq(events.id, id!)).get();
+			result = await getMetaAndImage(events);
 		} else if (type === 'news') {
-			record = await db.select().from(news).where(eq(news.id, id!)).get();
+			result = await getMetaAndImage(news);
 		} else {
 			throw error(400, 'Invalid image type');
 		}
 
-		if (!record || !record.image) {
+		if (!result) {
 			throw error(404, 'Image not found');
 		}
 
-		return new Response(record.image, {
+		if (result.status === 304) {
+			return new Response(null, { status: 304 });
+		}
+
+		return new Response(result.image as unknown as BodyInit, {
 			headers: {
-				'Content-Type': record.image_mime_type || 'image/webp',
-				'Cache-Control': 'public, max-age=31536000, immutable'
+				'Content-Type': result.mimeType || 'image/webp',
+				'Cache-Control': 'public, max-age=31536000, immutable',
+				ETag: result.etag
 			}
 		});
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} catch (e: any) {
-		if (e.status) throw e;
+	} catch (e: unknown) {
+		if (e && typeof e === 'object' && 'status' in e) throw e;
 		console.error('Failed to serve image:', e);
 		throw error(500, 'Internal server error');
 	}
