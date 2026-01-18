@@ -137,7 +137,7 @@
 							.slice(0, 5)
 							.map(
 								(amb: AmbassadorWithCoords) => `
-							<a href="/ambassadors/${amb.id}" class="popup-ambassador-link">
+							<a href="/ambassadors/@${amb.slug}" class="popup-ambassador-link">
 								<div class="popup-ambassador">
 									<img src="${amb.image ? getImageUrl('ambassadors', amb.id, amb.image) : '/placeholder-avatar.png'}" alt="${$language === 'ru' ? amb.name_ru : amb.name_en}" class="popup-avatar" />
 									<div class="popup-info">
