@@ -23,6 +23,19 @@
 		description={$language === 'en' ? newsItem.excerpt_en : newsItem.excerpt_ru}
 		image={getImageUrl('news', newsItem.id, newsItem.image)}
 		type="article"
+		jsonLd={{
+			'@context': 'https://schema.org',
+			'@type': 'NewsArticle',
+			headline: $language === 'en' ? newsItem.title_en : newsItem.title_ru,
+			description: $language === 'en' ? newsItem.excerpt_en : newsItem.excerpt_ru,
+			image: getImageUrl('news', newsItem.id, newsItem.image),
+			datePublished: newsItem.created,
+			dateModified: newsItem.updated,
+			author: {
+				'@type': 'Organization',
+				name: 'RNE Ambassadors'
+			}
+		}}
 	/>
 {/await}
 

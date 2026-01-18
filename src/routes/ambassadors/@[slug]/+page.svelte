@@ -50,6 +50,18 @@
 				t.profileDossier}
 			image={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
 			type="profile"
+			jsonLd={{
+				'@context': 'https://schema.org',
+				'@type': 'Person',
+				name: $language === 'en' ? ambassador.name_en : ambassador.name_ru,
+				jobTitle: $language === 'en' ? ambassador.role_en : ambassador.role_ru,
+				description: $language === 'en' ? ambassador.about_en : ambassador.about_ru,
+				image: getImageUrl('ambassadors', ambassador.id, ambassador.image),
+				nationality: {
+					'@type': 'Country',
+					name: $language === 'en' ? ambassador.country_en : ambassador.country_ru
+				}
+			}}
 		/>
 	{/if}
 {/await}

@@ -10,6 +10,7 @@
 		ogTitle?: string;
 		ogDescription?: string;
 		canonical?: string;
+		jsonLd?: Record<string, unknown>;
 	}
 
 	let {
@@ -19,13 +20,18 @@
 		type = 'website',
 		ogTitle,
 		ogDescription,
-		canonical
+		canonical,
+		jsonLd
 	}: Props = $props();
 
 	const siteName = 'RNE Ambassadors';
 	const fullTitle = $derived(title ? `${title} | ${siteName}` : siteName);
 	const siteUrl = $derived($page.url.origin);
+	const currentPath = $derived($page.url.pathname);
 	const currentUrl = $derived($page.url.href);
+
+	const alternateEn = $derived(`${siteUrl}${currentPath}`);
+	const alternateRu = $derived(`${siteUrl}${currentPath}`);
 
 	// Default meta values
 	const defaultDescription =
@@ -40,6 +46,10 @@
 	const finalOgTitle = $derived(ogTitle || fullTitle);
 	const finalOgDescription = $derived(ogDescription || finalDescription);
 	const finalCanonical = $derived(canonical || currentUrl);
+
+	const jsonLdScript = $derived(
+		jsonLd ? '<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</' + 'script>' : ''
+	);
 </script>
 
 <svelte:head>
@@ -47,6 +57,11 @@
 	<title>{fullTitle}</title>
 	<meta name="description" content={finalDescription} />
 	<link rel="canonical" href={finalCanonical} />
+
+	<!-- Multi-language SEO (hreflang) -->
+	<link rel="alternate" hreflang="en" href={alternateEn} />
+	<link rel="alternate" hreflang="ru" href={alternateRu} />
+	<link rel="alternate" hreflang="x-default" href={alternateEn} />
 
 	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content={type} />
@@ -62,6 +77,12 @@
 	<meta property="twitter:title" content={finalOgTitle} />
 	<meta property="twitter:description" content={finalOgDescription} />
 	<meta property="twitter:image" content={finalImage} />
+
+	<!-- Structured Data (JSON-LD) -->
+	{#if jsonLdScript}
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+		{@html jsonLdScript}
+	{/if}
 
 	<!-- Mobile / Theme -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />

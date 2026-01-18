@@ -13,7 +13,17 @@
 	let { data } = $props();
 </script>
 
-<SEO />
+<SEO
+	jsonLd={{
+		'@context': 'https://schema.org',
+		'@type': 'Organization',
+		name: 'RNE Ambassadors',
+		url: 'https://rosatom-ambassadors.vercel.app',
+		logo: 'https://rosatom-ambassadors.vercel.app/favicon.png',
+		description:
+			'Rosatom Nuclear Education Ambassadors program connecting students and professionals globally.'
+	}}
+/>
 
 <Hero
 	stats={data.stats}

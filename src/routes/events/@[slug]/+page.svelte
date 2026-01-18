@@ -23,6 +23,22 @@
 		description={$language === 'en' ? event.description_en : event.description_ru}
 		image={getImageUrl('events', event.id, event.image)}
 		type="article"
+		jsonLd={{
+			'@context': 'https://schema.org',
+			'@type': 'Event',
+			name: $language === 'en' ? event.title_en : event.title_ru,
+			description: $language === 'en' ? event.description_en : event.description_ru,
+			image: getImageUrl('events', event.id, event.image),
+			startDate: `${event.date_day} ${$language === 'en' ? event.date_month_en : event.date_month_ru} 2024 ${event.time}`, // Approximation for schema
+			location: {
+				'@type': 'Place',
+				name: $language === 'en' ? event.location_en : event.location_ru
+			},
+			organizer: {
+				'@type': 'Organization',
+				name: 'RNE Ambassadors'
+			}
+		}}
 	/>
 {/await}
 

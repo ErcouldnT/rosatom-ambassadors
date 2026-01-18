@@ -1,3 +1,6 @@
-# allow crawling everything by default
+# allow crawling everything by default, except admin and api
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /api
+
+Sitemap: https://rosatom-ambassadors.vercel.app/sitemap.xml
