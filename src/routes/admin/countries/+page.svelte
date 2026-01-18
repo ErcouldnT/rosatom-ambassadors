@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import { Plus, Pencil, Trash2, MapPin, Globe, Search } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
@@ -7,8 +7,10 @@
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
-	let countries = $state<Country[]>([]);
-	let loading = $state(true);
+	let { data } = $props();
+
+	// countries state removed
+
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 
@@ -24,22 +26,9 @@
 		longitude: ''
 	});
 
-	onMount(async () => {
-		await fetchCountries();
-	});
-
 	async function fetchCountries() {
-		loading = true;
-		try {
-			const res = await fetch('/api/admin/countries');
-			countries = await res.json();
-		} catch (error) {
-			console.error('Failed to fetch countries:', error);
-		} finally {
-			loading = false;
-		}
+		await invalidateAll();
 	}
-
 	function openModal(country?: Country) {
 		if (country) {
 			editingId = country.id;
@@ -121,14 +110,7 @@
 	}
 
 	let searchQuery = $state('');
-	let filteredCountries = $derived(
-		countries.filter(
-			(c) =>
-				c.name_en.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				c.name_ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				(c.code && c.code.toLowerCase().includes(searchQuery.toLowerCase()))
-		)
-	);
+	// filteredCountries removed
 </script>
 
 <svelte:head>
@@ -173,7 +155,7 @@
 				placeholder="Search by name or code..."
 				bind:value={searchQuery}
 			/>
-			<div class="font-mono text-xs opacity-50">{filteredCountries.length} found</div>
+			<!-- Count removed as it depends on streamed data -->
 		</div>
 	</div>
 
@@ -192,62 +174,79 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#if loading}
+					{#await data.streamed.countries}
 						<tr>
 							<td colspan="6" class="py-12 text-center">
 								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
-					{:else if filteredCountries.length === 0}
-						<tr>
-							<td colspan="6" class="py-12 text-center text-base-content/50">
-								No countries found.
-							</td>
-						</tr>
-					{:else}
-						{#each filteredCountries as country (country.id)}
-							<tr class="hover">
-								<td>
-									<span class="text-2xl">{country.flag || '🌍'}</span>
-								</td>
-								<td>
-									<div class="font-bold">{country.name_en}</div>
-								</td>
-								<td>
-									<div class="text-base-content/70">{country.name_ru}</div>
-								</td>
-								<td>
-									<div class="badge badge-ghost">{country.code || '-'}</div>
-								</td>
-								<td>
-									{#if country.latitude && country.longitude}
-										<div class="flex items-center gap-2 text-sm">
-											<MapPin class="h-4 w-4 text-success" />
-											<span class="font-mono text-xs">{country.latitude}, {country.longitude}</span>
-										</div>
-									{:else}
-										<span class="badge badge-sm badge-warning">No coords</span>
-									{/if}
-								</td>
-								<td class="text-right">
-									<div class="join">
-										<button
-											class="btn join-item btn-ghost btn-sm"
-											onclick={() => openModal(country)}
-										>
-											<Pencil class="h-4 w-4" />
-										</button>
-										<button
-											class="btn join-item text-error btn-ghost btn-sm"
-											onclick={() => handleDelete(country.id)}
-										>
-											<Trash2 class="h-4 w-4" />
-										</button>
-									</div>
+					{:then streamedCountries}
+						{@const currentList = streamedCountries.filter(
+							(c) =>
+								c.name_en.toLowerCase().includes(searchQuery.toLowerCase()) ||
+								c.name_ru.toLowerCase().includes(searchQuery.toLowerCase()) ||
+								(c.code && c.code.toLowerCase().includes(searchQuery.toLowerCase()))
+						)}
+
+						{#if currentList.length === 0}
+							<tr>
+								<td colspan="6" class="py-12 text-center text-base-content/50">
+									No countries found.
 								</td>
 							</tr>
-						{/each}
-					{/if}
+						{:else}
+							{#each currentList as country (country.id)}
+								<tr class="hover">
+									<td>
+										<span class="text-2xl">{country.flag || '🌍'}</span>
+									</td>
+									<td>
+										<div class="font-bold">{country.name_en}</div>
+									</td>
+									<td>
+										<div class="text-base-content/70">{country.name_ru}</div>
+									</td>
+									<td>
+										<div class="badge badge-ghost">{country.code || '-'}</div>
+									</td>
+									<td>
+										{#if country.latitude && country.longitude}
+											<div class="flex items-center gap-2 text-sm">
+												<MapPin class="h-4 w-4 text-success" />
+												<span class="font-mono text-xs"
+													>{country.latitude}, {country.longitude}</span
+												>
+											</div>
+										{:else}
+											<span class="badge badge-sm badge-warning">No coords</span>
+										{/if}
+									</td>
+									<td class="text-right">
+										<div class="join">
+											<button
+												class="btn join-item btn-ghost btn-sm"
+												onclick={() => openModal(country)}
+											>
+												<Pencil class="h-4 w-4" />
+											</button>
+											<button
+												class="btn join-item text-error btn-ghost btn-sm"
+												onclick={() => handleDelete(country.id)}
+											>
+												<Trash2 class="h-4 w-4" />
+											</button>
+										</div>
+									</td>
+								</tr>
+							{/each}
+						{/if}
+					{:catch error}
+						<tr>
+							<td colspan="6" class="py-12 text-center text-error">
+								Failed to load countries: {error.message}
+							</td>
+						</tr>
+					{/await}
 				</tbody>
 			</table>
 		</div>

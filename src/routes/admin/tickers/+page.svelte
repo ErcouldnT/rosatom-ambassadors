@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import { Plus, Pencil, Trash2 } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminTextarea from '$lib/components/admin/AdminTextarea.svelte';
@@ -7,8 +7,10 @@
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
-	let tickers = $state<Ticker[]>([]);
-	let loading = $state(true);
+	let { data } = $props();
+
+	// tickers state removed
+
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 	let activeTab = $state<'en' | 'ru'>('en');
@@ -22,24 +24,8 @@
 		isActive: true
 	});
 
-	onMount(async () => {
-		await fetchTickers();
-	});
-
 	async function fetchTickers() {
-		loading = true;
-		try {
-			const res = await fetch('/api/admin/tickers');
-			if (res.ok) {
-				tickers = await res.json();
-			} else {
-				console.error('Failed to fetch tickers');
-			}
-		} catch (error) {
-			console.error('Failed to fetch tickers:', error);
-		} finally {
-			loading = false;
-		}
+		await invalidateAll();
 	}
 
 	function openModal(ticker?: Ticker) {
@@ -134,18 +120,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#if loading}
+					{#await data.streamed.tickers}
 						<tr>
 							<td colspan="4" class="py-12 text-center">
 								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
-					{:else if tickers.length === 0}
-						<tr>
-							<td colspan="4" class="py-12 text-center text-base-content/50"> No tickers found </td>
-						</tr>
-					{:else}
-						{#each tickers as ticker (ticker.id)}
+					{:then streamedTickers}
+						{#each streamedTickers as ticker (ticker.id)}
 							<tr class="hover">
 								<td class="max-w-xs truncate">{ticker.text_en}</td>
 								<td class="max-w-xs truncate">{ticker.text_ru}</td>
@@ -173,8 +155,20 @@
 									</div>
 								</td>
 							</tr>
+						{:else}
+							<tr>
+								<td colspan="4" class="py-12 text-center text-base-content/50">
+									No tickers found
+								</td>
+							</tr>
 						{/each}
-					{/if}
+					{:catch error}
+						<tr>
+							<td colspan="4" class="py-12 text-center text-error">
+								Failed to load tickers: {error.message}
+							</td>
+						</tr>
+					{/await}
 				</tbody>
 			</table>
 		</div>

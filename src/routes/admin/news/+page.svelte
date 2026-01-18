@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import { Plus, Pencil, Trash2, FileText, Upload } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
@@ -10,8 +10,10 @@
 	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 	import { getImageUrl } from '$lib/utils';
 
-	let news = $state<NewsItem[]>([]);
-	let loading = $state(true);
+	let { data } = $props();
+
+	// news state removed
+
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 	let activeTab = $state<'en' | 'ru'>('en');
@@ -34,20 +36,8 @@
 
 	let existingImageUrl = $state('');
 
-	onMount(async () => {
-		await fetchNews();
-	});
-
 	async function fetchNews() {
-		loading = true;
-		try {
-			const res = await fetch('/api/admin/news');
-			news = await res.json();
-		} catch (error) {
-			console.error('Failed to fetch news:', error);
-		} finally {
-			loading = false;
-		}
+		await invalidateAll();
 	}
 
 	// function getImageUrl ... removed
@@ -168,20 +158,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#if loading}
+					{#await data.streamed.news}
 						<tr>
 							<td colspan="4" class="py-12 text-center">
 								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
-					{:else if news.length === 0}
-						<tr>
-							<td colspan="4" class="py-12 text-center text-base-content/50">
-								No articles found
-							</td>
-						</tr>
-					{:else}
-						{#each news as item (item.id)}
+					{:then streamedNews}
+						{#each streamedNews as item (item.id)}
 							<tr class="hover">
 								<td>
 									<div class="flex items-center gap-4">
@@ -225,8 +209,20 @@
 									</div>
 								</td>
 							</tr>
+						{:else}
+							<tr>
+								<td colspan="4" class="py-12 text-center text-base-content/50">
+									No articles found
+								</td>
+							</tr>
 						{/each}
-					{/if}
+					{:catch error}
+						<tr>
+							<td colspan="4" class="py-12 text-center text-error">
+								Failed to load headlines: {error.message}
+							</td>
+						</tr>
+					{/await}
 				</tbody>
 			</table>
 		</div>

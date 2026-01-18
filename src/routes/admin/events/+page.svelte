@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 	import { Plus, Pencil, Trash2, Calendar, MapPin, Upload } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
@@ -9,8 +9,10 @@
 	import { translations } from '$lib/services/translations';
 	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
-	let events = $state<AppEvent[]>([]);
-	let loading = $state(true);
+	let { data } = $props();
+
+	// events state removed
+
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 	let activeTab = $state<'en' | 'ru'>('en');
@@ -34,20 +36,8 @@
 
 	let existingImageUrl = $state('');
 
-	onMount(async () => {
-		await fetchEvents();
-	});
-
 	async function fetchEvents() {
-		loading = true;
-		try {
-			const res = await fetch('/api/admin/events');
-			events = await res.json();
-		} catch (error) {
-			console.error('Failed to fetch events:', error);
-		} finally {
-			loading = false;
-		}
+		await invalidateAll();
 	}
 
 	import { getImageUrl } from '$lib/utils';
@@ -177,18 +167,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#if loading}
+					{#await data.streamed.events}
 						<tr>
 							<td colspan="4" class="py-12 text-center">
 								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
-					{:else if events.length === 0}
-						<tr>
-							<td colspan="4" class="py-12 text-center text-base-content/50"> No events found </td>
-						</tr>
-					{:else}
-						{#each events as event (event.id)}
+					{:then streamedEvents}
+						{#each streamedEvents as event (event.id)}
 							<tr class="hover">
 								<td>
 									<div class="flex items-center gap-4">
@@ -247,8 +233,20 @@
 									</div>
 								</td>
 							</tr>
+						{:else}
+							<tr>
+								<td colspan="4" class="py-12 text-center text-base-content/50">
+									No events found
+								</td>
+							</tr>
 						{/each}
-					{/if}
+					{:catch error}
+						<tr>
+							<td colspan="4" class="py-12 text-center text-error">
+								Failed to load events: {error.message}
+							</td>
+						</tr>
+					{/await}
 				</tbody>
 			</table>
 		</div>

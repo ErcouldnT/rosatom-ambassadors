@@ -114,7 +114,7 @@
 			<div class="border-t border-base-200 p-4">
 				<button
 					onclick={handleLogout}
-					class="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-error hover:bg-error/10"
+					class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-error hover:bg-error/10"
 				>
 					<LogOut class="h-5 w-5" />
 					{t.logout}

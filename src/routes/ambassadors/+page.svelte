@@ -3,6 +3,7 @@
 	import { translations } from '$lib/services/translations';
 	import { ArrowRight, Search, X } from '@lucide/svelte';
 	import { getImageUrl } from '$lib/utils';
+	import type { Ambassador } from '$lib/types';
 
 	let { data } = $props();
 
@@ -23,10 +24,8 @@
 	});
 
 	let t = $derived(translations[$language].ambassadorsPage);
-	let ambassadors = $derived(data.ambassadors);
-
-	let filteredAmbassadors = $derived(
-		ambassadors.filter((ambassador) => {
+	function filteredAmbassadors(list: Ambassador[]) {
+		return list.filter((ambassador) => {
 			const query = debouncedQuery.toLowerCase().trim();
 			if (!query) return true;
 
@@ -38,8 +37,11 @@
 				ambassador.role_en,
 				ambassador.role_ru
 			].some((field) => field?.toLowerCase().includes(query));
-		})
-	);
+		});
+	}
+	function focus(el: HTMLInputElement) {
+		el.focus();
+	}
 </script>
 
 <svelte:head>
@@ -63,6 +65,7 @@
 						<Search size={20} />
 					</div>
 					<input
+						use:focus
 						type="text"
 						bind:value={searchQuery}
 						placeholder={t.searchPlaceholder}
@@ -81,58 +84,71 @@
 		</div>
 
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-			{#each filteredAmbassadors as ambassador (ambassador.id)}
-				<a
-					href="/ambassadors/{ambassador.id}"
-					class="group relative block h-[400px] overflow-hidden rounded-2xl bg-base-200 shadow-xl"
-				>
-					<img
-						src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
-						alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
-						class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-						loading="lazy"
-						onerror={(e) => ((e.currentTarget as HTMLImageElement).src = '/placeholder-avatar.png')}
-					/>
-					<div
-						class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 transition-opacity duration-300"
-					></div>
-					<div class="absolute bottom-0 left-0 w-full p-6 text-white">
-						<h3 class="mb-1 text-xl font-bold">
-							{$language === 'en' ? ambassador.name_en : ambassador.name_ru}
-						</h3>
-						<p class="mb-1 text-sm font-medium text-primary">
-							{$language === 'en' ? ambassador.country_en : ambassador.country_ru}
-						</p>
-						<p class="mb-4 text-xs text-white/70">
-							{$language === 'en' ? ambassador.role_en : ambassador.role_ru}
-						</p>
-						<span
-							class="group/btn flex items-center gap-2 text-sm font-medium text-white/90 transition-colors hover:text-white"
-						>
-							{t.viewProfile}
-							<ArrowRight class="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
-						</span>
-					</div>
-				</a>
-			{:else}
-				<div class="col-span-full py-20 text-center">
-					<div
-						class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-base-200 text-base-content/20"
-					>
-						<Search size={32} />
-					</div>
-					<h3 class="text-xl font-bold text-base-content">{t.noResults}</h3>
-					<p class="mt-2 text-base-content/50">Try searching for something else</p>
-					{#if searchQuery}
-						<button
-							onclick={() => (searchQuery = '')}
-							class="mt-6 btn btn-outline btn-primary rounded-xl"
-						>
-							Clear Search
-						</button>
-					{/if}
+			{#await data.streamed.ambassadors}
+				<div class="col-span-full flex justify-center py-20">
+					<span class="loading loading-lg loading-spinner text-primary"></span>
 				</div>
-			{/each}
+			{:then ambassadors}
+				{#if filteredAmbassadors(ambassadors).length > 0}
+					{#each filteredAmbassadors(ambassadors) as ambassador (ambassador.id)}
+						<a
+							href="/ambassadors/{ambassador.id}"
+							class="group relative block h-[400px] overflow-hidden rounded-2xl bg-base-200 shadow-xl"
+						>
+							<img
+								src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
+								alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
+								class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+								loading="lazy"
+								onerror={(e) =>
+									((e.currentTarget as HTMLImageElement).src = '/placeholder-avatar.png')}
+							/>
+							<div
+								class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 transition-opacity duration-300"
+							></div>
+							<div class="absolute bottom-0 left-0 w-full p-6 text-white">
+								<h3 class="mb-1 text-xl font-bold">
+									{$language === 'en' ? ambassador.name_en : ambassador.name_ru}
+								</h3>
+								<p class="mb-1 text-sm font-medium text-primary">
+									{$language === 'en' ? ambassador.country_en : ambassador.country_ru}
+								</p>
+								<p class="mb-4 text-xs text-white/70">
+									{$language === 'en' ? ambassador.role_en : ambassador.role_ru}
+								</p>
+								<span
+									class="group/btn flex items-center gap-2 text-sm font-medium text-white/90 transition-colors hover:text-white"
+								>
+									{t.viewProfile}
+									<ArrowRight class="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+								</span>
+							</div>
+						</a>
+					{/each}
+				{:else}
+					<div class="col-span-full py-20 text-center">
+						<div
+							class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-base-200 text-base-content/20"
+						>
+							<Search size={32} />
+						</div>
+						<h3 class="text-xl font-bold text-base-content">{t.noResults}</h3>
+						<p class="mt-2 text-base-content/50">Try searching for something else</p>
+						{#if searchQuery}
+							<button
+								onclick={() => (searchQuery = '')}
+								class="btn mt-6 rounded-xl btn-outline btn-primary"
+							>
+								Clear Search
+							</button>
+						{/if}
+					</div>
+				{/if}
+			{:catch error}
+				<div class="col-span-full py-20 text-center text-error">
+					<p>Error loading ambassadors: {error.message}</p>
+				</div>
+			{/await}
 		</div>
 	</div>
 </div>

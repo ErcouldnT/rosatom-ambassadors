@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	import type { Stat } from '$lib/types';
 	import { language } from '$lib/services/language';
@@ -9,9 +9,9 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
 
-	let stats = $state<Stat[]>([]);
-	let loading = $state(true);
-	let error = $state<string | null>(null);
+	let { data } = $props();
+
+	// stats state removed
 
 	// Translation
 	let t = $derived(translations[$language].admin);
@@ -31,23 +31,9 @@
 		label_ru: ''
 	});
 
-	onMount(async () => {
-		await loadStats();
-	});
-
 	async function loadStats() {
-		try {
-			const res = await fetch('/api/admin/stats');
-			if (res.ok) {
-				stats = await res.json();
-			} else {
-				error = 'Failed to load stats';
-			}
-		} catch {
-			error = 'Error loading stats';
-		} finally {
-			loading = false;
-		}
+		// Use invalidateAll to refresh
+		await invalidateAll();
 	}
 
 	function openAddModal() {
@@ -162,15 +148,11 @@
 		</button>
 	</div>
 
-	{#if loading}
+	{#await data.streamed.stats}
 		<div class="flex justify-center p-12">
 			<span class="loading loading-lg loading-spinner text-primary"></span>
 		</div>
-	{:else if error}
-		<div class="alert alert-error">
-			<span>{error}</span>
-		</div>
-	{:else}
+	{:then streamedStats}
 		<div class="overflow-x-auto rounded-xl border border-base-200 bg-base-100 shadow-sm">
 			<table class="table table-lg">
 				<thead class="bg-base-200/50">
@@ -183,7 +165,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each stats as stat (stat.id)}
+					{#each streamedStats as stat (stat.id)}
 						<tr class="hover">
 							<td class="font-mono text-sm opacity-50">{stat.key}</td>
 							<td class="font-bold">{stat.value}</td>
@@ -210,7 +192,11 @@
 				</tbody>
 			</table>
 		</div>
-	{/if}
+	{:catch error}
+		<div class="alert alert-error">
+			<span>Failed to load stats: {error.message}</span>
+		</div>
+	{/await}
 </div>
 
 <!-- Edit/Add Modal -->

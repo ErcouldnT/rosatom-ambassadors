@@ -1,22 +1,23 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, Upload, X } from '@lucide/svelte';
+	import { invalidateAll } from '$app/navigation';
+	import { Plus, Pencil, Trash2, Upload, X, Search } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
-	import type { Ambassador } from '$lib/types';
+	import type { Ambassador, Country } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
 
-	let ambassadors = $state<Ambassador[]>([]);
-	let countries = $state<
-		{ id: string; name_en: string; name_ru: string; flag: string; code: string }[]
-	>([]);
-	let loading = $state(true);
+	let { data } = $props();
+
+	// ambassadors state removed as we use data.streamed
+	let countries = $state<Country[]>([]);
+
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
 	let activeTab = $state<'en' | 'ru'>('en');
 	let countrySearch = $state('');
+	let adminSearchQuery = $state('');
 
 	let t = $derived(translations[$language].admin);
 
@@ -35,29 +36,15 @@
 	// For previewing existing image
 	let existingImageUrl = $state('');
 
-	onMount(async () => {
-		await Promise.all([fetchAmbassadors(), fetchCountries()]);
+	$effect(() => {
+		data.streamed.countries.then((res) => {
+			countries = res;
+		});
 	});
 
-	async function fetchCountries() {
-		try {
-			const res = await fetch('/api/admin/countries');
-			countries = await res.json();
-		} catch (error) {
-			console.error('Failed to fetch countries:', error);
-		}
-	}
-
 	async function fetchAmbassadors() {
-		loading = true;
-		try {
-			const res = await fetch('/api/admin/ambassadors');
-			ambassadors = await res.json();
-		} catch (error) {
-			console.error('Failed to fetch ambassadors:', error);
-		} finally {
-			loading = false;
-		}
+		// Use SvelteKit invalidation to refresh streamed data
+		await invalidateAll();
 	}
 
 	import { getImageUrl } from '$lib/utils';
@@ -101,7 +88,7 @@
 			(c) =>
 				c.name_en.toLowerCase().includes(countrySearch.toLowerCase()) ||
 				c.name_ru.toLowerCase().includes(countrySearch.toLowerCase()) ||
-				c.code.toLowerCase().includes(countrySearch.toLowerCase())
+				(c.code?.toLowerCase().includes(countrySearch.toLowerCase()) ?? false)
 		)
 	);
 
@@ -200,6 +187,19 @@
 		</button>
 	</div>
 
+	<!-- Search -->
+	<div class="card border border-base-200 bg-base-100 shadow-sm">
+		<div class="card-body flex-row items-center gap-4 p-4">
+			<Search class="h-5 w-5 text-base-content/40" />
+			<input
+				type="text"
+				class="input w-full border-none input-ghost p-0 text-base focus:bg-transparent"
+				placeholder="Search by name, country or role..."
+				bind:value={adminSearchQuery}
+			/>
+		</div>
+	</div>
+
 	<!-- Table -->
 	<div class="card overflow-hidden rounded-xl border border-base-200 bg-base-100 shadow-sm">
 		<div class="overflow-x-auto">
@@ -214,78 +214,97 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#if loading}
+					{#await data.streamed.ambassadors}
 						<tr>
 							<td colspan="5" class="py-12 text-center">
 								<span class="loading loading-lg loading-spinner text-primary"></span>
 							</td>
 						</tr>
-					{:else if ambassadors.length === 0}
-						<tr>
-							<td colspan="5" class="py-12 text-center text-base-content/50">
-								No ambassadors found. Create one to get started.
-							</td>
-						</tr>
-					{:else}
-						{#each ambassadors as ambassador (ambassador.id)}
-							<tr class="hover">
-								<td>
-									<div class="flex items-center gap-4">
-										<div class="avatar">
-											<div class="mask h-12 w-12 bg-base-300 mask-squircle">
-												{#if ambassador.image}
-													<img
-														src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
-														alt={ambassador.name_en}
-													/>
-												{:else}
-													<div
-														class="flex h-full w-full items-center justify-center text-base-content/30"
-													>
-														<Upload class="h-6 w-6" />
-													</div>
-												{/if}
-											</div>
-										</div>
-										<div>
-											<div class="font-bold">{ambassador.name_en}</div>
-											<div class="text-sm opacity-60">{ambassador.name_ru}</div>
-										</div>
-									</div>
-								</td>
-								<td>
-									<div class="font-medium">{ambassador.country_en}</div>
-									<div class="text-xs opacity-60">{ambassador.country_ru}</div>
-								</td>
-								<td>
-									<div class="badge badge-ghost badge-sm">{ambassador.role_en}</div>
-								</td>
-								<td>
-									{#if ambassador.isActive}
-										<div class="badge gap-2 text-white badge-success">Active</div>
-									{:else}
-										<div class="badge gap-2 badge-neutral">Inactive</div>
-									{/if}
-								</td>
-								<td class="text-right">
-									<div class="join">
-										<button
-											class="btn join-item btn-ghost btn-sm"
-											onclick={() => openModal(ambassador)}
-										>
-											<Pencil class="h-4 w-4" />
-										</button>
-										<button
-											class="btn join-item text-error btn-ghost btn-sm"
-											onclick={() => handleDelete(ambassador.id)}
-										>
-											<Trash2 class="h-4 w-4" />
-										</button>
-									</div>
+					{:then streamedAmbassadors}
+						{@const filtered = streamedAmbassadors.filter(
+							(a) =>
+								a.name_en.toLowerCase().includes(adminSearchQuery.toLowerCase()) ||
+								a.name_ru.toLowerCase().includes(adminSearchQuery.toLowerCase()) ||
+								a.country_en.toLowerCase().includes(adminSearchQuery.toLowerCase()) ||
+								a.country_ru.toLowerCase().includes(adminSearchQuery.toLowerCase()) ||
+								a.role_en.toLowerCase().includes(adminSearchQuery.toLowerCase()) ||
+								a.role_ru.toLowerCase().includes(adminSearchQuery.toLowerCase())
+						)}
+						{#if filtered.length === 0}
+							<tr>
+								<td colspan="5" class="py-12 text-center text-base-content/50">
+									{adminSearchQuery
+										? 'No results found matching your search.'
+										: 'No ambassadors found. Create one to get started.'}
 								</td>
 							</tr>
-						{/each}
-					{/if}
+						{:else}
+							{#each filtered as ambassador (ambassador.id)}
+								<tr class="hover">
+									<td>
+										<div class="flex items-center gap-4">
+											<div class="avatar">
+												<div class="mask h-12 w-12 bg-base-300 mask-squircle">
+													{#if ambassador.image}
+														<img
+															src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
+															alt={ambassador.name_en}
+														/>
+													{:else}
+														<div
+															class="flex h-full w-full items-center justify-center text-base-content/30"
+														>
+															<Upload class="h-6 w-6" />
+														</div>
+													{/if}
+												</div>
+											</div>
+											<div>
+												<div class="font-bold">{ambassador.name_en}</div>
+												<div class="text-sm opacity-60">{ambassador.name_ru}</div>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div class="font-medium">{ambassador.country_en}</div>
+										<div class="text-xs opacity-60">{ambassador.country_ru}</div>
+									</td>
+									<td>
+										<div class="badge badge-ghost badge-sm">{ambassador.role_en}</div>
+									</td>
+									<td>
+										{#if ambassador.isActive}
+											<div class="badge gap-2 text-white badge-success">Active</div>
+										{:else}
+											<div class="badge gap-2 badge-neutral">Inactive</div>
+										{/if}
+									</td>
+									<td class="text-right">
+										<div class="join">
+											<button
+												class="btn join-item btn-ghost btn-sm"
+												onclick={() => openModal(ambassador)}
+											>
+												<Pencil class="h-4 w-4" />
+											</button>
+											<button
+												class="btn join-item text-error btn-ghost btn-sm"
+												onclick={() => handleDelete(ambassador.id)}
+											>
+												<Trash2 class="h-4 w-4" />
+											</button>
+										</div>
+									</td>
+								</tr>
+							{/each}
+						{/if}
+					{:catch error}
+						<tr>
+							<td colspan="5" class="py-12 text-center text-error">
+								Failed to load ambassadors: {error.message}
+							</td>
+						</tr>
+					{/await}
 				</tbody>
 			</table>
 		</div>

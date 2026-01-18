@@ -1,10 +1,11 @@
+import { getAmbassadors, getCountries } from '$lib/server/data';
 import type { PageServerLoad } from './$types';
-import { getNews } from '$lib/server/data';
 
 export const load: PageServerLoad = async () => {
 	return {
 		streamed: {
-			news: getNews()
+			ambassadors: getAmbassadors(false),
+			countries: getCountries()
 		}
 	};
 };
