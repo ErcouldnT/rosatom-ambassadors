@@ -55,7 +55,7 @@
 			{#each news as item (item.id)}
 				<div class="carousel-item">
 					<a
-						href="/news/{item.id}"
+						href="/news/@{item.slug}"
 						class="group card w-96 border border-base-200 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:border-primary/20 hover:shadow-2xl"
 					>
 						<figure class="relative overflow-hidden px-4 pt-4">

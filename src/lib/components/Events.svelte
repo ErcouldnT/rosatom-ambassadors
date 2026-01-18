@@ -25,7 +25,7 @@
 		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 			{#each events as event (event.id)}
 				<a
-					href="/events/{event.id}"
+					href="/events/@{event.slug}"
 					class="group card border border-base-200 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl"
 				>
 					<div class="card-body p-6">
