@@ -22,6 +22,7 @@
 	// Form fields
 	let form = $state({
 		title_en: '',
+		slug: '',
 		title_ru: '',
 		date_day: '',
 		date_month_en: '',
@@ -47,6 +48,7 @@
 		if (event) {
 			editingId = event.id;
 			form.title_en = event.title_en;
+			form.slug = event.slug || '';
 			form.title_ru = event.title_ru;
 			form.date_day = event.date_day;
 			form.date_month_en = event.date_month_en;
@@ -62,6 +64,7 @@
 		} else {
 			editingId = null;
 			form.title_en = '';
+			form.slug = '';
 			form.title_ru = '';
 			form.date_day = '';
 			form.date_month_en = '';
@@ -87,6 +90,7 @@
 		const formData = new FormData();
 		if (editingId) formData.append('id', editingId);
 		formData.append('title_en', form.title_en);
+		if (form.slug) formData.append('slug', form.slug);
 		formData.append('title_ru', form.title_ru);
 		formData.append('date_day', form.date_day);
 		formData.append('date_month_en', form.date_month_en);
@@ -382,6 +386,12 @@
 							bind:value={form.title_en}
 							placeholder="Annual Exhibition"
 							required
+						/>
+						<AdminInput
+							id="slug"
+							label="Slug (URL)"
+							bind:value={form.slug}
+							placeholder="annual-exhibition"
 						/>
 						<div class="grid grid-cols-2 gap-4">
 							<AdminInput

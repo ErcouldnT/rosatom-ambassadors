@@ -26,7 +26,7 @@
 			{:then events}
 				{#each events as event (event.id)}
 					<a
-						href="/events/{event.id}"
+						href="/events/@{event.slug}"
 						class="group card overflow-hidden bg-base-200 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
 					>
 						<!-- Event Image -->

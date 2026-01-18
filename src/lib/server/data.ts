@@ -178,6 +178,7 @@ export async function getEvents(): Promise<Event[]> {
 		const records = await db
 			.select({
 				id: events.id,
+				slug: events.slug,
 				title_en: events.title_en,
 				title_ru: events.title_ru,
 				date_day: events.date_day,
@@ -206,6 +207,7 @@ export async function getEventById(id: string): Promise<Event | null> {
 		const record = await db
 			.select({
 				id: events.id,
+				slug: events.slug,
 				title_en: events.title_en,
 				title_ru: events.title_ru,
 				date_day: events.date_day,
@@ -230,11 +232,42 @@ export async function getEventById(id: string): Promise<Event | null> {
 	}
 }
 
+export async function getEventBySlug(slug: string): Promise<Event | null> {
+	try {
+		const record = await db
+			.select({
+				id: events.id,
+				slug: events.slug,
+				title_en: events.title_en,
+				title_ru: events.title_ru,
+				date_day: events.date_day,
+				date_month_en: events.date_month_en,
+				date_month_ru: events.date_month_ru,
+				time: events.time,
+				location_en: events.location_en,
+				location_ru: events.location_ru,
+				description_en: events.description_en,
+				description_ru: events.description_ru,
+				created: events.created,
+				updated: events.updated,
+				image: sql<boolean>`CASE WHEN ${events.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(events)
+			.where(eq(events.slug, slug))
+			.get();
+		return (record as unknown as Event) || null;
+	} catch (error) {
+		console.error('Failed to fetch event by slug:', error);
+		return null;
+	}
+}
+
 export async function getNews(): Promise<NewsItem[]> {
 	try {
 		const records = await db
 			.select({
 				id: news.id,
+				slug: news.slug,
 				category_en: news.category_en,
 				category_ru: news.category_ru,
 				date: news.date,
@@ -260,6 +293,7 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
 		const record = await db
 			.select({
 				id: news.id,
+				slug: news.slug,
 				category_en: news.category_en,
 				category_ru: news.category_ru,
 				date: news.date,
@@ -277,6 +311,33 @@ export async function getNewsById(id: string): Promise<NewsItem | null> {
 		return (record as unknown as NewsItem) || null;
 	} catch (error) {
 		console.error('Failed to fetch news item:', error);
+		return null;
+	}
+}
+
+export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
+	try {
+		const record = await db
+			.select({
+				id: news.id,
+				slug: news.slug,
+				category_en: news.category_en,
+				category_ru: news.category_ru,
+				date: news.date,
+				title_en: news.title_en,
+				title_ru: news.title_ru,
+				excerpt_en: news.excerpt_en,
+				excerpt_ru: news.excerpt_ru,
+				created: news.created,
+				updated: news.updated,
+				image: sql<boolean>`CASE WHEN ${news.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(news)
+			.where(eq(news.slug, slug))
+			.get();
+		return (record as unknown as NewsItem) || null;
+	} catch (error) {
+		console.error('Failed to fetch news item by slug:', error);
 		return null;
 	}
 }

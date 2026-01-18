@@ -23,6 +23,7 @@ export interface Ambassador extends BaseModel {
 }
 
 export interface Event extends BaseModel {
+	slug?: string | null;
 	title_en: string;
 	title_ru: string;
 	date_day: string;
@@ -38,6 +39,7 @@ export interface Event extends BaseModel {
 }
 
 export interface NewsItem extends BaseModel {
+	slug?: string | null;
 	category_en: string;
 	category_ru: string;
 	date: string;

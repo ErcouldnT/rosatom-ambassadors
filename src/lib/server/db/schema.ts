@@ -43,6 +43,7 @@ export const events = sqliteTable('events', {
 	id: text('id')
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
+	slug: text('slug').unique(),
 	title_en: text('title_en').notNull(),
 	title_ru: text('title_ru').notNull(),
 	date_day: text('date_day').notNull(),
@@ -63,6 +64,7 @@ export const news = sqliteTable('news', {
 	id: text('id')
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
+	slug: text('slug').unique(),
 	category_en: text('category_en').notNull(),
 	category_ru: text('category_ru').notNull(),
 	date: text('date').notNull(),

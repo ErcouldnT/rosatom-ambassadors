@@ -34,7 +34,7 @@
 			{:then news}
 				{#each news as item (item.id)}
 					<a
-						href="/news/{item.id}"
+						href="/news/@{item.slug}"
 						class="group card overflow-hidden bg-base-200 shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-primary/10"
 					>
 						<!-- News Image -->

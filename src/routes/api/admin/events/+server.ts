@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '$lib/server/data';
 import sharp from 'sharp';
+import slugify from 'slugify';
 
 export const GET: RequestHandler = async () => {
 	const events = await getEvents();
@@ -28,9 +29,13 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		mimeType = 'image/webp';
 	}
 
+	const title_en = formData.get('title_en') as string;
+	const slug = (formData.get('slug') as string) || slugify(title_en, { lower: true, strict: true });
+
 	const data = {
-		title_en: formData.get('title_en') as string,
+		title_en,
 		title_ru: formData.get('title_ru') as string,
+		slug,
 		date_day: formData.get('date_day') as string,
 		date_month_en: formData.get('date_month_en') as string,
 		date_month_ru: formData.get('date_month_ru') as string,
@@ -89,6 +94,9 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		description_en: formData.get('description_en') as string,
 		description_ru: formData.get('description_ru') as string
 	};
+
+	const slug = formData.get('slug') as string;
+	if (slug) data.slug = slug;
 
 	if (imageData) {
 		data.image = imageData;

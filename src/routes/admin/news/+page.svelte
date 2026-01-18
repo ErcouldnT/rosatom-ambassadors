@@ -25,6 +25,7 @@
 	// Form fields
 	let form = $state({
 		category_en: '',
+		slug: '',
 		category_ru: '',
 		date: '',
 		title_en: '',
@@ -47,6 +48,7 @@
 		if (item) {
 			editingId = item.id;
 			form.category_en = item.category_en;
+			form.slug = item.slug || '';
 			form.category_ru = item.category_ru;
 			form.date = item.date;
 			form.title_en = item.title_en;
@@ -59,6 +61,7 @@
 		} else {
 			editingId = null;
 			form.category_en = '';
+			form.slug = '';
 			form.category_ru = '';
 			form.date = '';
 			form.title_en = '';
@@ -81,6 +84,7 @@
 		const formData = new FormData();
 		if (editingId) formData.append('id', editingId);
 		formData.append('category_en', form.category_en);
+		if (form.slug) formData.append('slug', form.slug);
 		formData.append('category_ru', form.category_ru);
 		formData.append('date', form.date);
 		formData.append('title_en', form.title_en);
@@ -335,6 +339,12 @@
 							bind:value={form.title_en}
 							placeholder="Article headline..."
 							required
+						/>
+						<AdminInput
+							id="slug"
+							label="Slug (URL)"
+							bind:value={form.slug}
+							placeholder="article-headline"
 						/>
 						<AdminInput
 							id="category_en"
