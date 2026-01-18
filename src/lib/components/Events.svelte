@@ -3,6 +3,7 @@
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import type { Event } from '$lib/types';
+	import { getImageUrl } from '$lib/utils';
 
 	interface Props {
 		events: Event[];
@@ -26,8 +27,21 @@
 			{#each events as event (event.id)}
 				<a
 					href="/events/@{event.slug}"
-					class="group card border border-base-200 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl"
+					class="group card overflow-hidden border border-base-200 bg-base-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-xl"
 				>
+					<!-- Event Image -->
+					<figure class="relative h-48 w-full">
+						<img
+							src={getImageUrl('events', event.id, event.image)}
+							alt={$language === 'en' ? event.title_en : event.title_ru}
+							class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+							loading="lazy"
+							onerror={(e) =>
+								((e.currentTarget as HTMLImageElement).src = '/images/placeholders/event.png')}
+						/>
+						<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+					</figure>
+
 					<div class="card-body p-6">
 						<div class="mb-4 flex items-start justify-between">
 							<div
