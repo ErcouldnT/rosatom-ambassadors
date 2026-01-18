@@ -8,12 +8,12 @@
 	import Contact from '$lib/components/Contact.svelte';
 	import CTA from '$lib/components/CTA.svelte';
 
+	import SEO from '$lib/components/SEO.svelte';
+
 	let { data } = $props();
 </script>
 
-<svelte:head>
-	<title>RNE Ambassadors - Russian Nuclear Education</title>
-</svelte:head>
+<SEO />
 
 <Hero
 	stats={data.stats}

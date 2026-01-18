@@ -12,12 +12,19 @@
 		};
 	}
 
+	import SEO from '$lib/components/SEO.svelte';
+
 	let { data }: Props = $props();
 </script>
 
-<svelte:head>
-	<title>Event | RNE Ambassadors</title>
-</svelte:head>
+{#await data.streamed.event then event}
+	<SEO
+		title={$language === 'en' ? event.title_en : event.title_ru}
+		description={$language === 'en' ? event.description_en : event.description_ru}
+		image={getImageUrl('events', event.id, event.image)}
+		type="article"
+	/>
+{/await}
 
 {#await data.streamed.event}
 	<div class="flex min-h-screen items-center justify-center bg-base-100">

@@ -4,6 +4,7 @@
 	import { translations } from '$lib/services/translations';
 	import { getImageUrl } from '$lib/utils';
 	import { ArrowLeft, MapPin, Users } from '@lucide/svelte';
+	import SEO from '$lib/components/SEO.svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { PageData } from './$types';
 
@@ -170,13 +171,11 @@
 	);
 </script>
 
-<svelte:head>
-	<title>{translations[$language].map.title} | ROSATOM Ambassadors</title>
-	<meta
-		name="description"
-		content="Interactive world map showing ROSATOM ambassador locations around the globe."
-	/>
-</svelte:head>
+<SEO
+	title={translations[$language].map.title}
+	description="Interactive world map showing ROSATOM ambassador locations around the globe."
+	image="/images/global_network_map.png"
+/>
 
 <div class="min-h-screen bg-base-100">
 	<!-- Header -->

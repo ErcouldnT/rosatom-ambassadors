@@ -4,6 +4,7 @@
 	import { ArrowRight, Search, X } from '@lucide/svelte';
 	import { getImageUrl } from '$lib/utils';
 	import type { Ambassador } from '$lib/types';
+	import SEO from '$lib/components/SEO.svelte';
 
 	let { data } = $props();
 
@@ -44,9 +45,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{t.title} | RNE Ambassadors</title>
-</svelte:head>
+<SEO title={t.title} description={t.description} />
 
 <div class="min-h-screen bg-base-100 pt-24 pb-20">
 	<div class="container mx-auto px-6">

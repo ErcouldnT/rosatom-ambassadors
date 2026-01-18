@@ -3,12 +3,15 @@
 	import { language } from '$lib/services/language';
 	import { getImageUrl } from '$lib/utils';
 
+	import SEO from '$lib/components/SEO.svelte';
+
 	let { data } = $props();
 </script>
 
-<svelte:head>
-	<title>News | RNE Ambassadors</title>
-</svelte:head>
+<SEO
+	title="News"
+	description="Latest updates and success stories from the Rosatom Nuclear Education Ambassadors program."
+/>
 
 <div class="min-h-screen bg-base-100 pt-24 pb-20">
 	<div class="container mx-auto px-6">

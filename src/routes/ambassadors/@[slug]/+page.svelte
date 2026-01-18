@@ -4,6 +4,7 @@
 	import { translations } from '$lib/services/translations';
 	import { getImageUrl } from '$lib/utils';
 	import { fly } from 'svelte/transition';
+	import SEO from '$lib/components/SEO.svelte';
 
 	let { data } = $props();
 
@@ -41,14 +42,17 @@
 	}
 </script>
 
-<svelte:head>
-	{#await data.streamed.ambassador then ambassador}
-		{#if ambassador}
-			<title>{$language === 'en' ? ambassador.name_en : ambassador.name_ru} | RNE Ambassadors</title
-			>
-		{/if}
-	{/await}
-</svelte:head>
+{#await data.streamed.ambassador then ambassador}
+	{#if ambassador}
+		<SEO
+			title={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
+			description={($language === 'en' ? ambassador.about_en : ambassador.about_ru) ||
+				t.profileDossier}
+			image={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
+			type="profile"
+		/>
+	{/if}
+{/await}
 
 <div class="min-h-screen bg-base-100 selection:bg-primary/20">
 	{#await data.streamed.ambassador}
