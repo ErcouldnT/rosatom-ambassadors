@@ -101,7 +101,8 @@
 								class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
 								loading="lazy"
 								onerror={(e) =>
-									((e.currentTarget as HTMLImageElement).src = '/placeholder-avatar.png')}
+									((e.currentTarget as HTMLImageElement).src =
+										'/images/placeholders/ambassador.png')}
 							/>
 							<div
 								class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 transition-opacity duration-300"

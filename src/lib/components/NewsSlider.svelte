@@ -64,6 +64,8 @@
 								alt={$language === 'en' ? item.title_en : item.title_ru}
 								class="h-56 w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105"
 								loading="lazy"
+								onerror={(e) =>
+									((e.currentTarget as HTMLImageElement).src = '/images/placeholders/news.png')}
 							/>
 							<div class="absolute top-6 left-6 badge shadow-sm badge-primary">
 								{$language === 'en' ? item.category_en : item.category_ru}

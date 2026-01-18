@@ -1,26 +1,28 @@
-<script>
+<script lang="ts">
 	import Ticker from './Ticker.svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
-	/** @type {{
-		stats: import('$lib/types').Stat[], 
-		ambassadors?: import('$lib/types').Ambassador[],
-		totalAmbassadors?: number,
-		totalCountries?: number,
-		tickers?: import('$lib/types').Ticker[]
-	}} */
+	interface Props {
+		stats: import('$lib/types').Stat[];
+		ambassadors?: import('$lib/types').Ambassador[];
+		totalAmbassadors?: number;
+		totalCountries?: number;
+		tickers?: import('$lib/types').Ticker[] | Promise<import('$lib/types').Ticker[]>;
+	}
+
 	let {
 		stats = [],
 		ambassadors = [],
 		totalAmbassadors = 0,
 		totalCountries = 0,
 		tickers = []
-	} = $props();
+	}: Props = $props();
 
 	// Placeholder for hero image. Using a high-quality academic/global themed image.
-	const heroImage =
+	const defaultHeroImage =
 		'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop';
+	const heroImage = '/api/images/content/hero_main_image';
 
 	let t = $derived(translations[$language].hero);
 
@@ -107,6 +109,9 @@
 									src={`/api/images/ambassadors/${ambassador.id}`}
 									alt={$language === 'ru' ? ambassador.name_ru : ambassador.name_en}
 									class="h-full w-full object-cover"
+									onerror={(e) =>
+										((e.currentTarget as HTMLImageElement).src =
+											'/images/placeholders/ambassador.png')}
 								/>
 							</div>
 						{/each}
@@ -152,7 +157,12 @@
 				<div
 					class="relative skew-y-3 transform overflow-hidden rounded-3xl shadow-2xl transition-transform duration-700 ease-out hover:skew-y-0"
 				>
-					<img src={heroImage} alt="Students" class="h-auto w-full object-cover" />
+					<img
+						src={heroImage}
+						alt="Students"
+						class="h-auto w-full object-cover"
+						onerror={(e) => ((e.currentTarget as HTMLImageElement).src = defaultHeroImage)}
+					/>
 					<div
 						class="absolute inset-0 flex items-end bg-gradient-to-t from-black/50 to-transparent p-8"
 					>
@@ -165,7 +175,13 @@
 
 	<!-- Ticker at Bottom -->
 	<div class="absolute bottom-0 z-20 w-full">
-		<Ticker {tickers} />
+		{#await tickers}
+			<!-- Static fallback or nothing while loading -->
+		{:then resolvedTickers}
+			<Ticker tickers={resolvedTickers} />
+		{:catch}
+			<Ticker tickers={[]} />
+		{/await}
 	</div>
 </section>
 

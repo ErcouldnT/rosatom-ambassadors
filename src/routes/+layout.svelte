@@ -1,6 +1,8 @@
 <script lang="ts">
 	import './app.css';
-	import { page } from '$app/stores';
+	import { page, navigating } from '$app/stores';
+	import { tweened } from 'svelte/motion';
+	import { cubicOut } from 'svelte/easing';
 
 	import Header from '$lib/components/Header.svelte';
 	import Footer from '$lib/components/Footer.svelte';
@@ -20,7 +22,33 @@
 	let isImmersiveRoute = $derived(
 		$page.url.pathname.startsWith('/admin') || $page.url.pathname === '/map'
 	);
+
+	// Navigation progress bar
+	const progress = tweened(0, {
+		duration: 400,
+		easing: cubicOut
+	});
+
+	$effect(() => {
+		if ($navigating) {
+			progress.set(0, { duration: 0 });
+			progress.set(0.8, { duration: 3000 });
+		} else {
+			progress.set(1, { duration: 400 }).then(() => {
+				setTimeout(() => progress.set(0, { duration: 0 }), 100);
+			});
+		}
+	});
 </script>
+
+{#if $navigating}
+	<div class="fixed top-0 left-0 z-[60] h-1 w-full bg-base-200">
+		<div
+			class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-300"
+			style="width: {$progress * 100}%"
+		></div>
+	</div>
+{/if}
 
 {#if isImmersiveRoute}
 	<!-- Admin pages have their own layout -->

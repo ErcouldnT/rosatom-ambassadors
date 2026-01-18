@@ -6,6 +6,7 @@
 	import type { Ticker } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
+	import { toasts } from '$lib/stores/toast';
 
 	let { data } = $props();
 
@@ -54,24 +55,25 @@
 	async function handleSubmit() {
 		submitting = true;
 		try {
-			if (editingId) {
-				await fetch('/api/admin/tickers', {
-					method: 'PUT',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ id: editingId, ...form })
-				});
-			} else {
-				await fetch('/api/admin/tickers', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(form)
-				});
+			const res = await fetch('/api/admin/tickers', {
+				method: editingId ? 'PUT' : 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(editingId ? { id: editingId, ...form } : form)
+			});
+
+			if (!res.ok) {
+				throw new Error('Failed to save ticker');
 			}
 
 			closeModal();
 			await fetchTickers();
+			toasts.add(
+				editingId ? 'Ticker updated successfully' : 'Ticker created successfully',
+				'success'
+			);
 		} catch (error) {
 			console.error('Failed to save ticker:', error);
+			toasts.add('Failed to save ticker', 'error');
 		} finally {
 			submitting = false;
 		}
@@ -80,13 +82,23 @@
 	async function handleDelete(id: string) {
 		if (!confirm('Are you sure you want to delete this ticker?')) return;
 
-		await fetch('/api/admin/tickers', {
-			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id })
-		});
+		try {
+			const res = await fetch('/api/admin/tickers', {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id })
+			});
 
-		await fetchTickers();
+			if (!res.ok) {
+				throw new Error('Failed to delete ticker');
+			}
+
+			await fetchTickers();
+			toasts.add('Ticker deleted successfully', 'success');
+		} catch (error) {
+			console.error('Failed to delete ticker:', error);
+			toasts.add('Failed to delete ticker', 'error');
+		}
 	}
 </script>
 

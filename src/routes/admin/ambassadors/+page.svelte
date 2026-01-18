@@ -7,7 +7,7 @@
 	import type { Ambassador, Country } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	import { toasts } from '$lib/stores/toast';
 	import slugify from 'slugify';
 
 	let { data } = $props();
@@ -173,10 +173,15 @@
 
 			closeModal();
 			await fetchAmbassadors();
+			toasts.add(
+				editingId ? 'Ambassador updated successfully' : 'Ambassador created successfully',
+				'success'
+			);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error('Submit error:', error);
 			formError = error.message || 'An unexpected error occurred';
+			toasts.add('Failed to save ambassador', 'error');
 		} finally {
 			submitting = false;
 		}
@@ -185,13 +190,23 @@
 	async function handleDelete(id: string) {
 		if (!confirm('Are you sure you want to delete this ambassador?')) return;
 
-		await fetch('/api/admin/ambassadors', {
-			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id })
-		});
+		try {
+			const res = await fetch('/api/admin/ambassadors', {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id })
+			});
 
-		await fetchAmbassadors();
+			if (!res.ok) {
+				throw new Error('Failed to delete ambassador');
+			}
+
+			await fetchAmbassadors();
+			toasts.add('Ambassador deleted successfully', 'success');
+		} catch (error) {
+			console.error('Delete error:', error);
+			toasts.add('Failed to delete ambassador', 'error');
+		}
 	}
 
 	function handleFileChange(e: Event) {
@@ -281,6 +296,9 @@
 														<img
 															src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
 															alt={ambassador.name_en}
+															onerror={(e) =>
+																((e.currentTarget as HTMLImageElement).src =
+																	'/images/placeholders/ambassador.png')}
 														/>
 													{:else}
 														<div
@@ -382,7 +400,14 @@
 										class="h-full w-full object-cover"
 									/>
 								{:else if existingImageUrl}
-									<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+									<img
+										src={existingImageUrl}
+										alt="Current"
+										class="h-full w-full object-cover"
+										onerror={(e) =>
+											((e.currentTarget as HTMLImageElement).src =
+												'/images/placeholders/ambassador.png')}
+									/>
 								{:else}
 									<div
 										class="flex h-full w-full flex-col items-center justify-center text-base-content/20"

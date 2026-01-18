@@ -139,7 +139,7 @@
 								(amb: AmbassadorWithCoords) => `
 							<a href="/ambassadors/@${amb.slug}" class="popup-ambassador-link">
 								<div class="popup-ambassador">
-									<img src="${amb.image ? getImageUrl('ambassadors', amb.id, amb.image) : '/placeholder-avatar.png'}" alt="${$language === 'ru' ? amb.name_ru : amb.name_en}" class="popup-avatar" />
+									<img src="${getImageUrl('ambassadors', amb.id, amb.image)}" onerror="this.src='/images/placeholders/ambassador.png'" alt="${$language === 'ru' ? amb.name_ru : amb.name_en}" class="popup-avatar" />
 									<div class="popup-info">
 										<div class="popup-name">${$language === 'ru' ? amb.name_ru : amb.name_en}</div>
 										<div class="popup-role">${$language === 'ru' ? amb.role_ru : amb.role_en}</div>

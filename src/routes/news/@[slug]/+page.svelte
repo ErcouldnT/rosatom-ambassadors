@@ -67,6 +67,8 @@
 						alt={$language === 'en' ? newsItem.title_en : newsItem.title_ru}
 						class="h-full w-full object-cover"
 						loading="lazy"
+						onerror={(e) =>
+							((e.currentTarget as HTMLImageElement).src = '/images/placeholders/news.png')}
 					/>
 					<div class="absolute inset-0 rounded-3xl ring-1 ring-black/10 ring-inset"></div>
 				</figure>

@@ -6,6 +6,7 @@
 	import type { Country } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
+	import { toasts } from '$lib/stores/toast';
 
 	let { data } = $props();
 
@@ -83,8 +84,13 @@
 
 			await fetchCountries();
 			closeModal();
+			toasts.add(
+				editingId ? 'Country updated successfully' : 'Country created successfully',
+				'success'
+			);
 		} catch (error) {
 			formError = error instanceof Error ? error.message : 'An error occurred';
+			toasts.add('Failed to save country', 'error');
 		} finally {
 			submitting = false;
 		}
@@ -97,15 +103,23 @@
 			)
 		)
 			return;
+
 		try {
-			await fetch('/api/admin/countries', {
+			const res = await fetch('/api/admin/countries', {
 				method: 'DELETE',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ id })
 			});
+
+			if (!res.ok) {
+				throw new Error('Failed to delete country');
+			}
+
 			await fetchCountries();
+			toasts.add('Country deleted successfully', 'success');
 		} catch (error) {
 			console.error('Failed to delete country:', error);
+			toasts.add('Failed to delete country', 'error');
 		}
 	}
 

@@ -1,7 +1,25 @@
 import { db } from '$lib/server/db';
-import { ambassadors, events, news, stats, countries, tickers } from '$lib/server/db/schema';
+import {
+	ambassadors,
+	events,
+	news,
+	stats,
+	countries,
+	tickers,
+	cms_content,
+	messages
+} from '$lib/server/db/schema';
 import { eq, sql, asc, and, isNotNull } from 'drizzle-orm';
-import type { Ambassador, Event, NewsItem, Stat, Country, Ticker } from '$lib/types';
+import type {
+	Ambassador,
+	Event,
+	NewsItem,
+	Stat,
+	Country,
+	Ticker,
+	CMSContent,
+	Message
+} from '$lib/types';
 
 // ... (getAmbassadors same)
 
@@ -590,6 +608,109 @@ export async function deleteTicker(id: string): Promise<boolean> {
 		return true;
 	} catch (error) {
 		console.error('Failed to delete ticker:', error);
+		return false;
+	}
+}
+
+export async function getCMSContent(key: string): Promise<CMSContent | null> {
+	try {
+		const record = await db
+			.select({
+				id: cms_content.id,
+				key: cms_content.key,
+				image: cms_content.image, // Keep as blob/buffer
+				image_mime_type: cms_content.image_mime_type,
+				created: sql<string>`CURRENT_TIMESTAMP`, // derived
+				updated: cms_content.updated
+			})
+			.from(cms_content)
+			.where(eq(cms_content.key, key))
+			.get();
+		return (record as unknown as CMSContent) || null;
+	} catch (error) {
+		console.error('Failed to fetch CMS content:', error);
+		return null;
+	}
+}
+
+export async function updateCMSContent(
+	key: string,
+	data: Partial<CMSContent>
+): Promise<CMSContent | null> {
+	try {
+		// Check if exists
+		const existing = await db.select().from(cms_content).where(eq(cms_content.key, key)).get();
+
+		let record;
+		if (existing) {
+			[record] = await db
+				.update(cms_content)
+				.set({ ...data, updated: new Date().toISOString() })
+				.where(eq(cms_content.key, key))
+				.returning();
+		} else {
+			[record] = await db
+				.insert(cms_content)
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				.values({ key, ...data } as any)
+				.returning();
+		}
+
+		return record as unknown as CMSContent;
+	} catch (error) {
+		console.error('Failed to update CMS content:', error);
+		return null;
+	}
+}
+
+export async function createMessage(data: Partial<Message>): Promise<Message | null> {
+	try {
+		const [record] = await db
+			.insert(messages)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.values(data as any)
+			.returning();
+		return record as unknown as Message;
+	} catch (error) {
+		console.error('Failed to create message:', error);
+		return null;
+	}
+}
+
+export async function getMessages(): Promise<Message[]> {
+	try {
+		const records = await db
+			.select()
+			.from(messages)
+			.orderBy(sql`${messages.created} DESC`)
+			.all();
+		return records as unknown as Message[];
+	} catch (error) {
+		console.error('Failed to fetch messages:', error);
+		return [];
+	}
+}
+
+export async function markMessageRead(id: string): Promise<Message | null> {
+	try {
+		const [record] = await db
+			.update(messages)
+			.set({ is_read: true })
+			.where(eq(messages.id, id))
+			.returning();
+		return record as unknown as Message;
+	} catch (error) {
+		console.error('Failed to mark message as read:', error);
+		return null;
+	}
+}
+
+export async function deleteMessage(id: string): Promise<boolean> {
+	try {
+		await db.delete(messages).where(eq(messages.id, id));
+		return true;
+	} catch (error) {
+		console.error('Failed to delete message:', error);
 		return false;
 	}
 }

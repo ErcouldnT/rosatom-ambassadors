@@ -1,10 +1,18 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { THE_USER_CHAT_ID, TELEGRAM_BOT_TOKEN } from '$env/static/private';
+import { createMessage } from '$lib/server/data';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const { name, contact, message } = await request.json();
+
+		// 1. Save to database
+		await createMessage({
+			name,
+			contact,
+			message
+		});
 
 		if (!THE_USER_CHAT_ID) {
 			return json(
@@ -36,6 +44,9 @@ ${message}
 
 		if (!response.ok) {
 			console.error('Telegram API Error:', await response.text());
+			// Even if telegram fails, we saved to DB, so we can consider it partial success?
+			// But for now let's return error so user knows.
+			// Or maybe just warn.
 			return json({ success: false, error: 'Failed to send telegram message' }, { status: 502 });
 		}
 

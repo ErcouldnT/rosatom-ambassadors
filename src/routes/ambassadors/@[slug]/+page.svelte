@@ -115,6 +115,9 @@
 										src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
 										alt={$language === 'en' ? ambassador.name_en : ambassador.name_ru}
 										class="h-full w-full object-cover transition-all duration-700 group-hover:scale-105"
+										onerror={(e) =>
+											((e.currentTarget as HTMLImageElement).src =
+												'/images/placeholders/ambassador.png')}
 									/>
 
 									<!-- Active Status Badge -->
@@ -262,22 +265,5 @@
 <style>
 	:global(body) {
 		overflow-x: hidden;
-	}
-
-	/* Smooth scrolling for the content area on desktop */
-	@media (min-width: 1024px) {
-		.overflow-y-auto {
-			scrollbar-width: thin;
-			scrollbar-color: var(--color-primary) transparent;
-		}
-
-		.overflow-y-auto::-webkit-scrollbar {
-			width: 4px;
-		}
-
-		.overflow-y-auto::-webkit-scrollbar-thumb {
-			background: var(--color-primary);
-			border-radius: 10px;
-		}
 	}
 </style>

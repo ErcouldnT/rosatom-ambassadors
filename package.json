@@ -65,6 +65,9 @@
 		]
 	},
 	"browserslist": [
-		"last 1 major version"
+		"Chrome >= 85",
+		"Firefox >= 94",
+		"Safari >= 15.4",
+		"Edge >= 85"
 	]
 }

@@ -10,25 +10,25 @@ import {
 } from '$lib/server/data';
 
 export const load: PageServerLoad = async () => {
-	const [events, news, stats, countries, heroAmbassadors, totalAmbassadors, tickers] =
-		await Promise.all([
-			getEvents(),
-			getNews(),
-			getStats(),
-			getCountries(true),
-			getRandomAmbassadorsWithImages(4),
-			getAmbassadorCount(),
-			getTickers()
-		]);
+	// Await only absolute essentials for first paint
+	const [stats, countriesData, heroAmbassadors, totalAmbassadors] = await Promise.all([
+		getStats(),
+		getCountries(true),
+		getRandomAmbassadorsWithImages(4),
+		getAmbassadorCount()
+	]);
 
 	return {
-		events,
-		news,
 		stats,
-		countries,
+		countries: countriesData,
 		heroAmbassadors,
 		totalAmbassadors,
-		totalCountries: countries.length,
-		tickers
+		totalCountries: countriesData.length,
+		// Stream non-critical data
+		streamed: {
+			events: getEvents(),
+			news: getNews(),
+			tickers: getTickers()
+		}
 	};
 };

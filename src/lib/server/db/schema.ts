@@ -116,3 +116,24 @@ export const tickers = sqliteTable('tickers', {
 	created: text('created').default(sql`CURRENT_TIMESTAMP`),
 	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
 });
+
+export const cms_content = sqliteTable('cms_content', {
+	id: text('id')
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	key: text('key').unique().notNull(), // e.g. "hero_main_image", "about_main_image"
+	image: blob('image'), // Binary data
+	image_mime_type: text('image_mime_type'),
+	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
+});
+
+export const messages = sqliteTable('messages', {
+	id: text('id')
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	name: text('name').notNull(),
+	contact: text('contact').notNull(),
+	message: text('message').notNull(),
+	is_read: integer('is_read', { mode: 'boolean' }).default(false),
+	created: text('created').default(sql`CURRENT_TIMESTAMP`)
+});

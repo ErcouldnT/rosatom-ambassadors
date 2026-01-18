@@ -123,6 +123,8 @@ export const translations = {
 			stats: 'Stats',
 			countries: 'Countries',
 			tickers: 'Tickers',
+			content: 'Content',
+			messages: 'Messages',
 			logout: 'Logout'
 		},
 		map: {
@@ -280,6 +282,8 @@ export const translations = {
 			stats: 'Статистика',
 			countries: 'Страны',
 			tickers: 'Бегущая строка',
+			content: 'Контент',
+			messages: 'Сообщения',
 			logout: 'Выйти'
 		},
 		map: {

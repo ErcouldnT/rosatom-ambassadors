@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { Info, GraduationCap, Users } from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -6,8 +6,9 @@
 	$: t = translations[$language].about;
 
 	// Using a placeholder image for the about section
-	const aboutImage =
+	const defaultAboutImage =
 		'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop';
+	const aboutImage = '/api/images/content/about_main_image';
 </script>
 
 <section id="about" class="overflow-hidden bg-base-200 py-20 lg:py-32">
@@ -16,7 +17,12 @@
 			<!-- Image Side -->
 			<div class="relative lg:w-1/2">
 				<div class="relative z-10 overflow-hidden rounded-[2rem] shadow-2xl">
-					<img src={aboutImage} alt="About RNE Ambassadors" class="h-auto w-full object-cover" />
+					<img
+						src={aboutImage}
+						alt="About RNE Ambassadors"
+						class="h-auto w-full object-cover"
+						onerror={(e) => ((e.currentTarget as HTMLImageElement).src = defaultAboutImage)}
+					/>
 				</div>
 
 				<!-- Decorative Elements -->

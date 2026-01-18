@@ -75,3 +75,16 @@ export interface Ticker extends BaseModel {
 	icon?: string | null;
 	isActive: boolean;
 }
+
+export interface CMSContent extends BaseModel {
+	key: string;
+	image: string | Uint8Array | null;
+	image_mime_type?: string | null;
+}
+
+export interface Message extends BaseModel {
+	name: string;
+	contact: string;
+	message: string;
+	is_read: boolean;
+}

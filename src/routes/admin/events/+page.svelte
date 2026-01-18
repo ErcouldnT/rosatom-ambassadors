@@ -7,7 +7,7 @@
 	import type { Event as AppEvent } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	import { toasts } from '$lib/stores/toast';
 
 	let { data } = $props();
 
@@ -15,6 +15,7 @@
 
 	let showModal = $state(false);
 	let editingId = $state<string | null>(null);
+	let submitting = $state(false);
 	let activeTab = $state<'en' | 'ru'>('en');
 
 	let t = $derived(translations[$language].admin);
@@ -87,50 +88,69 @@
 	}
 
 	async function handleSubmit() {
-		const formData = new FormData();
-		if (editingId) formData.append('id', editingId);
-		formData.append('title_en', form.title_en);
-		if (form.slug) formData.append('slug', form.slug);
-		formData.append('title_ru', form.title_ru);
-		formData.append('date_day', form.date_day);
-		formData.append('date_month_en', form.date_month_en);
-		formData.append('date_month_ru', form.date_month_ru);
-		formData.append('time', form.time);
-		formData.append('location_en', form.location_en);
-		formData.append('location_ru', form.location_ru);
-		formData.append('description_en', form.description_en);
-		formData.append('description_ru', form.description_ru);
+		submitting = true;
+		try {
+			const formData = new FormData();
+			if (editingId) formData.append('id', editingId);
+			formData.append('title_en', form.title_en);
+			if (form.slug) formData.append('slug', form.slug);
+			formData.append('title_ru', form.title_ru);
+			formData.append('date_day', form.date_day);
+			formData.append('date_month_en', form.date_month_en);
+			formData.append('date_month_ru', form.date_month_ru);
+			formData.append('time', form.time);
+			formData.append('location_en', form.location_en);
+			formData.append('location_ru', form.location_ru);
+			formData.append('description_en', form.description_en);
+			formData.append('description_ru', form.description_ru);
 
-		if (form.image) {
-			formData.append('image', form.image);
-		}
+			if (form.image) {
+				formData.append('image', form.image);
+			}
 
-		if (editingId) {
-			await fetch('/api/admin/events', {
-				method: 'PUT',
+			const res = await fetch('/api/admin/events', {
+				method: editingId ? 'PUT' : 'POST',
 				body: formData
 			});
-		} else {
-			await fetch('/api/admin/events', {
-				method: 'POST',
-				body: formData
-			});
-		}
 
-		closeModal();
-		await fetchEvents();
+			if (!res.ok) {
+				throw new Error('Failed to save event');
+			}
+
+			closeModal();
+			await fetchEvents();
+			toasts.add(
+				editingId ? 'Event updated successfully' : 'Event created successfully',
+				'success'
+			);
+		} catch (error) {
+			console.error('Submit error:', error);
+			toasts.add('Failed to save event', 'error');
+		} finally {
+			submitting = false;
+		}
 	}
 
 	async function handleDelete(id: string) {
 		if (!confirm('Are you sure you want to delete this event?')) return;
 
-		await fetch('/api/admin/events', {
-			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id })
-		});
+		try {
+			const res = await fetch('/api/admin/events', {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id })
+			});
 
-		await fetchEvents();
+			if (!res.ok) {
+				throw new Error('Failed to delete event');
+			}
+
+			await fetchEvents();
+			toasts.add('Event deleted successfully', 'success');
+		} catch (error) {
+			console.error('Delete error:', error);
+			toasts.add('Failed to delete event', 'error');
+		}
 	}
 
 	function handleFileChange(e: globalThis.Event) {
@@ -189,6 +209,9 @@
 														src={getImageUrl('events', event.id, event.image)}
 														alt={event.title_en}
 														class="object-cover"
+														onerror={(e) =>
+															((e.currentTarget as HTMLImageElement).src =
+																'/images/placeholders/event.png')}
 													/>
 												{:else}
 													<div
@@ -293,7 +316,14 @@
 										class="h-full w-full object-cover"
 									/>
 								{:else if existingImageUrl}
-									<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+									<img
+										src={existingImageUrl}
+										alt="Current"
+										class="h-full w-full object-cover"
+										onerror={(e) =>
+											((e.currentTarget as HTMLImageElement).src =
+												'/images/placeholders/event.png')}
+									/>
 								{:else}
 									<div
 										class="flex h-full w-full flex-col items-center justify-center text-base-content/20"
@@ -461,9 +491,13 @@
 		<button
 			type="button"
 			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
-			onclick={closeModal}>Cancel</button
+			onclick={closeModal}
+			disabled={submitting}>Cancel</button
 		>
-		<button type="submit" form="event-form" class="btn px-8 btn-primary">
+		<button type="submit" form="event-form" class="btn px-8 btn-primary" disabled={submitting}>
+			{#if submitting}
+				<span class="loading loading-sm loading-spinner"></span>
+			{/if}
 			{editingId ? 'Save Changes' : 'Create Event'}
 		</button>
 	{/snippet}

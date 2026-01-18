@@ -32,26 +32,29 @@
 >
 	<div class="animate-marquee flex items-center gap-16 whitespace-nowrap">
 		{#each displayItems as item (item.text)}
+			{@const Icon = item.icon}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
-				<svelte:component this={item.icon} class="h-6 w-6 text-primary" />
+				<Icon class="h-6 w-6 text-primary" />
 				<span>{item.text}</span>
 			</div>
 		{/each}
 		{#each displayItems as item (item.text + 'dup1')}
+			{@const Icon = item.icon}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
-				<svelte:component this={item.icon} class="h-6 w-6 text-primary" />
+				<Icon class="h-6 w-6 text-primary" />
 				<span>{item.text}</span>
 			</div>
 		{/each}
 		{#each displayItems as item (item.text + 'dup2')}
+			{@const Icon = item.icon}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
-				<svelte:component this={item.icon} class="h-6 w-6 text-primary" />
+				<Icon class="h-6 w-6 text-primary" />
 				<span>{item.text}</span>
 			</div>
 		{/each}
@@ -61,26 +64,29 @@
 		class="animate-marquee2 absolute top-0 ml-16 flex h-full items-center gap-16 whitespace-nowrap"
 	>
 		{#each displayItems as item (item.text + 'mq2')}
+			{@const Icon = item.icon}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
-				<svelte:component this={item.icon} class="h-6 w-6 text-primary" />
+				<Icon class="h-6 w-6 text-primary" />
 				<span>{item.text}</span>
 			</div>
 		{/each}
 		{#each displayItems as item (item.text + 'mq2-dup1')}
+			{@const Icon = item.icon}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
-				<svelte:component this={item.icon} class="h-6 w-6 text-primary" />
+				<Icon class="h-6 w-6 text-primary" />
 				<span>{item.text}</span>
 			</div>
 		{/each}
 		{#each displayItems as item (item.text + 'mq2-dup2')}
+			{@const Icon = item.icon}
 			<div
 				class="flex cursor-default items-center gap-3 text-lg font-medium opacity-80 transition-opacity hover:opacity-100"
 			>
-				<svelte:component this={item.icon} class="h-6 w-6 text-primary" />
+				<Icon class="h-6 w-6 text-primary" />
 				<span>{item.text}</span>
 			</div>
 		{/each}

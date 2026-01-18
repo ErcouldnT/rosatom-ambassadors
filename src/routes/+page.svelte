@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Hero from '$lib/components/Hero.svelte';
 	import Stats from '$lib/components/Stats.svelte';
 	import About from '$lib/components/About.svelte';
@@ -20,7 +20,7 @@
 	ambassadors={data.heroAmbassadors}
 	totalAmbassadors={data.totalAmbassadors}
 	totalCountries={data.totalCountries}
-	tickers={data.tickers}
+	tickers={data.streamed.tickers}
 />
 <Stats stats={data.stats} />
 <About />
@@ -30,7 +30,24 @@
 	totalAmbassadors={data.totalAmbassadors}
 	totalCountries={data.totalCountries}
 />
-<Events events={data.events} />
-<NewsSlider news={data.news} />
+{#await data.streamed.events}
+	<div class="flex justify-center bg-base-100 py-20">
+		<span class="loading loading-lg loading-spinner text-primary"></span>
+	</div>
+{:then events}
+	<Events {events} />
+{:catch}
+	<Events events={[]} />
+{/await}
+
+{#await data.streamed.news}
+	<div class="flex justify-center bg-base-200 py-20">
+		<span class="loading loading-lg loading-spinner text-primary"></span>
+	</div>
+{:then news}
+	<NewsSlider {news} />
+{:catch}
+	<NewsSlider news={[]} />
+{/await}
 <CTA />
 <Contact />

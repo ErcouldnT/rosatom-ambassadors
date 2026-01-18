@@ -47,6 +47,8 @@
 								alt={$language === 'en' ? event.title_en : event.title_ru}
 								class="h-full w-full object-cover"
 								loading="lazy"
+								onerror={(e) =>
+									((e.currentTarget as HTMLImageElement).src = '/images/placeholders/event.png')}
 							/>
 							<div class="absolute inset-0 bg-gradient-to-t from-base-100/90 to-transparent"></div>
 							<div class="absolute right-6 bottom-6 left-6">

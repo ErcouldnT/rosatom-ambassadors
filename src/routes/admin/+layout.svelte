@@ -11,10 +11,13 @@
 		X,
 		Globe,
 		ScrollText,
-		BarChart3
+		BarChart3,
+		MessageSquare,
+		Image as ImageIcon
 	} from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
+	import ToastContainer from '$lib/components/ToastContainer.svelte';
 
 	let { children, data } = $props();
 
@@ -31,6 +34,8 @@
 
 	let navItems = $derived([
 		{ name: t.dashboard, href: '/admin', icon: LayoutDashboard },
+		{ name: t.messages, href: '/admin/messages', icon: MessageSquare },
+		{ name: t.content, href: '/admin/content', icon: ImageIcon },
 		{ name: t.ambassadors, href: '/admin/ambassadors', icon: Users },
 		{ name: t.events, href: '/admin/events', icon: Calendar },
 		{ name: t.news, href: '/admin/news', icon: Newspaper },
@@ -166,3 +171,5 @@
 		</div>
 	</div>
 {/if}
+
+<ToastContainer />

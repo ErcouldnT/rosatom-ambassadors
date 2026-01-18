@@ -7,7 +7,7 @@
 	import type { NewsItem } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	// import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+	import { toasts } from '$lib/stores/toast';
 	import { getImageUrl } from '$lib/utils';
 
 	let { data } = $props();
@@ -81,47 +81,68 @@
 	}
 
 	async function handleSubmit() {
-		const formData = new FormData();
-		if (editingId) formData.append('id', editingId);
-		formData.append('category_en', form.category_en);
-		if (form.slug) formData.append('slug', form.slug);
-		formData.append('category_ru', form.category_ru);
-		formData.append('date', form.date);
-		formData.append('title_en', form.title_en);
-		formData.append('title_ru', form.title_ru);
-		formData.append('excerpt_en', form.excerpt_en);
-		formData.append('excerpt_ru', form.excerpt_ru);
+		submitting = true;
+		formError = '';
+		try {
+			const formData = new FormData();
+			if (editingId) formData.append('id', editingId);
+			formData.append('category_en', form.category_en);
+			if (form.slug) formData.append('slug', form.slug);
+			formData.append('category_ru', form.category_ru);
+			formData.append('date', form.date);
+			formData.append('title_en', form.title_en);
+			formData.append('title_ru', form.title_ru);
+			formData.append('excerpt_en', form.excerpt_en);
+			formData.append('excerpt_ru', form.excerpt_ru);
 
-		if (form.image) {
-			formData.append('image', form.image);
-		}
+			if (form.image) {
+				formData.append('image', form.image);
+			}
 
-		if (editingId) {
-			await fetch('/api/admin/news', {
-				method: 'PUT',
+			const res = await fetch('/api/admin/news', {
+				method: editingId ? 'PUT' : 'POST',
 				body: formData
 			});
-		} else {
-			await fetch('/api/admin/news', {
-				method: 'POST',
-				body: formData
-			});
-		}
 
-		closeModal();
-		await fetchNews();
+			if (!res.ok) {
+				throw new Error('Failed to save article');
+			}
+
+			closeModal();
+			await fetchNews();
+			toasts.add(
+				editingId ? 'Article updated successfully' : 'Article created successfully',
+				'success'
+			);
+		} catch (error) {
+			console.error('Submit error:', error);
+			formError = error instanceof Error ? error.message : 'An error occurred';
+			toasts.add('Failed to save article', 'error');
+		} finally {
+			submitting = false;
+		}
 	}
 
 	async function handleDelete(id: string) {
 		if (!confirm('Are you sure you want to delete this article?')) return;
 
-		await fetch('/api/admin/news', {
-			method: 'DELETE',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id })
-		});
+		try {
+			const res = await fetch('/api/admin/news', {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id })
+			});
 
-		await fetchNews();
+			if (!res.ok) {
+				throw new Error('Failed to delete article');
+			}
+
+			await fetchNews();
+			toasts.add('Article deleted successfully', 'success');
+		} catch (error) {
+			console.error('Delete error:', error);
+			toasts.add('Failed to delete article', 'error');
+		}
 	}
 
 	function handleFileChange(e: Event) {
@@ -176,7 +197,13 @@
 										<div class="avatar">
 											<div class="mask h-16 w-16 bg-base-300 mask-squircle">
 												{#if item.image}
-													<img src={getImageUrl('news', item.id, item.image)} alt={item.title_en} />
+													<img
+														src={getImageUrl('news', item.id, item.image)}
+														alt={item.title_en}
+														onerror={(e) =>
+															((e.currentTarget as HTMLImageElement).src =
+																'/images/placeholders/news.png')}
+													/>
 												{:else}
 													<div
 														class="flex h-full w-full items-center justify-center text-base-content/30"
@@ -269,7 +296,13 @@
 										class="h-full w-full object-cover"
 									/>
 								{:else if existingImageUrl}
-									<img src={existingImageUrl} alt="Current" class="h-full w-full object-cover" />
+									<img
+										src={existingImageUrl}
+										alt="Current"
+										class="h-full w-full object-cover"
+										onerror={(e) =>
+											((e.currentTarget as HTMLImageElement).src = '/images/placeholders/news.png')}
+									/>
 								{:else}
 									<div
 										class="flex h-full w-full flex-col items-center justify-center text-base-content/20"

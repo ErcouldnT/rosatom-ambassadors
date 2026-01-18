@@ -4,6 +4,7 @@
 	import type { Stat } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
+	import { toasts } from '$lib/stores/toast';
 
 	import { Edit, Plus, Trash2 } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
@@ -87,12 +88,16 @@
 			if (res.ok) {
 				await loadStats();
 				closeModal();
+				toasts.add(
+					editingStat ? 'Statistic updated successfully' : 'Statistic created successfully',
+					'success'
+				);
 			} else {
-				alert('Failed to save stat');
+				toasts.add('Failed to save stat', 'error');
 			}
 		} catch {
 			console.error('Failed to update stat');
-			alert('Error saving stat');
+			toasts.add('Error saving stat', 'error');
 		} finally {
 			isSaving = false;
 		}
@@ -121,11 +126,12 @@
 			if (res.ok) {
 				await loadStats();
 				deletingStatId = null;
+				toasts.add('Statistic deleted successfully', 'success');
 			} else {
-				alert('Failed to delete stat');
+				toasts.add('Failed to delete stat', 'error');
 			}
 		} catch {
-			alert('Error deleting stat');
+			toasts.add('Error deleting stat', 'error');
 		}
 	}
 </script>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { ArrowRight, MapPin, Clock } from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { getImageUrl } from '$lib/utils';
@@ -35,7 +35,8 @@
 								src={getImageUrl('events', event.id, event.image)}
 								alt={$language === 'en' ? event.title_en : event.title_ru}
 								class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-								loading="lazy"
+								onerror={(e) =>
+									((e.currentTarget as HTMLImageElement).src = '/images/placeholders/event.png')}
 							/>
 						</figure>
 
