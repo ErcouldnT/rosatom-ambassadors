@@ -108,8 +108,8 @@ export const translations = {
 				ambassadors: 'Our Ambassadors',
 				universities: 'Universities',
 				careers: 'Careers',
-				news: 'News & Events',
-				blog: 'Blog',
+				news: 'News',
+				events: 'Events',
 				faq: 'FAQ',
 				contact: 'Contact Support'
 			},
@@ -265,8 +265,8 @@ export const translations = {
 				ambassadors: 'Наши Амбассадоры',
 				universities: 'Университеты',
 				careers: 'Карьера',
-				news: 'Новости и События',
-				blog: 'Блог',
+				news: 'Новости',
+				events: 'События',
 				faq: 'FAQ',
 				contact: 'Поддержка'
 			},

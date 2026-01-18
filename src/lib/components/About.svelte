@@ -77,10 +77,6 @@
 						</div>
 					</div>
 				</div>
-
-				<div class="mt-10">
-					<a href="#contact" class="btn rounded-full px-6 btn-primary">{t.joinButton}</a>
-				</div>
 			</div>
 		</div>
 	</div>

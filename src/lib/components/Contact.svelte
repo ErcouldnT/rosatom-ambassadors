@@ -210,7 +210,7 @@
 								</div>
 							</div>
 
-							<div class="mt-2 flex justify-end">
+							<div class="mt-2 flex justify-center">
 								<button
 									type="submit"
 									class="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-8 py-4 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-primary/25 active:scale-95 disabled:opacity-70 disabled:hover:translate-y-0 sm:w-auto"
