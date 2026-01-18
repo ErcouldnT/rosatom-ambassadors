@@ -125,6 +125,7 @@ export const translations = {
 			tickers: 'Tickers',
 			content: 'Content',
 			messages: 'Messages',
+			profile: 'Profile',
 			logout: 'Logout'
 		},
 		map: {
@@ -284,6 +285,7 @@ export const translations = {
 			tickers: 'Бегущая строка',
 			content: 'Контент',
 			messages: 'Сообщения',
+			profile: 'Профиль',
 			logout: 'Выйти'
 		},
 		map: {

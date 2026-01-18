@@ -15,7 +15,9 @@
 		"db:studio": "drizzle-kit studio",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:seed": "npx tsx scripts/seed.js"
+		"db:seed": "npx tsx scripts/seed.js",
+		"deps:check": "npm outdated || true && npm audit || true",
+		"deps:update": "npm update && npm audit fix"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
@@ -51,11 +53,13 @@
 		"daisyui": "^5.5.14",
 		"dotenv": "^17.2.3",
 		"drizzle-orm": "^0.45.1",
+		"isomorphic-dompurify": "^2.35.0",
 		"leaflet": "^1.9.4",
 		"lucia": "^3.2.2",
 		"oslo": "^1.2.1",
 		"sharp": "^0.34.5",
-		"slugify": "^1.6.6"
+		"slugify": "^1.6.6",
+		"zod": "^4.3.5"
 	},
 	"lint-staged": {
 		"*.{js,ts,svelte,json,md}": [

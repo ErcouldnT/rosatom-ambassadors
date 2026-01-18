@@ -2,6 +2,11 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { updateCMSContent } from '$lib/server/data';
 import sharp from 'sharp';
+import { z } from 'zod';
+
+const contentSchema = z.object({
+	key: z.string().min(1)
+});
 
 export const POST: RequestHandler = async ({ request, locals }) => {
 	if (!locals.user) {
@@ -9,12 +14,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	const formData = await request.formData();
-	const key = formData.get('key') as string;
-	const imageFile = formData.get('image') as File | null;
+	const key = formData.get('key');
+	const validation = contentSchema.safeParse({ key });
 
-	if (!key) {
-		return json({ error: 'Missing key' }, { status: 400 });
+	if (!validation.success) {
+		return json({ error: validation.error.issues[0].message }, { status: 400 });
 	}
+
+	const validKey = validation.data.key;
+	const imageFile = formData.get('image') as File | null;
 
 	let imageData: Buffer | null = null;
 	let mimeType: string | null = null;
@@ -32,7 +40,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'Missing image file' }, { status: 400 });
 	}
 
-	const content = await updateCMSContent(key, {
+	const content = await updateCMSContent(validKey, {
 		image: imageData,
 		image_mime_type: mimeType
 	});

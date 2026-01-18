@@ -3,6 +3,22 @@ import type { RequestHandler } from './$types';
 import { getEvents, createEvent, updateEvent, deleteEvent } from '$lib/server/data';
 import sharp from 'sharp';
 import slugify from 'slugify';
+import { z } from 'zod';
+import DOMPurify from 'isomorphic-dompurify';
+
+const eventSchema = z.object({
+	title_en: z.string().min(1),
+	title_ru: z.string().min(1),
+	slug: z.string().optional(),
+	date_day: z.string().min(1),
+	date_month_en: z.string().min(1),
+	date_month_ru: z.string().min(1),
+	time: z.string().min(1),
+	location_en: z.string().min(1),
+	location_ru: z.string().min(1),
+	description_en: z.string().min(1),
+	description_ru: z.string().min(1)
+});
 
 export const GET: RequestHandler = async () => {
 	const events = await getEvents();
@@ -14,46 +30,72 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const formData = await request.formData();
-	const imageFile = formData.get('image') as File | null;
+	try {
+		const formData = await request.formData();
 
-	let imageData: Buffer | null = null;
-	let mimeType: string | null = null;
+		const rawData = {
+			title_en: formData.get('title_en'),
+			title_ru: formData.get('title_ru'),
+			slug: formData.get('slug'),
+			date_day: formData.get('date_day'),
+			date_month_en: formData.get('date_month_en'),
+			date_month_ru: formData.get('date_month_ru'),
+			time: formData.get('time'),
+			location_en: formData.get('location_en'),
+			location_ru: formData.get('location_ru'),
+			description_en: formData.get('description_en'),
+			description_ru: formData.get('description_ru')
+		};
 
-	if (imageFile && imageFile.size > 0) {
-		const buffer = Buffer.from(await imageFile.arrayBuffer());
-		imageData = await sharp(buffer)
-			.resize(1200, 630, { fit: 'cover', withoutEnlargement: true })
-			.webp({ quality: 80 })
-			.toBuffer();
-		mimeType = 'image/webp';
+		const validation = eventSchema.safeParse(rawData);
+
+		if (!validation.success) {
+			return json({ error: validation.error.issues[0].message }, { status: 400 });
+		}
+
+		const vData = validation.data;
+
+		// Sanitize inputs
+		const data = {
+			title_en: DOMPurify.sanitize(vData.title_en),
+			title_ru: DOMPurify.sanitize(vData.title_ru),
+			slug: vData.slug
+				? DOMPurify.sanitize(vData.slug)
+				: slugify(vData.title_en, { lower: true, strict: true }),
+			date_day: DOMPurify.sanitize(vData.date_day),
+			date_month_en: DOMPurify.sanitize(vData.date_month_en),
+			date_month_ru: DOMPurify.sanitize(vData.date_month_ru),
+			time: DOMPurify.sanitize(vData.time),
+			location_en: DOMPurify.sanitize(vData.location_en),
+			location_ru: DOMPurify.sanitize(vData.location_ru),
+			description_en: DOMPurify.sanitize(vData.description_en),
+			description_ru: DOMPurify.sanitize(vData.description_ru),
+			image: null as Buffer | null,
+			image_mime_type: null as string | null
+		};
+
+		// Handle Image
+		const imageFile = formData.get('image') as File | null;
+		if (imageFile && imageFile.size > 0) {
+			const buffer = Buffer.from(await imageFile.arrayBuffer());
+			data.image = await sharp(buffer)
+				.resize(1200, 630, { fit: 'cover', withoutEnlargement: true })
+				.webp({ quality: 80 })
+				.toBuffer();
+			data.image_mime_type = 'image/webp';
+		}
+
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const event = await createEvent(data as any);
+		if (!event) {
+			return json({ error: 'Failed to create' }, { status: 500 });
+		}
+		return json(event, { status: 201 });
+	} catch (error) {
+		console.error('API POST Error:', error);
+		const message = error instanceof Error ? error.message : 'Server error';
+		return json({ error: message }, { status: 500 });
 	}
-
-	const title_en = formData.get('title_en') as string;
-	const slug = (formData.get('slug') as string) || slugify(title_en, { lower: true, strict: true });
-
-	const data = {
-		title_en,
-		title_ru: formData.get('title_ru') as string,
-		slug,
-		date_day: formData.get('date_day') as string,
-		date_month_en: formData.get('date_month_en') as string,
-		date_month_ru: formData.get('date_month_ru') as string,
-		time: formData.get('time') as string,
-		location_en: formData.get('location_en') as string,
-		location_ru: formData.get('location_ru') as string,
-		description_en: formData.get('description_en') as string,
-		description_ru: formData.get('description_ru') as string,
-		image: imageData,
-		image_mime_type: mimeType
-	};
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const event = await createEvent(data as any);
-	if (!event) {
-		return json({ error: 'Failed to create' }, { status: 500 });
-	}
-	return json(event, { status: 201 });
 };
 
 export const PUT: RequestHandler = async ({ request, locals }) => {
@@ -61,53 +103,76 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 
-	const formData = await request.formData();
-	const id = formData.get('id') as string;
+	try {
+		const formData = await request.formData();
+		const id = formData.get('id') as string;
 
-	if (!id) {
-		return json({ error: 'Missing ID' }, { status: 400 });
+		if (!id) {
+			return json({ error: 'Missing ID' }, { status: 400 });
+		}
+
+		const rawData = {
+			title_en: formData.get('title_en'),
+			title_ru: formData.get('title_ru'),
+			slug: formData.get('slug'),
+			date_day: formData.get('date_day'),
+			date_month_en: formData.get('date_month_en'),
+			date_month_ru: formData.get('date_month_ru'),
+			time: formData.get('time'),
+			location_en: formData.get('location_en'),
+			location_ru: formData.get('location_ru'),
+			description_en: formData.get('description_en'),
+			description_ru: formData.get('description_ru')
+		};
+
+		const validation = eventSchema.safeParse(rawData);
+
+		if (!validation.success) {
+			return json({ error: validation.error.issues[0].message }, { status: 400 });
+		}
+
+		const vData = validation.data;
+
+		// Sanitize inputs
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const data: any = {
+			title_en: DOMPurify.sanitize(vData.title_en),
+			title_ru: DOMPurify.sanitize(vData.title_ru),
+			date_day: DOMPurify.sanitize(vData.date_day),
+			date_month_en: DOMPurify.sanitize(vData.date_month_en),
+			date_month_ru: DOMPurify.sanitize(vData.date_month_ru),
+			time: DOMPurify.sanitize(vData.time),
+			location_en: DOMPurify.sanitize(vData.location_en),
+			location_ru: DOMPurify.sanitize(vData.location_ru),
+			description_en: DOMPurify.sanitize(vData.description_en),
+			description_ru: DOMPurify.sanitize(vData.description_ru)
+		};
+
+		if (vData.slug) {
+			data.slug = DOMPurify.sanitize(vData.slug);
+		}
+
+		// Handle Image
+		const imageFile = formData.get('image') as File | null;
+		if (imageFile && imageFile.size > 0) {
+			const buffer = Buffer.from(await imageFile.arrayBuffer());
+			data.image = await sharp(buffer)
+				.resize(1200, 630, { fit: 'cover', withoutEnlargement: true })
+				.webp({ quality: 80 })
+				.toBuffer();
+			data.image_mime_type = 'image/webp';
+		}
+
+		const event = await updateEvent(id, data);
+		if (!event) {
+			return json({ error: 'Not found' }, { status: 404 });
+		}
+		return json(event);
+	} catch (error) {
+		console.error('API PUT Error:', error);
+		const message = error instanceof Error ? error.message : 'Server error';
+		return json({ error: message }, { status: 500 });
 	}
-
-	const imageFile = formData.get('image') as File | null;
-	let imageData: Buffer | null = null;
-	let mimeType: string | null = null;
-
-	if (imageFile && imageFile.size > 0) {
-		const buffer = Buffer.from(await imageFile.arrayBuffer());
-		imageData = await sharp(buffer)
-			.resize(1200, 630, { fit: 'cover', withoutEnlargement: true })
-			.webp({ quality: 80 })
-			.toBuffer();
-		mimeType = 'image/webp';
-	}
-
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const data: any = {
-		title_en: formData.get('title_en') as string,
-		title_ru: formData.get('title_ru') as string,
-		date_day: formData.get('date_day') as string,
-		date_month_en: formData.get('date_month_en') as string,
-		date_month_ru: formData.get('date_month_ru') as string,
-		time: formData.get('time') as string,
-		location_en: formData.get('location_en') as string,
-		location_ru: formData.get('location_ru') as string,
-		description_en: formData.get('description_en') as string,
-		description_ru: formData.get('description_ru') as string
-	};
-
-	const slug = formData.get('slug') as string;
-	if (slug) data.slug = slug;
-
-	if (imageData) {
-		data.image = imageData;
-		data.image_mime_type = mimeType;
-	}
-
-	const event = await updateEvent(id, data);
-	if (!event) {
-		return json({ error: 'Not found' }, { status: 404 });
-	}
-	return json(event);
 };
 
 export const DELETE: RequestHandler = async ({ request, locals }) => {

@@ -85,7 +85,7 @@
 							<span class="text-xs font-semibold tracking-wider text-base-content/50 uppercase"
 								>Email Us</span
 							>
-							<span class="font-medium">contact@rosatom-ambassadors.com</span>
+							<span class="font-medium">info@rneateam.ru</span>
 						</div>
 					</div>
 				</div>

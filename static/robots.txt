@@ -3,4 +3,4 @@ User-agent: *
 Disallow: /admin
 Disallow: /api
 
-Sitemap: https://rosatom-ambassadors.vercel.app/sitemap.xml
+Sitemap: https://www.rneateam.ru/sitemap.xml

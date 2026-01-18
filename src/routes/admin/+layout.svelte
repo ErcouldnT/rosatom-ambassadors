@@ -13,7 +13,8 @@
 		ScrollText,
 		BarChart3,
 		MessageSquare,
-		Image as ImageIcon
+		Image as ImageIcon,
+		User
 	} from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -66,7 +67,7 @@
 	{@render children()}
 {:else}
 	<!-- Authenticated admin pages: full admin layout with sidebar -->
-	<div class="flex min-h-screen bg-base-200">
+	<div class="flex h-screen overflow-hidden bg-base-200">
 		<!-- Mobile sidebar backdrop -->
 		{#if sidebarOpen}
 			<button
@@ -116,7 +117,22 @@
 			</nav>
 
 			<!-- Logout -->
-			<div class="border-t border-base-200 p-4">
+			<div class="space-y-1 border-t border-base-200 p-4">
+				<!-- eslint-disable svelte/no-navigation-without-resolve -->
+				<a
+					href="/admin/profile"
+					class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors {isActive(
+						'/admin/profile'
+					)
+						? 'bg-primary text-primary-content'
+						: 'text-base-content/70 hover:bg-base-200 hover:text-base-content'}"
+					onclick={() => (sidebarOpen = false)}
+				>
+					<User class="h-5 w-5" />
+					{t.profile}
+				</a>
+				<!-- eslint-enable svelte/no-navigation-without-resolve -->
+
 				<button
 					onclick={handleLogout}
 					class="flex w-full cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-error hover:bg-error/10"

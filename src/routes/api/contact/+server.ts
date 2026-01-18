@@ -2,10 +2,28 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { THE_USER_CHAT_ID, TELEGRAM_BOT_TOKEN } from '$env/static/private';
 import { createMessage } from '$lib/server/data';
+import { z } from 'zod';
+import DOMPurify from 'isomorphic-dompurify';
+
+const contactSchema = z.object({
+	name: z.string().min(1).max(100),
+	contact: z.string().min(1).max(200),
+	message: z.string().min(1).max(5000)
+});
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const { name, contact, message } = await request.json();
+		const body = await request.json();
+		const validation = contactSchema.safeParse(body);
+
+		if (!validation.success) {
+			return json({ success: false, error: validation.error.issues[0].message }, { status: 400 });
+		}
+
+		// Sanitize inputs
+		const name = DOMPurify.sanitize(validation.data.name);
+		const contact = DOMPurify.sanitize(validation.data.contact);
+		const message = DOMPurify.sanitize(validation.data.message);
 
 		// 1. Save to database
 		await createMessage({
