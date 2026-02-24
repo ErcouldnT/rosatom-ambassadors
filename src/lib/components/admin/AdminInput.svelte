@@ -37,6 +37,6 @@
 		{required}
 		{disabled}
 		{maxlength}
-		class="input w-full border-white/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
+		class="input w-full border-base-content/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
 	/>
 </fieldset>

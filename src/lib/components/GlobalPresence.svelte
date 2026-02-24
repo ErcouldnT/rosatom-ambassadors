@@ -42,7 +42,7 @@
 		<img
 			src="/images/global_network_map.png"
 			alt=""
-			class="h-full w-full object-cover opacity-50 dark:opacity-40"
+			class="h-full w-full object-cover opacity-40"
 		/>
 		<div
 			class="absolute inset-0 bg-gradient-to-b from-base-100/50 via-base-100/20 to-base-100/50"

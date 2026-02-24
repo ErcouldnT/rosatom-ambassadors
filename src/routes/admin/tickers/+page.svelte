@@ -204,7 +204,7 @@
 		class="space-y-6"
 	>
 		<!-- Status Switch -->
-		<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+		<fieldset class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4">
 			<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70">Status</legend>
 			<label class="label cursor-pointer justify-between">
 				<span class="label-text font-medium">Active Status</span>
@@ -245,7 +245,7 @@
 			</div>
 
 			<div
-				class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
+				class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-base-content/5 bg-base-100/50 p-6"
 			>
 				<div class={activeTab === 'en' ? 'block' : 'hidden'}>
 					<AdminTextarea
@@ -274,7 +274,7 @@
 	{#snippet actions()}
 		<button
 			type="button"
-			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			class="btn text-base-content/70 btn-ghost hover:bg-base-content/5"
 			onclick={closeModal}
 			disabled={submitting}>Cancel</button
 		>

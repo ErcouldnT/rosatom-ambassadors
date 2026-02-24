@@ -181,7 +181,7 @@
 	<!-- Header -->
 	<!-- Header (Floating) -->
 	<header
-		class="absolute top-4 right-4 left-4 z-[1000] rounded-2xl border border-white/20 bg-base-100/60 shadow-xl backdrop-blur-xl transition-all sm:top-6 sm:right-6 sm:left-6"
+		class="absolute top-4 right-4 left-4 z-[1000] rounded-2xl border border-base-content/20 bg-base-100/60 shadow-xl backdrop-blur-xl transition-all sm:top-6 sm:right-6 sm:left-6"
 	>
 		<div class="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4">
 			<a
@@ -210,7 +210,7 @@
 			</div>
 
 			<div
-				class="badge h-8 gap-1.5 border-none bg-primary/10 px-3 text-primary transition-all hover:bg-primary hover:text-white sm:h-10 sm:px-4"
+				class="badge h-8 gap-1.5 border-none bg-primary/10 px-3 text-primary transition-all hover:bg-primary hover:text-primary-content sm:h-10 sm:px-4"
 			>
 				<Users size={14} class="sm:h-4 sm:w-4" />
 				<span class="text-sm font-black sm:text-base">{data.ambassadors.length}</span>
@@ -227,7 +227,7 @@
 		<div
 			class="pointer-events-none absolute inset-0 z-10 shadow-[inner_0_0_100px_rgba(0,0,0,0.1)]"
 		></div>
-		<div bind:this={mapContainer} class="h-full w-full bg-[#1a1a1a]"></div>
+		<div bind:this={mapContainer} class="h-full w-full bg-base-200"></div>
 
 		<!-- Legend -->
 		<!-- Legend -->
@@ -236,7 +236,7 @@
 		>
 			<!-- Legend Toggle (Mobile) -->
 			<button
-				class="btn btn-circle border-white/20 bg-base-100/60 shadow-lg backdrop-blur-xl btn-sm hover:bg-base-100/80 sm:hidden"
+				class="btn btn-circle border-base-content/20 bg-base-100/60 shadow-lg backdrop-blur-xl btn-sm hover:bg-base-100/80 sm:hidden"
 				aria-label="Toggle Legend"
 				onclick={() => {
 					const legendContent = document.getElementById('legend-content');
@@ -249,7 +249,7 @@
 			<!-- Legend Content -->
 			<div
 				id="legend-content"
-				class="hidden min-w-[180px] flex-col gap-3 rounded-2xl border border-white/20 bg-base-100/60 p-4 shadow-2xl backdrop-blur-xl transition-all hover:bg-base-100/80 sm:flex sm:min-w-[200px] sm:p-5"
+				class="hidden min-w-[180px] flex-col gap-3 rounded-2xl border border-base-content/20 bg-base-100/60 p-4 shadow-2xl backdrop-blur-xl transition-all hover:bg-base-100/80 sm:flex sm:min-w-[200px] sm:p-5"
 			>
 				<h3 class="text-[10px] font-bold tracking-tight text-base-content/90 uppercase sm:text-xs">
 					{translations[$language].map.legend}
@@ -273,7 +273,7 @@
 					</div>
 				</div>
 
-				<div class="border-t border-white/10 pt-3">
+				<div class="border-t border-base-content/10 pt-3">
 					<p class="text-[10px] leading-relaxed font-medium text-base-content/60">
 						{translations[$language].map.clickInfo}
 					</p>
@@ -307,10 +307,10 @@
 	}
 
 	:global(.ambassador-popup .leaflet-popup-content-wrapper) {
-		background: rgba(20, 20, 20, 0.75) !important;
+		background: oklch(var(--b2) / 0.85) !important;
 		backdrop-filter: blur(12px) saturate(180%);
 		-webkit-backdrop-filter: blur(12px) saturate(180%);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		border: 1px solid oklch(var(--bc) / 0.1);
 		border-radius: 1.5rem;
 		padding: 0;
 		overflow: hidden;
@@ -318,7 +318,7 @@
 	}
 
 	:global(.ambassador-popup .leaflet-popup-tip) {
-		background: rgba(20, 20, 20, 0.75) !important;
+		background: oklch(var(--b2) / 0.85) !important;
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
 	}
@@ -347,17 +347,17 @@
 	:global(.popup-title) {
 		font-weight: 800;
 		font-size: 1.1rem;
-		color: white;
+		color: oklch(var(--bc));
 		letter-spacing: -0.02em;
 	}
 
 	:global(.popup-count) {
 		font-size: 0.825rem;
 		font-weight: 500;
-		color: rgba(255, 255, 255, 0.6);
+		color: oklch(var(--bc) / 0.6);
 		margin-bottom: 1rem;
 		padding-bottom: 0.75rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+		border-bottom: 1px solid oklch(var(--bc) / 0.1);
 		display: flex;
 		align-items: baseline;
 		gap: 0.25rem;
@@ -397,7 +397,7 @@
 		height: 36px;
 		border-radius: 12px;
 		object-fit: cover;
-		border: 1.5px solid white/10;
+		border: 1.5px solid oklch(var(--bc) / 0.1);
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 	}
 
@@ -409,7 +409,7 @@
 	:global(.popup-name) {
 		font-weight: 700;
 		font-size: 0.825rem;
-		color: white;
+		color: oklch(var(--bc));
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -418,14 +418,14 @@
 	:global(.popup-role) {
 		font-size: 0.675rem;
 		font-weight: 500;
-		color: rgba(255, 255, 255, 0.6);
+		color: oklch(var(--bc) / 0.6);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
 	:global(.popup-arrow) {
-		color: rgba(255, 255, 255, 0.3);
+		color: oklch(var(--bc) / 0.3);
 		transition:
 			transform 0.2s,
 			color 0.2s;
@@ -460,7 +460,7 @@
 
 	:global(.popup-link:hover) {
 		background: oklch(var(--p));
-		color: white;
+		color: oklch(var(--pc));
 		transform: translateY(-1px);
 		box-shadow: 0 4px 12px oklch(var(--p) / 0.2);
 	}

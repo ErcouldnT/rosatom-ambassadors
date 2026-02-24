@@ -60,7 +60,7 @@
 				in:fly={{ y: 20, duration: 800, delay: 200, easing: cubicOut }}
 			>
 				<div
-					class="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary shadow-lg ring-1 shadow-primary/10 ring-white/20 backdrop-blur-xl"
+					class="inline-flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary shadow-lg ring-1 shadow-primary/10 ring-base-content/20 backdrop-blur-xl"
 				>
 					<Sparkles class="h-8 w-8" />
 				</div>
@@ -102,7 +102,7 @@
 				></div>
 
 				<div
-					class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl backdrop-blur-3xl dark:border-white/5 dark:bg-black/20"
+					class="relative overflow-hidden rounded-[2rem] border border-base-content/10 bg-base-content/5 shadow-2xl backdrop-blur-3xl"
 				>
 					<div class="card-body gap-8 p-8 sm:p-12">
 						<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-6">
@@ -135,7 +135,7 @@
 										placeholder="John Doe"
 										on:focus={() => (focusedField = 'name')}
 										on:blur={() => (focusedField = null)}
-										class="input input-lg w-full rounded-2xl border-white/10 bg-base-100/30 pl-12 transition-all duration-300 hover:bg-base-100/50 focus:border-primary focus:bg-base-100/60 focus:ring-4 focus:ring-primary/10"
+										class="input input-lg w-full rounded-2xl border-base-content/10 bg-base-100/30 pl-12 transition-all duration-300 hover:bg-base-100/50 focus:border-primary focus:bg-base-100/60 focus:ring-4 focus:ring-primary/10"
 									/>
 								</div>
 							</div>
@@ -170,7 +170,7 @@
 										placeholder="@username or email"
 										on:focus={() => (focusedField = 'contact')}
 										on:blur={() => (focusedField = null)}
-										class="input input-lg w-full rounded-2xl border-white/10 bg-base-100/30 pl-12 transition-all duration-300 hover:bg-base-100/50 focus:border-primary focus:bg-base-100/60 focus:ring-4 focus:ring-primary/10"
+										class="input input-lg w-full rounded-2xl border-base-content/10 bg-base-100/30 pl-12 transition-all duration-300 hover:bg-base-100/50 focus:border-primary focus:bg-base-100/60 focus:ring-4 focus:ring-primary/10"
 									/>
 								</div>
 							</div>
@@ -204,7 +204,7 @@
 										rows="4"
 										on:focus={() => (focusedField = 'message')}
 										on:blur={() => (focusedField = null)}
-										class="textarea h-40 w-full resize-none rounded-2xl border-white/10 bg-base-100/30 py-4 pl-12 text-base leading-relaxed transition-all duration-300 hover:bg-base-100/50 focus:border-primary focus:bg-base-100/60 focus:ring-4 focus:ring-primary/10"
+										class="textarea h-40 w-full resize-none rounded-2xl border-base-content/10 bg-base-100/30 py-4 pl-12 text-base leading-relaxed transition-all duration-300 hover:bg-base-100/50 focus:border-primary focus:bg-base-100/60 focus:ring-4 focus:ring-primary/10"
 										placeholder="How can we help you?"
 									></textarea>
 								</div>
@@ -213,12 +213,12 @@
 							<div class="mt-2 flex justify-center">
 								<button
 									type="submit"
-									class="group relative w-full overflow-hidden rounded-2xl border border-white/10 bg-white/5 px-8 py-4 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-primary/25 active:scale-95 disabled:opacity-70 disabled:hover:translate-y-0 sm:w-auto"
+									class="group relative w-full overflow-hidden rounded-2xl border border-base-content/10 bg-base-content/5 px-8 py-4 font-bold text-base-content shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-primary/25 active:scale-95 disabled:opacity-70 disabled:hover:translate-y-0 sm:w-auto"
 									disabled={loading}
 								>
 									<!-- Shine effect -->
 									<div
-										class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+										class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-base-content/10 to-transparent transition-transform duration-700 group-hover:translate-x-full"
 									></div>
 
 									<span class="relative z-10 flex items-center justify-center gap-2">
@@ -245,8 +245,8 @@
 	/* Force placeholder styling to ensure visibility contrast */
 	input::placeholder,
 	textarea::placeholder {
-		color: rgba(255, 255, 255, 0.3) !important;
+		color: oklch(var(--bc) / 0.3) !important;
 		font-weight: 300 !important;
-		opacity: 1 !important; /* Firefox needs this to override default opacity */
+		opacity: 1 !important; /* Firefox needs this */
 	}
 </style>

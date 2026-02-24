@@ -280,14 +280,16 @@
 			<!-- Sidebar: Cover Image & Date -->
 			<div class="space-y-6">
 				<!-- Image Upload -->
-				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+				<fieldset
+					class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4"
+				>
 					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
 						>Cover Image</legend
 					>
 					<div class="flex flex-col items-center gap-4">
 						<div class="avatar aspect-video w-full shadow-xl">
 							<div
-								class="mask h-full w-full rounded-2xl bg-base-300 object-cover ring-1 ring-white/10"
+								class="mask h-full w-full rounded-2xl bg-base-300 object-cover ring-1 ring-base-content/10"
 							>
 								{#if form.image}
 									<img
@@ -315,7 +317,7 @@
 						</div>
 
 						<label
-							class="btn btn-block border-white/20 font-medium btn-outline btn-sm hover:border-white/40"
+							class="btn btn-block border-base-content/20 font-medium btn-outline btn-sm hover:border-base-content/40"
 						>
 							Choose File
 							<input
@@ -362,7 +364,7 @@
 				</div>
 
 				<div
-					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
+					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-base-content/5 bg-base-100/50 p-6"
 				>
 					<!-- EN Fields -->
 					<div class={activeTab === 'en' ? 'block space-y-4' : 'hidden'}>
@@ -433,7 +435,7 @@
 	{#snippet actions()}
 		<button
 			type="button"
-			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			class="btn text-base-content/70 btn-ghost hover:bg-base-content/5"
 			onclick={closeModal}
 			disabled={submitting}>Cancel</button
 		>

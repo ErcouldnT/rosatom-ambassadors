@@ -31,6 +31,6 @@
 		{placeholder}
 		{required}
 		{rows}
-		class="textarea w-full resize-none border-white/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
+		class="textarea w-full resize-none border-base-content/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
 	></textarea>
 </fieldset>

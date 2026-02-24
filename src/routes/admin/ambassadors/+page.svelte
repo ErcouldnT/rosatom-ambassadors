@@ -383,7 +383,9 @@
 			<!-- Sidebar: Photo & Status -->
 			<div class="space-y-6">
 				<!-- Image Upload -->
-				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+				<fieldset
+					class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4"
+				>
 					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
 						>Profile Photo</legend
 					>
@@ -391,7 +393,7 @@
 					<div class="flex flex-col items-center gap-4">
 						<div class="avatar shadow-xl">
 							<div
-								class="mask h-40 w-40 rounded-2xl bg-base-300 mask-squircle object-cover ring-4 ring-white/10"
+								class="mask h-40 w-40 rounded-2xl bg-base-300 mask-squircle object-cover ring-4 ring-base-content/10"
 							>
 								{#if form.image}
 									<img
@@ -420,7 +422,7 @@
 						</div>
 
 						<label
-							class="btn btn-block border-white/20 font-medium btn-outline btn-sm hover:border-white/40"
+							class="btn btn-block border-base-content/20 font-medium btn-outline btn-sm hover:border-base-content/40"
 						>
 							Choose File
 							<input
@@ -440,7 +442,9 @@
 				</fieldset>
 
 				<!-- Status Switch -->
-				<fieldset class="fieldset w-full rounded-xl border border-white/5 bg-base-100/30 p-4">
+				<fieldset
+					class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4"
+				>
 					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
 						>Status</legend
 					>
@@ -487,7 +491,7 @@
 				</div>
 
 				<div
-					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-white/5 bg-base-100/50 p-6"
+					class="-mt-px space-y-6 rounded-tr-2xl rounded-b-2xl border border-base-content/5 bg-base-100/50 p-6"
 				>
 					<!-- English Fields -->
 					<div class={activeTab === 'en' ? 'block space-y-6' : 'hidden'}>
@@ -508,25 +512,25 @@
 									<input
 										type="text"
 										placeholder="Search countries..."
-										class="input w-full border-white/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
+										class="input w-full border-base-content/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
 										bind:value={countrySearch}
 										onfocus={() => (countrySearch = '')}
 									/>
 									{#if countrySearch && filteredCountries.length > 0}
 										<ul
-											class="dropdown-content menu z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-box border border-white/10 bg-[#1a1a1a] p-2 shadow-2xl"
+											class="dropdown-content menu z-50 mt-1 max-h-48 w-full overflow-y-auto rounded-box border border-base-content/10 bg-base-200 p-2 shadow-2xl"
 										>
 											{#each filteredCountries.slice(0, 10) as country (country.id)}
 												<li>
 													<button
 														type="button"
 														onclick={() => selectCountry(country)}
-														class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/5"
+														class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-base-content/5"
 													>
 														<span class="text-xl">{country.flag}</span>
 														<div class="text-left leading-tight">
 															<div class="font-medium">{country.name_en}</div>
-															<div class="text-[10px] text-white/40">{country.name_ru}</div>
+															<div class="text-[10px] text-base-content/40">{country.name_ru}</div>
 														</div>
 													</button>
 												</li>
@@ -537,14 +541,14 @@
 								{#if form.country_en}
 									<div class="mt-2 flex items-center gap-2">
 										<div
-											class="badge gap-2 border-white/10 bg-white/5 py-4 pr-1 pl-3 badge-lg badge-neutral"
+											class="badge gap-2 border-base-content/10 bg-base-content/5 py-4 pr-1 pl-3 badge-lg badge-neutral"
 										>
 											<span class="font-medium">{form.country_en}</span>
 											<span class="px-1 opacity-40">/</span>
 											<span class="opacity-60">{form.country_ru}</span>
 											<button
 												type="button"
-												class="btn btn-circle text-white/50 btn-ghost btn-xs hover:text-white"
+												class="btn btn-circle text-base-content/50 btn-ghost btn-xs hover:text-base-content"
 												onclick={() => {
 													form.country_en = '';
 													form.country_ru = '';
@@ -651,7 +655,7 @@
 	{#snippet actions()}
 		<button
 			type="button"
-			class="btn text-base-content/70 btn-ghost hover:bg-white/5"
+			class="btn text-base-content/70 btn-ghost hover:bg-base-content/5"
 			onclick={closeModal}
 			disabled={submitting}>Cancel</button
 		>

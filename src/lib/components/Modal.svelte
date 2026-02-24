@@ -67,24 +67,24 @@
 >
 	<div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
 		<div
-			class="relative modal-box flex max-h-[90vh] w-full flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#121212]/80 p-0 shadow-2xl backdrop-blur-3xl {maxWidthClasses[
+			class="relative modal-box flex max-h-[90vh] w-full flex-col overflow-hidden rounded-[2rem] border border-base-content/10 bg-base-200/80 p-0 shadow-2xl backdrop-blur-3xl {maxWidthClasses[
 				maxWidth
 			]}"
 			style="animation: modal-pop 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)"
 		>
 			<!-- Header -->
 			<div
-				class="flex shrink-0 items-center justify-between border-b border-white/5 bg-white/5 px-8 py-6 backdrop-blur-md"
+				class="flex shrink-0 items-center justify-between border-b border-base-content/5 bg-base-content/5 px-8 py-6 backdrop-blur-md"
 			>
 				<div class="space-y-1">
-					<h3 class="text-2xl font-bold tracking-tight text-white">{title}</h3>
+					<h3 class="text-2xl font-bold tracking-tight text-base-content">{title}</h3>
 					{#if subtitle}
-						<p class="text-sm font-medium text-white/50">{subtitle}</p>
+						<p class="text-sm font-medium text-base-content/50">{subtitle}</p>
 					{/if}
 				</div>
 				<button
 					type="button"
-					class="btn btn-circle text-white/40 btn-ghost btn-sm hover:bg-white/10 hover:text-white"
+					class="btn btn-circle text-base-content/40 btn-ghost btn-sm hover:bg-base-content/10 hover:text-base-content"
 					onclick={onClose}
 					aria-label="Close modal"
 				>
@@ -94,7 +94,7 @@
 
 			<!-- Content -->
 			<div
-				class="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 grow overflow-y-auto px-8 py-8"
+				class="scrollbar-thin scrollbar-track-transparent scrollbar-thumb-base-content/10 hover:scrollbar-thumb-base-content/20 grow overflow-y-auto px-8 py-8"
 			>
 				{@render children()}
 			</div>
@@ -102,7 +102,7 @@
 			<!-- Actions -->
 			{#if actions}
 				<div
-					class="flex shrink-0 flex-col-reverse gap-3 border-t border-white/5 bg-white/5 px-8 py-6 backdrop-blur-md sm:flex-row sm:justify-end"
+					class="flex shrink-0 flex-col-reverse gap-3 border-t border-base-content/5 bg-base-content/5 px-8 py-6 backdrop-blur-md sm:flex-row sm:justify-end"
 				>
 					{@render actions()}
 				</div>

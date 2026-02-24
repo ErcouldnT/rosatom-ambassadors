@@ -31,7 +31,7 @@
 		{name}
 		bind:value
 		{required}
-		class="select w-full border-white/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
+		class="select w-full border-base-content/10 bg-base-100/50 transition-all duration-300 focus:border-primary/50 focus:bg-base-100/80"
 	>
 		<option value="" disabled selected>{placeholder}</option>
 		{#if options.length > 0}

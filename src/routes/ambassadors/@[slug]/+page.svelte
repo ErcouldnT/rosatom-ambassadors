@@ -125,7 +125,7 @@
 								<!-- Decorative Ring -->
 
 								<div
-									class="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-base-300 shadow-2xl ring-1 ring-white/10 lg:aspect-[3/4] lg:rounded-[2.5rem]"
+									class="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-base-300 shadow-2xl ring-1 ring-base-content/10 lg:aspect-[3/4] lg:rounded-[2.5rem]"
 								>
 									<img
 										src={getImageUrl('ambassadors', ambassador.id, ambassador.image)}
@@ -139,7 +139,7 @@
 									<!-- Active Status Badge -->
 									<div class="absolute bottom-4 left-4 lg:bottom-6 lg:left-6">
 										<div
-											class="flex items-center gap-2 rounded-full border border-white/20 glass px-3 py-1.5 shadow-xl backdrop-blur-md lg:px-4 lg:py-2"
+											class="flex items-center gap-2 rounded-full border border-base-content/20 glass px-3 py-1.5 shadow-xl backdrop-blur-md lg:px-4 lg:py-2"
 										>
 											<span class="relative flex h-2 w-2">
 												{#if ambassador.isActive}
