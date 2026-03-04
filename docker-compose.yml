@@ -12,6 +12,15 @@ services:
       - TURSO_CONNECTION_URL=file:/app/data/local.db
       - TURSO_AUTH_TOKEN=unused
     restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:3000'
+      interval: 2s
+      timeout: 10s
+      retries: 15
 
 volumes:
   db-data:

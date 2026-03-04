@@ -23,8 +23,8 @@ FROM node:24-alpine AS production
 
 WORKDIR /app
 
-# Add non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Add non-root user for security and install curl for healthcheck
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup && apk add --no-cache curl
 
 # Create data directory for SQLite and set permissions
 RUN mkdir -p /app/data && chown appuser:appgroup /app/data
@@ -38,6 +38,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/drizzle.config.ts ./
 COPY --from=build /app/migrations ./migrations
 COPY --from=build /app/src/lib/server/db ./src/lib/server/db
+COPY --from=build /app/scripts ./scripts
+COPY --from=build /app/src/lib/data ./src/lib/data
 
 # SvelteKit adapter-node settings
 ENV NODE_ENV=production
@@ -49,4 +51,4 @@ USER appuser
 EXPOSE 3000
 
 # Run migrations and then start the server
-CMD ["sh", "-c", "npx drizzle-kit migrate && (npm run db:seed || true) && node build"]
+CMD ["sh", "-c", "npx drizzle-kit migrate && npm run db:seed && node build"]
