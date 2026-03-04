@@ -5,7 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "npm run db:migrate && npm run db:seed && vite dev",
-		"build": "npm run db:migrate && npm run db:seed && vite build",
+		"build": "(npm run db:migrate || true) && (npm run db:seed || true) && vite build",
 		"preview": "vite preview",
 		"prepare": "husky",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -22,6 +22,7 @@
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
 		"@eslint/js": "^9.39.1",
+		"@sveltejs/adapter-node": "^5.5.4",
 		"@sveltejs/adapter-vercel": "^6.3.0",
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",

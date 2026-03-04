@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - db-data:/app/data
+    env_file:
+      - .env
+    environment:
+      - ORIGIN=https://rnea.erkut.dev
+      - TURSO_CONNECTION_URL=file:/app/data/local.db
+      - TURSO_AUTH_TOKEN=unused
+    restart: unless-stopped
+
+volumes:
+  db-data:

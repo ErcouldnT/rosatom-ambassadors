@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { THE_USER_CHAT_ID, TELEGRAM_BOT_TOKEN } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { createMessage } from '$lib/server/data';
 import { z } from 'zod';
 import DOMPurify from 'isomorphic-dompurify';
@@ -32,7 +32,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			message
 		});
 
-		if (!THE_USER_CHAT_ID) {
+		if (!env.THE_USER_CHAT_ID) {
 			return json(
 				{ success: false, error: 'Configuration Error: Chat ID not set.' },
 				{ status: 500 }
@@ -48,13 +48,13 @@ export const POST: RequestHandler = async ({ request }) => {
 ${message}
         `;
 
-		const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+		const telegramUrl = `https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`;
 
 		const response = await fetch(telegramUrl, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				chat_id: THE_USER_CHAT_ID,
+				chat_id: env.THE_USER_CHAT_ID,
 				text: text,
 				parse_mode: 'Markdown'
 			})

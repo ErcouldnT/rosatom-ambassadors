@@ -1,0 +1,11 @@
+node_modules
+.svelte-kit
+build
+.output
+.vercel
+.git
+.DS_Store
+*.db
+.env
+.env.*
+!.env.example
