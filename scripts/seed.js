@@ -336,9 +336,9 @@ async function _seedTickers() {
 }
 
 async function main() {
-	// await _seedAdmin();
+	await _seedAdmin();
 	// await _seedStats();
-	// await _seedCountries();
+	await _seedCountries();
 	// await _seedEvents();
 	// await _seedNews();
 	// await _seedTickers();
