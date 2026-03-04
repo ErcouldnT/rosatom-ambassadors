@@ -17,7 +17,7 @@
 	jsonLd={{
 		'@context': 'https://schema.org',
 		'@type': 'Organization',
-		name: 'RNE Ambassadors',
+		name: 'RNEA',
 		url: 'https://rosatom-ambassadors.vercel.app',
 		logo: 'https://rosatom-ambassadors.vercel.app/favicon.png',
 		description:
@@ -31,6 +31,9 @@
 	totalAmbassadors={data.totalAmbassadors}
 	totalCountries={data.totalCountries}
 	tickers={data.streamed.tickers}
+	latestNewsSlug={data.latestNewsSlug}
+	latestNewsTitle_en={data.latestNewsTitle_en}
+	latestNewsTitle_ru={data.latestNewsTitle_ru}
 />
 <Stats stats={data.stats} />
 <About />
@@ -45,7 +48,9 @@
 		<span class="loading loading-lg loading-spinner text-primary"></span>
 	</div>
 {:then events}
-	<Events {events} />
+	{@const today = new Date().toISOString().split('T')[0]}
+	{@const upcomingEvents = events.filter((e) => e.event_date && e.event_date >= today)}
+	<Events events={upcomingEvents} />
 {:catch}
 	<Events events={[]} />
 {/await}

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Ticker from './Ticker.svelte';
+	import { ChevronRight } from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
@@ -9,6 +10,9 @@
 		totalAmbassadors?: number;
 		totalCountries?: number;
 		tickers?: import('$lib/types').Ticker[] | Promise<import('$lib/types').Ticker[]>;
+		latestNewsSlug?: string | null;
+		latestNewsTitle_en?: string | null;
+		latestNewsTitle_ru?: string | null;
 	}
 
 	let {
@@ -16,7 +20,10 @@
 		ambassadors = [],
 		totalAmbassadors = 0,
 		totalCountries = 0,
-		tickers = []
+		tickers = [],
+		latestNewsSlug = null,
+		latestNewsTitle_en = null,
+		latestNewsTitle_ru = null
 	}: Props = $props();
 
 	// Placeholder for hero image. Using a high-quality academic/global themed image.
@@ -25,6 +32,10 @@
 	const heroImage = '/api/images/content/hero_main_image';
 
 	let t = $derived(translations[$language].hero);
+
+	let latestNewsTitle = $derived(
+		($language === 'ru' ? latestNewsTitle_ru : latestNewsTitle_en) || t.initiative
+	);
 
 	let countriesStat = $derived(
 		totalCountries > 0
@@ -60,12 +71,14 @@
 		<div class="flex flex-col items-center gap-12 lg:flex-row">
 			<!-- Text Content -->
 			<div class="text-center lg:w-1/2 lg:text-left">
-				<div
-					class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary shadow-sm"
+				<a
+					href={latestNewsSlug ? `/news/@${latestNewsSlug}` : '/news'}
+					class="btn mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary shadow-sm transition-all duration-300 btn-sm hover:bg-primary/20 hover:shadow-md"
 				>
 					<span class="badge badge-xs badge-primary">{t.new}</span>
-					{t.initiative}
-				</div>
+					{latestNewsTitle}
+					<ChevronRight class="h-4 w-4" />
+				</a>
 
 				<h1
 					class="mb-6 text-5xl leading-tight font-extrabold tracking-tight text-base-content lg:text-7xl"

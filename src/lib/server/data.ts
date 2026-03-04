@@ -7,9 +7,10 @@ import {
 	countries,
 	tickers,
 	cms_content,
-	messages
+	messages,
+	universities
 } from '$lib/server/db/schema';
-import { eq, sql, asc, and, isNotNull } from 'drizzle-orm';
+import { eq, ne, sql, asc, desc, and, isNotNull } from 'drizzle-orm';
 import type {
 	Ambassador,
 	Event,
@@ -18,7 +19,8 @@ import type {
 	Country,
 	Ticker,
 	CMSContent,
-	Message
+	Message,
+	University
 } from '$lib/types';
 
 // ... (getAmbassadors same)
@@ -41,7 +43,6 @@ export async function getCountries(onlyWithAmbassadors = false): Promise<Country
 				})
 				.from(countries)
 				.innerJoin(ambassadors, eq(countries.name_en, ambassadors.country_en))
-				.where(eq(ambassadors.isActive, true))
 				.groupBy(countries.id)
 				.orderBy(asc(countries.name_en));
 
@@ -74,18 +75,96 @@ export async function getAmbassadors(onlyActive = true): Promise<Ambassador[]> {
 				about_ru: ambassadors.about_ru,
 				contributions_en: ambassadors.contributions_en,
 				contributions_ru: ambassadors.contributions_ru,
-				isActive: ambassadors.isActive,
+				isAlumni: ambassadors.isAlumni,
+				awards_json: ambassadors.awards_json,
 				image_mime_type: ambassadors.image_mime_type,
 				created: ambassadors.created,
 				updated: ambassadors.updated,
 				image: sql<boolean>`CASE WHEN ${ambassadors.image} IS NOT NULL THEN 1 ELSE 0 END`
 			})
 			.from(ambassadors)
-			.where(onlyActive ? eq(ambassadors.isActive, true) : sql`1=1`);
+			.where(onlyActive ? eq(ambassadors.isAlumni, false) : sql`1=1`);
 
 		return results as unknown as Ambassador[];
 	} catch (error) {
 		console.error('Failed to fetch ambassadors:', error);
+		return [];
+	}
+}
+
+export async function getAlumni(): Promise<Ambassador[]> {
+	try {
+		const results = await db
+			.select({
+				id: ambassadors.id,
+				slug: ambassadors.slug,
+				email: ambassadors.email,
+				name_en: ambassadors.name_en,
+				name_ru: ambassadors.name_ru,
+				country_en: ambassadors.country_en,
+				country_ru: ambassadors.country_ru,
+				role_en: ambassadors.role_en,
+				role_ru: ambassadors.role_ru,
+				about_en: ambassadors.about_en,
+				about_ru: ambassadors.about_ru,
+				contributions_en: ambassadors.contributions_en,
+				contributions_ru: ambassadors.contributions_ru,
+				isAlumni: ambassadors.isAlumni,
+				awards_json: ambassadors.awards_json,
+				image_mime_type: ambassadors.image_mime_type,
+				created: ambassadors.created,
+				updated: ambassadors.updated,
+				image: sql<boolean>`CASE WHEN ${ambassadors.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(ambassadors)
+			.where(eq(ambassadors.isAlumni, true));
+
+		return results as unknown as Ambassador[];
+	} catch (error) {
+		console.error('Failed to fetch alumni:', error);
+		return [];
+	}
+}
+
+export async function getAmbassadorsWithAwards(): Promise<Ambassador[]> {
+	try {
+		const results = await db
+			.select({
+				id: ambassadors.id,
+				slug: ambassadors.slug,
+				email: ambassadors.email,
+				name_en: ambassadors.name_en,
+				name_ru: ambassadors.name_ru,
+				country_en: ambassadors.country_en,
+				country_ru: ambassadors.country_ru,
+				role_en: ambassadors.role_en,
+				role_ru: ambassadors.role_ru,
+				about_en: ambassadors.about_en,
+				about_ru: ambassadors.about_ru,
+				contributions_en: ambassadors.contributions_en,
+				contributions_ru: ambassadors.contributions_ru,
+				isAlumni: ambassadors.isAlumni,
+				awards_json: ambassadors.awards_json,
+				image_mime_type: ambassadors.image_mime_type,
+				created: ambassadors.created,
+				updated: ambassadors.updated,
+				image: sql<boolean>`CASE WHEN ${ambassadors.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(ambassadors)
+			.where(isNotNull(ambassadors.awards_json));
+
+		// Parse awards_json and filter out ambassadors with empty arrays
+		return (results as unknown as Ambassador[]).filter((a) => {
+			try {
+				const awards = JSON.parse(a.awards_json || '[]');
+				a.awards = awards;
+				return awards.length > 0;
+			} catch {
+				return false;
+			}
+		});
+	} catch (error) {
+		console.error('Failed to fetch ambassadors with awards:', error);
 		return [];
 	}
 }
@@ -95,7 +174,7 @@ export async function getAmbassadorCount(): Promise<number> {
 		const [result] = await db
 			.select({ count: sql<number>`count(*)` })
 			.from(ambassadors)
-			.where(eq(ambassadors.isActive, true));
+			.where(eq(ambassadors.isAlumni, false));
 		return result.count;
 	} catch (error) {
 		console.error('Failed to fetch ambassador count:', error);
@@ -110,11 +189,10 @@ export async function getRandomAmbassadorsWithImages(limit = 4): Promise<Ambassa
 				id: ambassadors.id,
 				name_en: ambassadors.name_en,
 				name_ru: ambassadors.name_ru,
-				isActive: ambassadors.isActive,
 				image: sql<boolean>`1`
 			})
 			.from(ambassadors)
-			.where(and(eq(ambassadors.isActive, true), isNotNull(ambassadors.image)))
+			.where(isNotNull(ambassadors.image))
 			.orderBy(sql`RANDOM()`)
 			.limit(limit);
 
@@ -142,7 +220,7 @@ export async function getAmbassadorById(id: string): Promise<Ambassador | null> 
 				about_ru: ambassadors.about_ru,
 				contributions_en: ambassadors.contributions_en,
 				contributions_ru: ambassadors.contributions_ru,
-				isActive: ambassadors.isActive,
+				isAlumni: ambassadors.isAlumni,
 				image_mime_type: ambassadors.image_mime_type,
 				created: ambassadors.created,
 				updated: ambassadors.updated,
@@ -173,9 +251,9 @@ export async function getAmbassadorBySlug(slug: string): Promise<Ambassador | nu
 				role_ru: ambassadors.role_ru,
 				about_en: ambassadors.about_en,
 				about_ru: ambassadors.about_ru,
-				contributions_en: ambassadors.contributions_en,
 				contributions_ru: ambassadors.contributions_ru,
-				isActive: ambassadors.isActive,
+				isAlumni: ambassadors.isAlumni,
+				awards_json: ambassadors.awards_json,
 				image_mime_type: ambassadors.image_mime_type,
 				created: ambassadors.created,
 				updated: ambassadors.updated,
@@ -184,7 +262,14 @@ export async function getAmbassadorBySlug(slug: string): Promise<Ambassador | nu
 			.from(ambassadors)
 			.where(eq(ambassadors.slug, slug))
 			.get();
-		return (record as unknown as Ambassador) || null;
+		if (!record) return null;
+		const amb = record as unknown as Ambassador;
+		try {
+			amb.awards = JSON.parse(amb.awards_json || '[]');
+		} catch {
+			amb.awards = [];
+		}
+		return amb;
 	} catch (error) {
 		console.error('Failed to fetch ambassador by slug:', error);
 		return null;
@@ -207,6 +292,7 @@ export async function getEvents(): Promise<Event[]> {
 				location_ru: events.location_ru,
 				description_en: events.description_en,
 				description_ru: events.description_ru,
+				event_date: events.event_date,
 				created: events.created,
 				updated: events.updated,
 				image: sql<boolean>`CASE WHEN ${events.image} IS NOT NULL THEN 1 ELSE 0 END`
@@ -306,6 +392,27 @@ export async function getNews(): Promise<NewsItem[]> {
 	}
 }
 
+export async function getLatestNewsInfo(): Promise<{
+	slug: string;
+	title_en: string;
+	title_ru: string;
+} | null> {
+	try {
+		const record = await db
+			.select({ slug: news.slug, title_en: news.title_en, title_ru: news.title_ru })
+			.from(news)
+			.orderBy(desc(news.created))
+			.limit(1)
+			.get();
+		return record && record.slug
+			? (record as { slug: string; title_en: string; title_ru: string })
+			: null;
+	} catch (error) {
+		console.error('Failed to fetch latest news info:', error);
+		return null;
+	}
+}
+
 export async function getNewsById(id: string): Promise<NewsItem | null> {
 	try {
 		const record = await db
@@ -357,6 +464,100 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
 	} catch (error) {
 		console.error('Failed to fetch news item by slug:', error);
 		return null;
+	}
+}
+
+export async function getRelatedContent(
+	currentNewsId: string
+): Promise<{
+	relatedNews: NewsItem | null;
+	upcomingEvent: Event | null;
+	fallbackNews: NewsItem | null;
+}> {
+	try {
+		const today = new Date().toISOString().split('T')[0];
+
+		// Get one other news item, most recent first, excluding current
+		const relatedNewsRecord = await db
+			.select({
+				id: news.id,
+				slug: news.slug,
+				category_en: news.category_en,
+				category_ru: news.category_ru,
+				date: news.date,
+				title_en: news.title_en,
+				title_ru: news.title_ru,
+				excerpt_en: news.excerpt_en,
+				excerpt_ru: news.excerpt_ru,
+				created: news.created,
+				updated: news.updated,
+				image: sql<boolean>`CASE WHEN ${news.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(news)
+			.where(ne(news.id, currentNewsId))
+			.orderBy(desc(news.created))
+			.limit(1)
+			.get();
+
+		// Get one upcoming event (event_date >= today)
+		const upcomingEventRecord = await db
+			.select({
+				id: events.id,
+				slug: events.slug,
+				title_en: events.title_en,
+				title_ru: events.title_ru,
+				date_day: events.date_day,
+				date_month_en: events.date_month_en,
+				date_month_ru: events.date_month_ru,
+				time: events.time,
+				location_en: events.location_en,
+				location_ru: events.location_ru,
+				description_en: events.description_en,
+				description_ru: events.description_ru,
+				event_date: events.event_date,
+				created: events.created,
+				updated: events.updated,
+				image: sql<boolean>`CASE WHEN ${events.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(events)
+			.where(sql`${events.event_date} >= ${today}`)
+			.orderBy(asc(events.event_date))
+			.limit(1)
+			.get();
+
+		// If no upcoming event, get a second news item as fallback
+		let fallbackNewsRecord = null;
+		if (!upcomingEventRecord && relatedNewsRecord) {
+			fallbackNewsRecord = await db
+				.select({
+					id: news.id,
+					slug: news.slug,
+					category_en: news.category_en,
+					category_ru: news.category_ru,
+					date: news.date,
+					title_en: news.title_en,
+					title_ru: news.title_ru,
+					excerpt_en: news.excerpt_en,
+					excerpt_ru: news.excerpt_ru,
+					created: news.created,
+					updated: news.updated,
+					image: sql<boolean>`CASE WHEN ${news.image} IS NOT NULL THEN 1 ELSE 0 END`
+				})
+				.from(news)
+				.where(and(ne(news.id, currentNewsId), ne(news.id, relatedNewsRecord.id)))
+				.orderBy(desc(news.created))
+				.limit(1)
+				.get();
+		}
+
+		return {
+			relatedNews: (relatedNewsRecord as unknown as NewsItem) || null,
+			upcomingEvent: (upcomingEventRecord as unknown as Event) || null,
+			fallbackNews: (fallbackNewsRecord as unknown as NewsItem) || null
+		};
+	} catch (error) {
+		console.error('Failed to fetch related content:', error);
+		return { relatedNews: null, upcomingEvent: null, fallbackNews: null };
 	}
 }
 
@@ -711,6 +912,77 @@ export async function deleteMessage(id: string): Promise<boolean> {
 		return true;
 	} catch (error) {
 		console.error('Failed to delete message:', error);
+		return false;
+	}
+}
+
+// Universities CRUD
+export async function getUniversities(): Promise<University[]> {
+	try {
+		const records = await db
+			.select({
+				id: universities.id,
+				name_en: universities.name_en,
+				name_ru: universities.name_ru,
+				city_en: universities.city_en,
+				city_ru: universities.city_ru,
+				website: universities.website,
+				founded: universities.founded,
+				student_count: universities.student_count,
+				intl_student_count: universities.intl_student_count,
+				budget_places: universities.budget_places,
+				program_count: universities.program_count,
+				created: universities.created,
+				updated: universities.updated,
+				image: sql<boolean>`CASE WHEN ${universities.image} IS NOT NULL THEN 1 ELSE 0 END`
+			})
+			.from(universities)
+			.orderBy(asc(universities.name_en))
+			.all();
+		return records as unknown as University[];
+	} catch (error) {
+		console.error('Failed to fetch universities:', error);
+		return [];
+	}
+}
+
+export async function createUniversity(data: Partial<University>): Promise<University | null> {
+	try {
+		const [record] = await db
+			.insert(universities)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			.values(data as any)
+			.returning();
+		return record as unknown as University;
+	} catch (error) {
+		console.error('Failed to create university:', error);
+		return null;
+	}
+}
+
+export async function updateUniversity(
+	id: string,
+	data: Partial<University>
+): Promise<University | null> {
+	try {
+		const [record] = await db
+			.update(universities)
+			.set({ ...data, updated: new Date().toISOString() })
+			.where(eq(universities.id, id))
+			.returning();
+		return record as unknown as University;
+	} catch (error) {
+		console.error('Failed to update university:', error);
+		return null;
+	}
+}
+
+export async function deleteUniversity(id: string): Promise<boolean> {
+	try {
+		await db.delete(universities).where(eq(universities.id, id));
+		return true;
+	} catch (error) {
+		console.error('Failed to delete university:', error);
 		return false;
 	}
 }
