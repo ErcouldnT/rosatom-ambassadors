@@ -49,4 +49,4 @@ USER appuser
 EXPOSE 3000
 
 # Run migrations and then start the server
-CMD ["sh", "-c", "npx drizzle-kit migrate && node build"]
+CMD ["sh", "-c", "npx drizzle-kit migrate && (npm run db:seed || true) && node build"]
