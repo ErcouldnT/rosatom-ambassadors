@@ -3,7 +3,9 @@
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 
-	$: t = translations[$language].about;
+	let t = $derived(translations[$language].about);
+
+	let { totalCountries = 0 } = $props<{ totalCountries?: number }>();
 
 	// Using a placeholder image for the about section
 	const defaultAboutImage =
@@ -79,7 +81,9 @@
 						</div>
 						<div>
 							<h4 class="font-bold text-base-content">{t.community}</h4>
-							<p class="mt-1 text-sm text-base-content/60">{t.community_desc}</p>
+							<p class="mt-1 text-sm text-base-content/60">
+								{t.community_desc.replace('{n}', `${totalCountries}`)}
+							</p>
 						</div>
 					</div>
 				</div>

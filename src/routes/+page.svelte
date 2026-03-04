@@ -40,7 +40,7 @@
 	totalEvents={data.totalEvents}
 	totalUniversities={data.totalUniversities}
 />
-<About />
+<About totalCountries={data.totalCountries} />
 <GlobalPresence
 	countries={data.countries}
 	totalAmbassadors={data.totalAmbassadors}

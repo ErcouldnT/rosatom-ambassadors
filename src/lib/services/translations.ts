@@ -51,7 +51,7 @@ export const translations = {
 				'Access to top-tier resources and mentorship from leading experts in the Russian nuclear industry.',
 			community: 'Global Community',
 			community_desc:
-				'Connect with like-minded individuals from over 28 countries and build a professional network.',
+				'Connect with like-minded individuals from over {n} countries and build a professional network.',
 			joinButton: 'Join the Community'
 		},
 		events: {
@@ -280,7 +280,7 @@ export const translations = {
 				'Доступ к передовым ресурсам и наставничество от ведущих экспертов российской атомной отрасли.',
 			community: 'Глобальное Сообщество',
 			community_desc:
-				'Общайтесь с единомышленниками из более чем 28 стран и создавайте профессиональную сеть.',
+				'Общайтесь с единомышленниками из более чем {n} стран и создавайте профессиональную сеть.',
 			joinButton: 'Присоединиться к Сообществу'
 		},
 		events: {
