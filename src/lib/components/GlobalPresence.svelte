@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
-	import type { Country, Stat } from '$lib/types';
+	import type { Country } from '$lib/types';
 	import { Globe, Users, Award, MapPin } from '@lucide/svelte';
 
 	let {
 		countries = [],
-		stats = [],
 		totalAmbassadors = 0,
-		totalCountries = 0
+		totalCountries = 0,
+		totalUniversities = 0
 	} = $props<{
 		countries: Country[];
-		stats: Stat[];
 		totalAmbassadors?: number;
 		totalCountries?: number;
+		totalUniversities?: number;
 	}>();
 
 	let t = $derived(translations[$language].impact);
@@ -21,19 +21,9 @@
 	let showAll = $state(false);
 	let displayedCountries = $derived(showAll ? countries : countries.slice(0, 15));
 
-	let countriesStat = $derived(
-		totalCountries > 0
-			? `${totalCountries}+`
-			: stats.find((s: Stat) => s.key === 'countries')?.value || '50+'
-	);
-	let ambassadorsStat = $derived(
-		totalAmbassadors > 0
-			? `${totalAmbassadors}+`
-			: stats.find((s: Stat) => s.key === 'members')?.value || '150+'
-	);
-	let universitiesStat = $derived(
-		stats.find((s: Stat) => s.key === 'universities')?.value || '50+'
-	);
+	let countriesStat = $derived(`${totalCountries}+`);
+	let ambassadorsStat = $derived(`${totalAmbassadors}+`);
+	let universitiesStat = $derived(`${totalUniversities}+`);
 </script>
 
 <section id="ambassadors" class="relative overflow-hidden bg-base-100 py-24 lg:py-32">

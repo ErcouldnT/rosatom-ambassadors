@@ -3,7 +3,6 @@ import {
 	ambassadors,
 	events,
 	news,
-	stats,
 	countries,
 	tickers,
 	cms_content,
@@ -15,7 +14,6 @@ import type {
 	Ambassador,
 	Event,
 	NewsItem,
-	Stat,
 	Country,
 	Ticker,
 	CMSContent,
@@ -366,6 +364,16 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
 	}
 }
 
+export async function getEventCount(): Promise<number> {
+	try {
+		const [result] = await db.select({ count: sql<number>`count(*)` }).from(events);
+		return result.count;
+	} catch (error) {
+		console.error('Failed to fetch event count:', error);
+		return 0;
+	}
+}
+
 export async function getNews(): Promise<NewsItem[]> {
 	try {
 		const records = await db
@@ -467,9 +475,7 @@ export async function getNewsBySlug(slug: string): Promise<NewsItem | null> {
 	}
 }
 
-export async function getRelatedContent(
-	currentNewsId: string
-): Promise<{
+export async function getRelatedContent(currentNewsId: string): Promise<{
 	relatedNews: NewsItem | null;
 	upcomingEvent: Event | null;
 	fallbackNews: NewsItem | null;
@@ -561,13 +567,13 @@ export async function getRelatedContent(
 	}
 }
 
-export async function getStats(): Promise<Stat[]> {
+export async function getUniversityCount(): Promise<number> {
 	try {
-		const records = await db.select().from(stats).all();
-		return records as unknown as Stat[];
+		const [result] = await db.select({ count: sql<number>`count(*)` }).from(universities);
+		return result.count;
 	} catch (error) {
-		console.error('Failed to fetch stats:', error);
-		return [];
+		console.error('Failed to fetch university count:', error);
+		return 0;
 	}
 }
 
@@ -723,44 +729,6 @@ export async function deleteNews(id: string): Promise<boolean> {
 		return true;
 	} catch (error) {
 		console.error('Failed to delete news:', error);
-		return false;
-	}
-}
-
-export async function createStat(data: Partial<Stat>): Promise<Stat | null> {
-	try {
-		const [record] = await db
-			.insert(stats)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			.values(data as any)
-			.returning();
-		return record as unknown as Stat;
-	} catch (error) {
-		console.error('Failed to create stat:', error);
-		return null;
-	}
-}
-
-export async function updateStat(id: string, data: Partial<Stat>): Promise<Stat | null> {
-	try {
-		const [record] = await db
-			.update(stats)
-			.set({ ...data, updated: new Date().toISOString() })
-			.where(eq(stats.id, id))
-			.returning();
-		return record as unknown as Stat;
-	} catch (error) {
-		console.error('Failed to update stat:', error);
-		return null;
-	}
-}
-
-export async function deleteStat(id: string): Promise<boolean> {
-	try {
-		await db.delete(stats).where(eq(stats.id, id));
-		return true;
-	} catch (error) {
-		console.error('Failed to delete stat:', error);
 		return false;
 	}
 }

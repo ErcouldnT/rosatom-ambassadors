@@ -1,5 +1,5 @@
 services:
-  app:
+  rneateam:
     build: .
     ports:
       - '3000:3000'

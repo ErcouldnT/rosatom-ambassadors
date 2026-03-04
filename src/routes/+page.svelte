@@ -26,7 +26,6 @@
 />
 
 <Hero
-	stats={data.stats}
 	ambassadors={data.heroAmbassadors}
 	totalAmbassadors={data.totalAmbassadors}
 	totalCountries={data.totalCountries}
@@ -35,13 +34,18 @@
 	latestNewsTitle_en={data.latestNewsTitle_en}
 	latestNewsTitle_ru={data.latestNewsTitle_ru}
 />
-<Stats stats={data.stats} />
+<Stats
+	totalCountries={data.totalCountries}
+	totalAmbassadors={data.totalAmbassadors}
+	totalEvents={data.totalEvents}
+	totalUniversities={data.totalUniversities}
+/>
 <About />
 <GlobalPresence
 	countries={data.countries}
-	stats={data.stats}
 	totalAmbassadors={data.totalAmbassadors}
 	totalCountries={data.totalCountries}
+	totalUniversities={data.totalUniversities}
 />
 {#await data.streamed.events}
 	<div class="flex justify-center bg-base-100 py-20">
@@ -49,7 +53,9 @@
 	</div>
 {:then events}
 	{@const today = new Date().toISOString().split('T')[0]}
-	{@const upcomingEvents = events.filter((e) => e.event_date && e.event_date >= today)}
+	{@const upcomingEvents = events.filter(
+		(e: import('$lib/types').Event) => e.event_date && e.event_date >= today
+	)}
 	<Events events={upcomingEvents} />
 {:catch}
 	<Events events={[]} />

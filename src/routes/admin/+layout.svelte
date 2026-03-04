@@ -12,7 +12,6 @@
 		X,
 		Globe,
 		ScrollText,
-		BarChart3,
 		MessageSquare,
 		Image as ImageIcon,
 		User,
@@ -67,7 +66,6 @@
 		{ name: t.ambassadors, href: '/admin/ambassadors', icon: Users },
 		{ name: t.events, href: '/admin/events', icon: Calendar },
 		{ name: t.news, href: '/admin/news', icon: Newspaper },
-		{ name: t.stats, href: '/admin/stats', icon: BarChart3 },
 		{ name: t.countries, href: '/admin/countries', icon: Globe },
 		{ name: t.tickers, href: '/admin/tickers', icon: ScrollText },
 		{ name: 'Universities', href: '/admin/universities', icon: GraduationCap }

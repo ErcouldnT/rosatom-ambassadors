@@ -80,19 +80,6 @@ export const news = sqliteTable('news', {
 	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
 });
 
-export const stats = sqliteTable('stats', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	key: text('key').notNull(),
-	value: text('value').notNull(),
-	label_en: text('label_en').notNull(),
-	label_ru: text('label_ru').notNull(),
-	icon: text('icon'),
-	created: text('created').default(sql`CURRENT_TIMESTAMP`),
-	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
-});
-
 export const countries = sqliteTable('countries', {
 	id: text('id')
 		.primaryKey()

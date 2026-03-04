@@ -5,7 +5,6 @@
 	import { translations } from '$lib/services/translations';
 
 	interface Props {
-		stats: import('$lib/types').Stat[];
 		ambassadors?: import('$lib/types').Ambassador[];
 		totalAmbassadors?: number;
 		totalCountries?: number;
@@ -16,7 +15,6 @@
 	}
 
 	let {
-		stats = [],
 		ambassadors = [],
 		totalAmbassadors = 0,
 		totalCountries = 0,
@@ -37,16 +35,8 @@
 		($language === 'ru' ? latestNewsTitle_ru : latestNewsTitle_en) || t.initiative
 	);
 
-	let countriesStat = $derived(
-		totalCountries > 0
-			? `${totalCountries}+`
-			: stats.find((s) => s.key === 'countries')?.value || '50+'
-	);
-	let ambassadorsStat = $derived(
-		totalAmbassadors > 0
-			? `${totalAmbassadors}+`
-			: stats.find((s) => s.key === 'members')?.value || '150+'
-	);
+	let countriesStat = $derived(`${totalCountries}+`);
+	let ambassadorsStat = $derived(`${totalAmbassadors}+`);
 
 	let displayAmbassadors = $derived(ambassadors.length > 0 ? ambassadors : []);
 </script>
