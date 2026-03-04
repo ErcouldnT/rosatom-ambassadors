@@ -8,7 +8,7 @@
 		ambassadors?: import('$lib/types').Ambassador[];
 		totalAmbassadors?: number;
 		totalCountries?: number;
-		tickers?: import('$lib/types').Ticker[] | Promise<import('$lib/types').Ticker[]>;
+		news?: import('$lib/types').NewsItem[] | Promise<import('$lib/types').NewsItem[]>;
 		latestNewsSlug?: string | null;
 		latestNewsTitle_en?: string | null;
 		latestNewsTitle_ru?: string | null;
@@ -18,7 +18,7 @@
 		ambassadors = [],
 		totalAmbassadors = 0,
 		totalCountries = 0,
-		tickers = [],
+		news = [],
 		latestNewsSlug = null,
 		latestNewsTitle_en = null,
 		latestNewsTitle_ru = null
@@ -178,12 +178,12 @@
 
 	<!-- Ticker at Bottom -->
 	<div class="absolute bottom-0 z-20 w-full">
-		{#await tickers}
+		{#await news}
 			<!-- Static fallback or nothing while loading -->
-		{:then resolvedTickers}
-			<Ticker tickers={resolvedTickers} />
+		{:then resolvedNews}
+			<Ticker news={resolvedNews} />
 		{:catch}
-			<Ticker tickers={[]} />
+			<Ticker news={[]} />
 		{/await}
 	</div>
 </section>

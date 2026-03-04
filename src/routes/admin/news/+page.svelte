@@ -9,6 +9,27 @@
 	import { translations } from '$lib/services/translations';
 	import { toasts } from '$lib/stores/toast';
 	import { getImageUrl } from '$lib/utils';
+	import {
+		Globe,
+		GraduationCap,
+		Handshake,
+		Atom,
+		Calendar,
+		Megaphone,
+		FlaskConical,
+		Newspaper
+	} from '@lucide/svelte';
+
+	const categories = [
+		{ value_en: 'Education', value_ru: 'Образование', icon: GraduationCap },
+		{ value_en: 'Technology', value_ru: 'Технологии', icon: Atom },
+		{ value_en: 'Community', value_ru: 'Сообщество', icon: Handshake },
+		{ value_en: 'Events', value_ru: 'События', icon: Calendar },
+		{ value_en: 'Announcements', value_ru: 'Анонсы', icon: Megaphone },
+		{ value_en: 'Global', value_ru: 'Глобальные', icon: Globe },
+		{ value_en: 'Research', value_ru: 'Исследования', icon: FlaskConical },
+		{ value_en: 'Other', value_ru: 'Другое', icon: Newspaper }
+	];
 
 	let { data } = $props();
 
@@ -381,12 +402,27 @@
 							bind:value={form.slug}
 							placeholder="article-headline"
 						/>
-						<AdminInput
-							id="category_en"
-							label="Category (EN)"
-							bind:value={form.category_en}
-							placeholder="e.g. Technology"
-						/>
+						<div class="form-control w-full">
+							<label class="label" for="category_en">
+								<span class="label-text font-medium text-base-content/80">Category (EN)</span>
+							</label>
+							<select
+								id="category_en"
+								class="select-bordered select w-full bg-base-100/50"
+								bind:value={form.category_en}
+								onchange={() => {
+									// Auto-sync RU category when EN is changed
+									const idx = categories.findIndex((c) => c.value_en === form.category_en);
+									if (idx !== -1) form.category_ru = categories[idx].value_ru;
+								}}
+								required
+							>
+								<option value="" disabled>Select Category</option>
+								{#each categories as cat (cat.value_en)}
+									<option value={cat.value_en}>{cat.value_en}</option>
+								{/each}
+							</select>
+						</div>
 						<AdminTextarea
 							id="excerpt_en"
 							label="Excerpt (EN)"
@@ -404,12 +440,22 @@
 							bind:value={form.title_ru}
 							placeholder="Заголовок статьи..."
 						/>
-						<AdminInput
-							id="category_ru"
-							label="Category (RU)"
-							bind:value={form.category_ru}
-							placeholder="Например: Технологии"
-						/>
+						<div class="form-control w-full">
+							<label class="label" for="category_ru">
+								<span class="label-text font-medium text-base-content/80">Category (RU)</span>
+							</label>
+							<select
+								id="category_ru"
+								class="select-bordered select w-full bg-base-100/50"
+								bind:value={form.category_ru}
+								required
+							>
+								<option value="" disabled>Выберите категорию</option>
+								{#each categories as cat (cat.value_ru)}
+									<option value={cat.value_ru}>{cat.value_ru}</option>
+								{/each}
+							</select>
+						</div>
 						<AdminTextarea
 							id="excerpt_ru"
 							label="Excerpt (RU)"

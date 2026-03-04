@@ -5,7 +5,6 @@ import {
 	getCountries,
 	getRandomAmbassadorsWithImages,
 	getAmbassadorCount,
-	getTickers,
 	getLatestNewsInfo,
 	getUniversityCount,
 	getEventCount
@@ -42,8 +41,7 @@ export const load: PageServerLoad = async () => {
 		// Stream non-critical data
 		streamed: {
 			events: getEvents(),
-			news: getNews(),
-			tickers: getTickers()
+			news: getNews()
 		}
 	};
 };

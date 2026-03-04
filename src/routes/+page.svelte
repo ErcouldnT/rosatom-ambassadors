@@ -29,7 +29,7 @@
 	ambassadors={data.heroAmbassadors}
 	totalAmbassadors={data.totalAmbassadors}
 	totalCountries={data.totalCountries}
-	tickers={data.streamed.tickers}
+	news={data.streamed.news}
 	latestNewsSlug={data.latestNewsSlug}
 	latestNewsTitle_en={data.latestNewsTitle_en}
 	latestNewsTitle_ru={data.latestNewsTitle_ru}

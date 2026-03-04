@@ -80,13 +80,6 @@ export interface Country extends BaseModel {
 	ambassador_count?: number;
 }
 
-export interface Ticker extends BaseModel {
-	text_en: string;
-	text_ru: string;
-	icon?: string | null;
-	isActive: boolean;
-}
-
 export interface CMSContent extends BaseModel {
 	key: string;
 	image: string | Uint8Array | null;

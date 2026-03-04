@@ -4,7 +4,6 @@ import {
 	events,
 	news,
 	countries,
-	tickers,
 	cms_content,
 	messages,
 	universities
@@ -15,7 +14,6 @@ import type {
 	Event,
 	NewsItem,
 	Country,
-	Ticker,
 	CMSContent,
 	Message,
 	University
@@ -729,54 +727,6 @@ export async function deleteNews(id: string): Promise<boolean> {
 		return true;
 	} catch (error) {
 		console.error('Failed to delete news:', error);
-		return false;
-	}
-}
-
-export async function getTickers(): Promise<Ticker[]> {
-	try {
-		const records = await db.select().from(tickers).all();
-		return records as unknown as Ticker[];
-	} catch (error) {
-		console.error('Failed to fetch tickers:', error);
-		return [];
-	}
-}
-
-export async function createTicker(data: Partial<Ticker>): Promise<Ticker | null> {
-	try {
-		const [record] = await db
-			.insert(tickers)
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			.values(data as any)
-			.returning();
-		return record as unknown as Ticker;
-	} catch (error) {
-		console.error('Failed to create ticker:', error);
-		return null;
-	}
-}
-
-export async function updateTicker(id: string, data: Partial<Ticker>): Promise<Ticker | null> {
-	try {
-		const [record] = await db
-			.update(tickers)
-			.set({ ...data, updated: new Date().toISOString() })
-			.where(eq(tickers.id, id))
-			.returning();
-		return record as unknown as Ticker;
-	} catch (error) {
-		console.error('Failed to update ticker:', error);
-		return null;
-	}
-}
-
-export async function deleteTicker(id: string): Promise<boolean> {
-	try {
-		await db.delete(tickers).where(eq(tickers.id, id));
-		return true;
-	} catch (error) {
-		console.error('Failed to delete ticker:', error);
 		return false;
 	}
 }
