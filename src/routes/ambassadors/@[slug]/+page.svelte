@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Mail, Share2, Check, Briefcase, Award, Sparkles, MapPin } from '@lucide/svelte';
+	import { Mail, Share2, Check, Briefcase, Award, Sparkles, MapPin, Trophy } from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import { getImageUrl } from '$lib/utils';
@@ -136,25 +136,25 @@
 												'/images/placeholders/ambassador.png')}
 									/>
 
-									<!-- Active Status Badge -->
+									<!-- Status Badge -->
 									<div class="absolute bottom-4 left-4 lg:bottom-6 lg:left-6">
 										<div
 											class="flex items-center gap-2 rounded-full border border-base-content/20 glass px-3 py-1.5 shadow-xl backdrop-blur-md lg:px-4 lg:py-2"
 										>
 											<span class="relative flex h-2 w-2">
-												{#if ambassador.isActive}
+												{#if ambassador.isAlumni}
+													<span class="relative inline-flex h-2 w-2 rounded-full bg-info"></span>
+												{:else}
 													<span
 														class="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75"
 													></span>
 													<span class="relative inline-flex h-2 w-2 rounded-full bg-success"></span>
-												{:else}
-													<span class="relative inline-flex h-2 w-2 rounded-full bg-error"></span>
 												{/if}
 											</span>
 											<span
 												class="text-[9px] font-black tracking-widest text-white uppercase lg:text-[10px]"
 											>
-												{ambassador.isActive ? t.active : t.inactive}
+												{ambassador.isAlumni ? t.alumni : t.active}
 											</span>
 										</div>
 									</div>
@@ -237,6 +237,67 @@
 												? ambassador.contributions_en
 												: ambassador.contributions_ru}
 										</p>
+									</div>
+								</section>
+							{/if}
+
+							<!-- Awards -->
+							{#if ambassador.awards && ambassador.awards.length > 0}
+								<section
+									class="space-y-4 lg:space-y-6"
+									in:fly={{ y: 20, duration: 800, delay: 400 }}
+								>
+									<div class="flex items-center gap-2 opacity-30 lg:gap-3">
+										<Trophy class="h-3.5 w-3.5 w-4 lg:h-4" />
+										<h2 class="text-[9px] font-black tracking-widest uppercase lg:text-[10px]">
+											{t.awardsTitle}
+										</h2>
+									</div>
+
+									<div class="space-y-3">
+										{#each ambassador.awards as award, i (award.title_en || i)}
+											<div
+												class="group/award relative overflow-hidden rounded-2xl border border-warning/15 bg-gradient-to-br from-warning/5 via-base-200/50 to-base-100 p-5 shadow-sm transition-all duration-500 hover:-translate-y-0.5 hover:border-warning/30 hover:shadow-lg hover:shadow-warning/10 lg:rounded-[1.5rem] lg:p-6"
+												in:fly={{ y: 15, duration: 600, delay: 500 + i * 100 }}
+											>
+												<!-- Subtle gold shimmer on hover -->
+												<div
+													class="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-warning/5 to-transparent opacity-0 transition-opacity duration-700 group-hover/award:opacity-100"
+												></div>
+
+												<div class="relative flex items-start gap-4">
+													<!-- Award Icon -->
+													<div
+														class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-warning/20 to-warning/10 shadow-inner transition-transform duration-500 group-hover/award:scale-110 lg:h-12 lg:w-12"
+													>
+														<Award class="h-5 w-5 text-warning lg:h-6 lg:w-6" />
+													</div>
+
+													<!-- Content -->
+													<div class="min-w-0 flex-1">
+														<div class="mb-1 flex flex-wrap items-center gap-2">
+															<h3
+																class="text-base font-bold tracking-tight text-base-content lg:text-lg"
+															>
+																{$language === 'en' ? award.title_en : award.title_ru}
+															</h3>
+															{#if award.year}
+																<span
+																	class="inline-flex items-center rounded-full border border-warning/20 bg-warning/10 px-2.5 py-0.5 text-[10px] font-bold tracking-wider text-warning"
+																>
+																	{award.year}
+																</span>
+															{/if}
+														</div>
+														{#if $language === 'en' ? award.description_en : award.description_ru}
+															<p class="text-sm leading-relaxed text-base-content/60 lg:text-base">
+																{$language === 'en' ? award.description_en : award.description_ru}
+															</p>
+														{/if}
+													</div>
+												</div>
+											</div>
+										{/each}
 									</div>
 								</section>
 							{/if}

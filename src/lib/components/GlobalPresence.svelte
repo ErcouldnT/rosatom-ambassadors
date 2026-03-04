@@ -134,7 +134,7 @@
 				>
 					{#each displayedCountries as country (country.id)}
 						<div
-							class="group bg-base-50 relative flex cursor-default flex-col items-center justify-center gap-2 rounded-xl border border-base-200 p-4 transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md"
+							class="group relative flex cursor-default flex-col items-center justify-center gap-2 rounded-xl border border-base-200 bg-base-200 p-4 transition-all duration-300 hover:border-primary/40 hover:bg-primary/5 hover:shadow-md synthwave:bg-[#3b0c63]"
 						>
 							<span class="text-3xl transition-transform duration-300 group-hover:scale-110">
 								{country.flag}

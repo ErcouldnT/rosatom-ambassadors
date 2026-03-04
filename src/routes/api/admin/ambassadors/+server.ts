@@ -24,7 +24,8 @@ const ambassadorSchema = z.object({
 	about_ru: z.string().optional().default(''),
 	contributions_en: z.string().optional().default(''),
 	contributions_ru: z.string().optional().default(''),
-	isActive: z.union([z.boolean(), z.string().transform((val) => val === 'true')]).default(true)
+	isAlumni: z.union([z.boolean(), z.string().transform((val) => val === 'true')]).default(false),
+	awards_json: z.string().optional().default('[]')
 });
 
 export const GET: RequestHandler = async () => {
@@ -54,7 +55,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			about_ru: formData.get('about_ru'),
 			contributions_en: formData.get('contributions_en'),
 			contributions_ru: formData.get('contributions_ru'),
-			isActive: formData.get('isActive')
+			isAlumni: formData.get('isAlumni'),
+			awards_json: formData.get('awards_json') || '[]'
 		};
 
 		const validation = ambassadorSchema.safeParse(rawData);
@@ -81,7 +83,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			about_ru: DOMPurify.sanitize(vData.about_ru),
 			contributions_en: DOMPurify.sanitize(vData.contributions_en),
 			contributions_ru: DOMPurify.sanitize(vData.contributions_ru),
-			isActive: vData.isActive,
+			isAlumni: vData.isAlumni,
+			awards_json: vData.awards_json,
 			image: null as Buffer | null,
 			image_mime_type: null as string | null
 		};
@@ -137,7 +140,8 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 			about_ru: formData.get('about_ru'),
 			contributions_en: formData.get('contributions_en'),
 			contributions_ru: formData.get('contributions_ru'),
-			isActive: formData.get('isActive')
+			isAlumni: formData.get('isAlumni'),
+			awards_json: formData.get('awards_json') || '[]'
 		};
 
 		const validation = ambassadorSchema.safeParse(rawData);
@@ -161,7 +165,8 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 			about_ru: DOMPurify.sanitize(vData.about_ru),
 			contributions_en: DOMPurify.sanitize(vData.contributions_en),
 			contributions_ru: DOMPurify.sanitize(vData.contributions_ru),
-			isActive: vData.isActive,
+			isAlumni: vData.isAlumni,
+			awards_json: vData.awards_json,
 			email: DOMPurify.sanitize(vData.email || '')
 		};
 

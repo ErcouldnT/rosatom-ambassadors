@@ -33,7 +33,8 @@
 		location_ru: '',
 		description_en: '',
 		description_ru: '',
-		image: null as File | null
+		image: null as File | null,
+		event_date: ''
 	});
 
 	let existingImageUrl = $state('');
@@ -59,6 +60,7 @@
 			form.location_ru = event.location_ru;
 			form.description_en = event.description_en;
 			form.description_ru = event.description_ru;
+			form.event_date = event.event_date || '';
 			form.image = null;
 
 			existingImageUrl = event.image ? getImageUrl('events', event.id, event.image) : '';
@@ -75,6 +77,7 @@
 			form.location_ru = '';
 			form.description_en = '';
 			form.description_ru = '';
+			form.event_date = '';
 			form.image = null;
 			existingImageUrl = '';
 		}
@@ -103,6 +106,7 @@
 			formData.append('location_ru', form.location_ru);
 			formData.append('description_en', form.description_en);
 			formData.append('description_ru', form.description_ru);
+			if (form.event_date) formData.append('event_date', form.event_date);
 
 			if (form.image) {
 				formData.append('image', form.image);
@@ -379,6 +383,21 @@
 							/>
 						</div>
 					</div>
+				</fieldset>
+
+				<!-- Event Date (ISO) -->
+				<fieldset
+					class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4"
+				>
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
+						>Event Date</legend
+					>
+					<input
+						type="date"
+						bind:value={form.event_date}
+						class="input w-full border-base-content/10 text-center font-mono"
+					/>
+					<p class="mt-1 text-xs text-base-content/40">Used for upcoming/past filtering.</p>
 				</fieldset>
 			</div>
 

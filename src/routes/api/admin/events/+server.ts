@@ -17,7 +17,8 @@ const eventSchema = z.object({
 	location_en: z.string().min(1),
 	location_ru: z.string().min(1),
 	description_en: z.string().min(1),
-	description_ru: z.string().min(1)
+	description_ru: z.string().min(1),
+	event_date: z.string().optional().default('')
 });
 
 export const GET: RequestHandler = async () => {
@@ -44,7 +45,8 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			location_en: formData.get('location_en'),
 			location_ru: formData.get('location_ru'),
 			description_en: formData.get('description_en'),
-			description_ru: formData.get('description_ru')
+			description_ru: formData.get('description_ru'),
+			event_date: formData.get('event_date') || ''
 		};
 
 		const validation = eventSchema.safeParse(rawData);
@@ -70,6 +72,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 			location_ru: DOMPurify.sanitize(vData.location_ru),
 			description_en: DOMPurify.sanitize(vData.description_en),
 			description_ru: DOMPurify.sanitize(vData.description_ru),
+			event_date: vData.event_date || null,
 			image: null as Buffer | null,
 			image_mime_type: null as string | null
 		};
@@ -122,7 +125,8 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 			location_en: formData.get('location_en'),
 			location_ru: formData.get('location_ru'),
 			description_en: formData.get('description_en'),
-			description_ru: formData.get('description_ru')
+			description_ru: formData.get('description_ru'),
+			event_date: formData.get('event_date') || ''
 		};
 
 		const validation = eventSchema.safeParse(rawData);
@@ -145,7 +149,8 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 			location_en: DOMPurify.sanitize(vData.location_en),
 			location_ru: DOMPurify.sanitize(vData.location_ru),
 			description_en: DOMPurify.sanitize(vData.description_en),
-			description_ru: DOMPurify.sanitize(vData.description_ru)
+			description_ru: DOMPurify.sanitize(vData.description_ru),
+			event_date: vData.event_date || null
 		};
 
 		if (vData.slug) {

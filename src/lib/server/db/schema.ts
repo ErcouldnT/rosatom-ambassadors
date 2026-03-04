@@ -34,7 +34,8 @@ export const ambassadors = sqliteTable('ambassadors', {
 	contributions_ru: text('contributions_ru'),
 	image: blob('image'), // Binary data
 	image_mime_type: text('image_mime_type'), // e.g. image/webp
-	isActive: integer('is_active', { mode: 'boolean' }).default(true),
+	isAlumni: integer('is_alumni', { mode: 'boolean' }).default(false),
+	awards_json: text('awards_json'), // JSON string: [{title_en, title_ru, year}]
 	created: text('created').default(sql`CURRENT_TIMESTAMP`),
 	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
 });
@@ -56,6 +57,7 @@ export const events = sqliteTable('events', {
 	description_ru: text('description_ru'),
 	image: blob('image'), // Binary data
 	image_mime_type: text('image_mime_type'),
+	event_date: text('event_date'), // ISO YYYY-MM-DD for sorting/filtering
 	created: text('created').default(sql`CURRENT_TIMESTAMP`),
 	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
 });
@@ -136,4 +138,24 @@ export const messages = sqliteTable('messages', {
 	message: text('message').notNull(),
 	is_read: integer('is_read', { mode: 'boolean' }).default(false),
 	created: text('created').default(sql`CURRENT_TIMESTAMP`)
+});
+
+export const universities = sqliteTable('universities', {
+	id: text('id')
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	name_en: text('name_en').notNull(),
+	name_ru: text('name_ru').notNull(),
+	city_en: text('city_en'),
+	city_ru: text('city_ru'),
+	website: text('website'),
+	founded: text('founded'),
+	student_count: integer('student_count'),
+	intl_student_count: integer('intl_student_count'),
+	budget_places: integer('budget_places'),
+	program_count: integer('program_count'),
+	image: blob('image'),
+	image_mime_type: text('image_mime_type'),
+	created: text('created').default(sql`CURRENT_TIMESTAMP`),
+	updated: text('updated').default(sql`CURRENT_TIMESTAMP`)
 });

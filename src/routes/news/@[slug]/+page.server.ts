@@ -1,14 +1,17 @@
 import type { PageServerLoad } from './$types';
-import { getNewsBySlug } from '$lib/server/data';
+import { getNewsBySlug, getRelatedContent } from '$lib/server/data';
 import { error } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ params }) => {
+	const newsItemPromise = getNewsBySlug(params.slug).then((newsItem) => {
+		if (!newsItem) throw error(404, 'News article not found');
+		return newsItem;
+	});
+
 	return {
 		streamed: {
-			newsItem: getNewsBySlug(params.slug).then((newsItem) => {
-				if (!newsItem) throw error(404, 'News article not found');
-				return newsItem;
-			})
+			newsItem: newsItemPromise,
+			relatedContent: newsItemPromise.then((newsItem) => getRelatedContent(newsItem.id))
 		}
 	};
 };

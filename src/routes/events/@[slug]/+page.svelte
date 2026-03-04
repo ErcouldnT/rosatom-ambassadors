@@ -36,7 +36,7 @@
 			},
 			organizer: {
 				'@type': 'Organization',
-				name: 'RNE Ambassadors'
+				name: 'RNEA'
 			}
 		}}
 	/>

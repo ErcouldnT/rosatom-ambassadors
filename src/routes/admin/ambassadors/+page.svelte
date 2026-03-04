@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { Plus, Pencil, Trash2, Upload, X, Search } from '@lucide/svelte';
+	import { Plus, Pencil, Trash2, Upload, X, Search, Trophy } from '@lucide/svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import AdminInput from '$lib/components/admin/AdminInput.svelte';
 	import AdminTextarea from '$lib/components/admin/AdminTextarea.svelte';
-	import type { Ambassador, Country } from '$lib/types';
+	import type { Ambassador, Country, Award } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
 	import { toasts } from '$lib/stores/toast';
@@ -28,7 +28,7 @@
 		name_en: '',
 		name_ru: '',
 		slug: '',
-		email: '', // Added
+		email: '',
 		country_en: '',
 		country_ru: '',
 		role_en: '',
@@ -38,7 +38,8 @@
 		contributions_en: '',
 		contributions_ru: '',
 		image: null as File | null,
-		isActive: true
+		isAlumni: false,
+		awards: [] as Award[]
 	});
 
 	// For previewing existing image
@@ -70,7 +71,7 @@
 			form.name_en = ambassador.name_en;
 			form.name_ru = ambassador.name_ru;
 			form.slug = ambassador.slug || '';
-			form.email = ambassador.email || ''; // Added
+			form.email = ambassador.email || '';
 			form.country_en = ambassador.country_en;
 			form.country_ru = ambassador.country_ru;
 			form.role_en = ambassador.role_en;
@@ -79,10 +80,14 @@
 			form.about_ru = ambassador.about_ru || '';
 			form.contributions_en = ambassador.contributions_en || '';
 			form.contributions_ru = ambassador.contributions_ru || '';
-			form.isActive = ambassador.isActive;
-			form.image = null; // Reset file input
+			form.isAlumni = ambassador.isAlumni ?? false;
+			form.image = null;
+			try {
+				form.awards = JSON.parse(ambassador.awards_json || '[]');
+			} catch {
+				form.awards = [];
+			}
 
-			// Construct existing image URL if available
 			existingImageUrl = ambassador.image
 				? getImageUrl('ambassadors', ambassador.id, ambassador.image)
 				: '';
@@ -91,7 +96,7 @@
 			form.name_en = '';
 			form.name_ru = '';
 			form.slug = '';
-			form.email = ''; // Added
+			form.email = '';
 			form.country_en = '';
 			form.country_ru = '';
 			form.role_en = '';
@@ -100,7 +105,8 @@
 			form.about_ru = '';
 			form.contributions_en = '';
 			form.contributions_ru = '';
-			form.isActive = true;
+			form.isAlumni = false;
+			form.awards = [];
 			form.image = null;
 			existingImageUrl = '';
 		}
@@ -150,7 +156,8 @@
 			formData.append('about_ru', form.about_ru);
 			formData.append('contributions_en', form.contributions_en);
 			formData.append('contributions_ru', form.contributions_ru);
-			formData.append('isActive', form.isActive.toString());
+			formData.append('isAlumni', form.isAlumni.toString());
+			formData.append('awards_json', JSON.stringify(form.awards));
 
 			if (form.image) {
 				formData.append('image', form.image);
@@ -323,10 +330,10 @@
 										<div class="badge badge-ghost badge-sm">{ambassador.role_en}</div>
 									</td>
 									<td>
-										{#if ambassador.isActive}
-											<div class="badge gap-2 text-white badge-success">Active</div>
+										{#if ambassador.isAlumni}
+											<div class="badge gap-2 badge-info">Alumni</div>
 										{:else}
-											<div class="badge gap-2 badge-neutral">Inactive</div>
+											<div class="badge gap-2 text-white badge-success">Active</div>
 										{/if}
 									</td>
 									<td class="text-right">
@@ -441,23 +448,23 @@
 					</div>
 				</fieldset>
 
-				<!-- Status Switch -->
+				<!-- Alumni Toggle -->
 				<fieldset
 					class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4"
 				>
 					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70"
-						>Status</legend
+						>Alumni</legend
 					>
 					<label class="label cursor-pointer justify-between">
-						<span class="label-text font-medium">Public Visibility</span>
+						<span class="label-text font-medium">Graduated (Alumni)</span>
 						<input
 							type="checkbox"
-							bind:checked={form.isActive}
-							class="toggle toggle-sm toggle-success"
+							bind:checked={form.isAlumni}
+							class="toggle toggle-info toggle-sm"
 						/>
 					</label>
 					<p class="mt-1 text-xs text-base-content/40">
-						Controls profile visibility on the public map.
+						Alumni appear on the Alumni page instead of Ambassadors.
 					</p>
 				</fieldset>
 			</div>
@@ -639,6 +646,63 @@
 						/>
 					</div>
 				</div>
+
+				<!-- Awards Section -->
+				<fieldset
+					class="fieldset w-full rounded-xl border border-base-content/5 bg-base-100/30 p-4"
+				>
+					<legend class="fieldset-legend pb-2 text-sm font-medium text-base-content/70">
+						<Trophy class="mr-1 inline h-4 w-4" /> Awards ({form.awards.length})
+					</legend>
+
+					{#each form.awards as award, idx (idx)}
+						<div
+							class="mb-3 flex items-start gap-2 rounded-lg border border-base-content/10 bg-base-200/50 p-3"
+						>
+							<div class="flex-1 space-y-2">
+								<div class="grid grid-cols-2 gap-2">
+									<input
+										type="text"
+										placeholder="Award title (EN)"
+										bind:value={award.title_en}
+										class="input input-sm w-full border-base-content/10"
+									/>
+									<input
+										type="text"
+										placeholder="Award title (RU)"
+										bind:value={award.title_ru}
+										class="input input-sm w-full border-base-content/10"
+									/>
+								</div>
+								<input
+									type="text"
+									placeholder="Year (e.g. 2024)"
+									bind:value={award.year}
+									class="input input-sm w-24 border-base-content/10"
+								/>
+							</div>
+							<button
+								type="button"
+								class="btn btn-circle text-error btn-ghost btn-xs"
+								onclick={() => {
+									form.awards = form.awards.filter((_, i) => i !== idx);
+								}}
+							>
+								<X size={14} />
+							</button>
+						</div>
+					{/each}
+
+					<button
+						type="button"
+						class="btn mt-2 btn-block border-dashed border-base-content/20 btn-outline btn-sm"
+						onclick={() => {
+							form.awards = [...form.awards, { title_en: '', title_ru: '', year: '' }];
+						}}
+					>
+						<Plus size={14} /> Add Award
+					</button>
+				</fieldset>
 			</div>
 		</div>
 

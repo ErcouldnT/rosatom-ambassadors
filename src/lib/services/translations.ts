@@ -3,8 +3,11 @@ export const translations = {
 		nav: {
 			about: 'About',
 			ambassadors: 'Ambassadors',
+			alumni: 'Alumni',
 			events: 'Events',
 			news: 'News',
+			honors: 'Honors',
+			universities: 'Universities',
 			contact: 'Contact',
 			join: 'Join Us'
 		},
@@ -52,9 +55,16 @@ export const translations = {
 			joinButton: 'Join the Community'
 		},
 		events: {
-			title: 'Upcoming Events',
+			title: 'Events',
 			description:
 				'Join our ambassadors at events around the world. From workshops to conferences, find out where we will be next.'
+		},
+		eventsPage: {
+			upcoming: 'Upcoming Events',
+			past: 'Past Events',
+			noUpcoming: 'No upcoming events scheduled.',
+			noPast: 'No past events found.',
+			viewDetails: 'View Details'
 		},
 		impact: {
 			title: 'Global Presence',
@@ -96,6 +106,33 @@ export const translations = {
 			searchPlaceholder: 'Search by name, country or role...',
 			noResults: 'No ambassadors found matching your search.'
 		},
+		alumniPage: {
+			title: 'Alumni Ambassadors',
+			description:
+				'Meet our graduated ambassadors who have completed the program and continue to inspire the next generation.',
+			viewProfile: 'View Profile',
+			searchPlaceholder: 'Search alumni by name, country or role...',
+			noResults: 'No alumni found matching your search.'
+		},
+		honorsPage: {
+			title: 'Honors & Awards',
+			description:
+				'Celebrating the outstanding achievements and awards of our distinguished ambassadors.',
+			awards: 'Awards',
+			noAwards: 'No awarded ambassadors yet.'
+		},
+		universitiesPage: {
+			title: 'Partner Universities',
+			description:
+				'Explore the prestigious universities partnered with our ambassador program across Russia.',
+			founded: 'Founded',
+			students: 'Students',
+			intlStudents: 'International Students',
+			budgetPlaces: 'Budget Places',
+			programs: 'Programs',
+			visitWebsite: 'Visit Website',
+			noUniversities: 'No universities found.'
+		},
 		footer: {
 			desc: 'Promoting Russian nuclear education globally and building a sustainable future through international cooperation.',
 			headers: {
@@ -113,7 +150,8 @@ export const translations = {
 				faq: 'FAQ',
 				contact: 'Contact Support'
 			},
-			copyright: 'RNE Ambassadors. All rights reserved.'
+			copyright: 'RNE Ambassadors. All rights reserved.',
+			developedBy: 'Developed by Erkut & Cansın with ♥️ in Moscow.'
 		},
 		admin: {
 			dashboard: 'Dashboard',
@@ -171,6 +209,7 @@ export const translations = {
 		},
 		ambassadorProfile: {
 			active: 'Active',
+			alumni: 'Alumni',
 			inactive: 'Inactive',
 			networkVerified: 'Network Verified',
 			profileDossier: 'Ambassador Profile',
@@ -185,15 +224,19 @@ export const translations = {
 				'The ambassador you are looking for has departed the network or the link is invalid.',
 			backToNetwork: 'Back to Network',
 			shareTitle: 'Ambassador Profile',
-			shareText: 'Check out this ambassador profile on RNE'
+			shareText: 'Check out this ambassador profile on RNE',
+			awardsTitle: 'Honors & Awards'
 		}
 	},
 	ru: {
 		nav: {
 			about: 'О нас',
 			ambassadors: 'Амбассадоры',
+			alumni: 'Выпускники',
 			events: 'События',
 			news: 'Новости',
+			honors: 'Награды',
+			universities: 'Университеты',
 			contact: 'Контакты',
 			join: 'Присоединиться'
 		},
@@ -245,6 +288,13 @@ export const translations = {
 			description:
 				'Присоединяйтесь к нашим амбассадорам на мероприятиях по всему миру. От семинаров до конференций — узнайте, где мы будем завтра.'
 		},
+		eventsPage: {
+			upcoming: 'Предстоящие События',
+			past: 'Прошедшие События',
+			noUpcoming: 'Предстоящих событий пока нет.',
+			noPast: 'Прошедших событий не найдено.',
+			viewDetails: 'Подробнее'
+		},
 		impact: {
 			title: 'Глобальное Присутствие',
 			description:
@@ -285,6 +335,32 @@ export const translations = {
 			searchPlaceholder: 'Поиск по имени, стране или роли...',
 			noResults: 'Амбассадоры по вашему запросу не найдены.'
 		},
+		alumniPage: {
+			title: 'Выпускники-Амбассадоры',
+			description:
+				'Познакомьтесь с нашими выпускниками-амбассадорами, завершившими программу и продолжающими вдохновлять новое поколение.',
+			viewProfile: 'Посмотреть Профиль',
+			searchPlaceholder: 'Поиск выпускников по имени, стране или роли...',
+			noResults: 'Выпускники по вашему запросу не найдены.'
+		},
+		honorsPage: {
+			title: 'Награды и Достижения',
+			description: 'Чествуем выдающиеся достижения и награды наших амбассадоров.',
+			awards: 'Награды',
+			noAwards: 'Пока нет награждённых амбассадоров.'
+		},
+		universitiesPage: {
+			title: 'Университеты-Партнёры',
+			description:
+				'Ознакомьтесь с престижными университетами, сотрудничающими с нашей программой амбассадоров.',
+			founded: 'Основан',
+			students: 'Студентов',
+			intlStudents: 'Иностранных студентов',
+			budgetPlaces: 'Бюджетных мест',
+			programs: 'Программ',
+			visitWebsite: 'Посетить сайт',
+			noUniversities: 'Университеты не найдены.'
+		},
 		footer: {
 			desc: 'Продвижение российского ядерного образования во всем мире и построение устойчивого будущего через международное сотрудничество.',
 			headers: {
@@ -302,7 +378,8 @@ export const translations = {
 				faq: 'FAQ',
 				contact: 'Поддержка'
 			},
-			copyright: 'RNE Ambassadors. Все права защищены.'
+			copyright: 'RNE Ambassadors. Все права защищены.',
+			developedBy: 'Разработано Эркутом и Джансыном с ♥️ в Москве.'
 		},
 		admin: {
 			dashboard: 'Панель управления',
@@ -360,6 +437,7 @@ export const translations = {
 		},
 		ambassadorProfile: {
 			active: 'Активен',
+			alumni: 'Выпускник',
 			inactive: 'Неактивен',
 			networkVerified: 'Верифицирован в сети',
 			profileDossier: 'Профиль Амбассадора',
@@ -374,7 +452,8 @@ export const translations = {
 				'Амбассадор, которого вы ищете, покинул сеть или ссылка недействительна.',
 			backToNetwork: 'Назад к списку',
 			shareTitle: 'Профиль Амбассадора',
-			shareText: 'Посмотрите профиль амбассадора на RNE'
+			shareText: 'Посмотрите профиль амбассадора на RNE',
+			awardsTitle: 'Награды и Достижения'
 		}
 	}
 };

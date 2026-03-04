@@ -4,6 +4,14 @@ export interface BaseModel {
 	updated: string;
 }
 
+export interface Award {
+	title_en: string;
+	title_ru: string;
+	year?: string;
+	description_en?: string;
+	description_ru?: string;
+}
+
 export interface Ambassador extends BaseModel {
 	slug: string;
 	email: string | null;
@@ -19,7 +27,9 @@ export interface Ambassador extends BaseModel {
 	contributions_ru: string | null;
 	image: string | Uint8Array | null;
 	image_mime_type?: string | null;
-	isActive: boolean;
+	isAlumni: boolean;
+	awards_json?: string | null;
+	awards?: Award[];
 }
 
 export interface Event extends BaseModel {
@@ -36,6 +46,7 @@ export interface Event extends BaseModel {
 	description_ru: string;
 	image: string | Uint8Array | null;
 	image_mime_type?: string | null;
+	event_date?: string | null;
 }
 
 export interface NewsItem extends BaseModel {
@@ -87,4 +98,19 @@ export interface Message extends BaseModel {
 	contact: string;
 	message: string;
 	is_read: boolean;
+}
+
+export interface University extends BaseModel {
+	name_en: string;
+	name_ru: string;
+	city_en?: string | null;
+	city_ru?: string | null;
+	website?: string | null;
+	founded?: string | null;
+	student_count?: number | null;
+	intl_student_count?: number | null;
+	budget_places?: number | null;
+	program_count?: number | null;
+	image: string | Uint8Array | null;
+	image_mime_type?: string | null;
 }

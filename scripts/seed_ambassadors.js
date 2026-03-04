@@ -142,8 +142,36 @@ async function seedAmbassadors() {
 					console.warn('Failed to fetch placeholder image for ambassador:', imgError);
 				}
 
+				const shouldHaveAwards = Math.random() < 0.15;
+				const awards = shouldHaveAwards
+					? Array.from({ length: Math.floor(Math.random() * 2) + 1 }, () => {
+							const awardOptions = [
+								{ title_en: 'Best Ambassador of the Year', title_ru: 'Лучший амбассадор года' },
+								{
+									title_en: 'Outstanding Research Contribution',
+									title_ru: 'Выдающийся вклад в исследования'
+								},
+								{
+									title_en: 'International Cooperation Award',
+									title_ru: 'Награда за международное сотрудничество'
+								},
+								{
+									title_en: 'Nuclear Science Excellence',
+									title_ru: 'Награда за достижения в ядерной науке'
+								},
+								{
+									title_en: 'Community Leadership Award',
+									title_ru: 'Награда за лидерство в сообществе'
+								}
+							];
+							const award = awardOptions[Math.floor(Math.random() * awardOptions.length)];
+							return { ...award, year: String(2022 + Math.floor(Math.random() * 4)) };
+						})
+					: [];
+
 				await db.insert(schema.ambassadors).values({
 					id: crypto.randomUUID(),
+					slug: `${sample.name_en.toLowerCase().replace(/\s+/g, '-')}-${Math.random().toString(36).substring(2, 6)}`,
 					name_en: `${sample.name_en}`,
 					name_ru: `${sample.name_ru}`,
 					country_id: country.id,
@@ -153,7 +181,8 @@ async function seedAmbassadors() {
 					role_ru: sample.role_ru,
 					image: imageBuffer,
 					image_mime_type: mimeType,
-					isActive: true
+					isAlumni: Math.random() < 0.2,
+					awards_json: awards.length > 0 ? JSON.stringify(awards) : null
 				});
 			}
 			totalAmbassadors += count;

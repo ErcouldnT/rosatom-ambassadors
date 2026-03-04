@@ -22,7 +22,7 @@
 				News & Updates
 			</div>
 			<h1 class="mb-4 text-3xl font-bold tracking-tight text-base-content md:text-4xl lg:text-5xl">
-				Latest from RNE Ambassadors
+				Latest from RNEA
 			</h1>
 			<p class="mx-auto max-w-2xl text-base text-base-content/70 md:text-lg">
 				Stay informed about our latest activities, events, and success stories.

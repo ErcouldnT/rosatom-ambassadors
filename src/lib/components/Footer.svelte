@@ -77,7 +77,8 @@
 	</nav>
 </footer>
 <footer class="footer border-t border-base-300 bg-base-200 px-10 py-4 text-base-content">
-	<aside class="grid-flow-col items-center">
+	<div class="flex w-full flex-col items-center justify-between gap-2 sm:flex-row">
 		<p>© {new Date().getFullYear()} {t.copyright}</p>
-	</aside>
+		<p class="text-sm opacity-60">{t.developedBy}</p>
+	</div>
 </footer>

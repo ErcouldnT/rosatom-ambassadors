@@ -75,7 +75,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	const stats = {
 		ambassadors: ambassadors.length,
-		activeAmbassadors: ambassadors.filter((a) => a.isActive).length,
+		activeAmbassadors: ambassadors.filter((a) => !a.isAlumni).length,
 		events: events.length,
 		news: news.length,
 		countries: new Set(ambassadors.map((a) => a.country_en)).size,
@@ -99,7 +99,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 	// Aggregate ambassador roles
 	const roleCounts: Record<string, number> = {};
 	ambassadors.forEach((a) => {
-		if (a.isActive && a.role_en) {
+		if (!a.isAlumni && a.role_en) {
 			roleCounts[a.role_en] = (roleCounts[a.role_en] || 0) + 1;
 		}
 	});

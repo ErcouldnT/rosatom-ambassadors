@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Menu, Sun, Moon, Atom } from '@lucide/svelte';
+	import { Menu, Sun, Moon } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -13,8 +13,11 @@
 	let navLinks = $derived([
 		{ name: t.nav.about, href: '/#about' },
 		{ name: t.nav.ambassadors, href: '/ambassadors' },
+		{ name: t.nav.alumni, href: '/alumni' },
 		{ name: t.nav.events, href: '/events' },
 		{ name: t.nav.news, href: '/news' },
+		{ name: t.nav.honors, href: '/honors' },
+		{ name: t.nav.universities, href: '/universities' },
 		{ name: t.nav.contact, href: '/#contact' }
 	]);
 
@@ -27,7 +30,7 @@
 	});
 
 	function toggleTheme() {
-		theme = theme === 'light' ? 'dark' : 'light';
+		theme = theme === 'light' ? 'synthwave' : 'light';
 		document.documentElement.setAttribute('data-theme', theme);
 		localStorage.setItem('theme', theme);
 	}
@@ -69,12 +72,8 @@
 					href="/"
 					class="btn flex items-center gap-2 text-xl font-bold text-base-content btn-ghost"
 				>
-					<div
-						class="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary"
-					>
-						<Atom size={20} />
-					</div>
-					<span><span class="text-primary">RNE</span> Ambassadors</span>
+					<img src="/logos/RNEA_transparent.png" alt="RNEA Logo" class="h-12 w-auto" />
+					<span><span class="text-primary">RNEA</span></span>
 				</a>
 				<!-- eslint-enable svelte/no-navigation-without-resolve -->
 			</div>
@@ -94,8 +93,8 @@
 					<input
 						type="checkbox"
 						class="theme-controller"
-						value="dark"
-						checked={theme === 'dark'}
+						value="synthwave"
+						checked={theme === 'synthwave'}
 						onchange={toggleTheme}
 					/>
 

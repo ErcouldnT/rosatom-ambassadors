@@ -54,7 +54,7 @@
 </script>
 
 <svelte:head>
-	<title>Admin Profile - RNE Ambassadors</title>
+	<title>Admin Profile - RNEA</title>
 </svelte:head>
 
 <div class="mx-auto max-w-2xl space-y-8">

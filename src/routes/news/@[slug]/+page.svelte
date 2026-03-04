@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ArrowLeft, Calendar, Tag, Share2, Bookmark, Clock, ArrowRight } from '@lucide/svelte';
-	import type { NewsItem } from '$lib/types';
+	import type { NewsItem, Event } from '$lib/types';
 	import { language } from '$lib/services/language';
 	import { getImageUrl } from '$lib/utils';
 
@@ -8,6 +8,11 @@
 		data: {
 			streamed: {
 				newsItem: Promise<NewsItem>;
+				relatedContent: Promise<{
+					relatedNews: NewsItem | null;
+					upcomingEvent: Event | null;
+					fallbackNews: NewsItem | null;
+				}>;
 			};
 		};
 	}
@@ -15,6 +20,23 @@
 	import SEO from '$lib/components/SEO.svelte';
 
 	let { data }: Props = $props();
+
+	function timeAgo(dateStr: string): string {
+		const now = new Date();
+		const date = new Date(dateStr);
+		const diffMs = now.getTime() - date.getTime();
+		const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+		if (diffDays === 0) return $language === 'en' ? 'Today' : 'Сегодня';
+		if (diffDays === 1) return $language === 'en' ? '1 day ago' : '1 день назад';
+		if (diffDays < 7) return $language === 'en' ? `${diffDays} days ago` : `${diffDays} дн. назад`;
+		const diffWeeks = Math.floor(diffDays / 7);
+		if (diffWeeks === 1) return $language === 'en' ? '1 week ago' : '1 нед. назад';
+		if (diffWeeks < 4)
+			return $language === 'en' ? `${diffWeeks} weeks ago` : `${diffWeeks} нед. назад`;
+		const diffMonths = Math.floor(diffDays / 30);
+		if (diffMonths === 1) return $language === 'en' ? '1 month ago' : '1 мес. назад';
+		return $language === 'en' ? `${diffMonths} months ago` : `${diffMonths} мес. назад`;
+	}
 </script>
 
 {#await data.streamed.newsItem then newsItem}
@@ -186,49 +208,98 @@
 				</footer>
 
 				<!-- Related Articles Section -->
-				<section class="mt-20">
-					<div class="mb-8 flex items-center justify-between">
-						<h2 class="text-2xl font-bold text-base-content">Related Articles</h2>
-						<button class="btn text-base-content/60 btn-link no-underline hover:text-primary"
-							>View All <ArrowRight class="ml-1 h-4 w-4" /></button
-						>
-					</div>
-					<div class="grid gap-6 md:grid-cols-2">
-						<div
-							class="group card cursor-pointer border border-base-200 bg-base-100 shadow-md transition-all duration-300 hover:shadow-xl"
-						>
-							<div class="card-body">
-								<div class="mb-2 flex items-start justify-between">
-									<span class="badge badge-outline badge-sm badge-secondary">Education</span>
-									<span class="text-xs text-base-content/50">2 days ago</span>
-								</div>
-								<h3 class="card-title text-base-content transition-colors group-hover:text-primary">
-									Latest Developments in Nuclear Science
-								</h3>
-								<p class="line-clamp-2 text-base-content/70">
-									Exploring new research frontiers and what they mean for the future of energy
-									production worldwide.
-								</p>
+				{#await data.streamed.relatedContent then relatedContent}
+					{#if relatedContent.relatedNews || relatedContent.upcomingEvent || relatedContent.fallbackNews}
+						<section class="mt-20">
+							<div class="mb-8 flex items-center justify-between">
+								<h2 class="text-2xl font-bold text-base-content">
+									{$language === 'en' ? 'Related Articles' : 'Похожие статьи'}
+								</h2>
+								<a
+									href="/news"
+									class="btn text-base-content/60 btn-link no-underline hover:text-primary"
+									>{$language === 'en' ? 'View All' : 'Все'} <ArrowRight class="ml-1 h-4 w-4" /></a
+								>
 							</div>
-						</div>
-						<div
-							class="group card cursor-pointer border border-base-200 bg-base-100 shadow-md transition-all duration-300 hover:shadow-xl"
-						>
-							<div class="card-body">
-								<div class="mb-2 flex items-start justify-between">
-									<span class="badge badge-outline badge-sm badge-accent">Events</span>
-									<span class="text-xs text-base-content/50">5 days ago</span>
-								</div>
-								<h3 class="card-title text-base-content transition-colors group-hover:text-primary">
-									Upcoming International Forums
-								</h3>
-								<p class="line-clamp-2 text-base-content/70">
-									Mark your calendar for these key events happening in Q3 and Q4 2024.
-								</p>
+							<div class="grid gap-6 md:grid-cols-2">
+								{#if relatedContent.relatedNews}
+									{@const item = relatedContent.relatedNews}
+									<a
+										href="/news/@{item.slug || item.id}"
+										class="group card cursor-pointer border border-base-200 bg-base-100 shadow-md transition-all duration-300 hover:shadow-xl"
+									>
+										<div class="card-body">
+											<div class="mb-2 flex items-start justify-between">
+												<span class="badge badge-outline badge-sm badge-secondary"
+													>{$language === 'en' ? item.category_en : item.category_ru}</span
+												>
+												<span class="text-xs text-base-content/50">{timeAgo(item.created)}</span>
+											</div>
+											<h3
+												class="card-title text-base-content transition-colors group-hover:text-primary"
+											>
+												{$language === 'en' ? item.title_en : item.title_ru}
+											</h3>
+											<p class="line-clamp-2 text-base-content/70">
+												{$language === 'en' ? item.excerpt_en : item.excerpt_ru}
+											</p>
+										</div>
+									</a>
+								{/if}
+								{#if relatedContent.upcomingEvent}
+									{@const evt = relatedContent.upcomingEvent}
+									<a
+										href="/events/@{evt.slug || evt.id}"
+										class="group card cursor-pointer border border-base-200 bg-base-100 shadow-md transition-all duration-300 hover:shadow-xl"
+									>
+										<div class="card-body">
+											<div class="mb-2 flex items-start justify-between">
+												<span class="badge badge-outline badge-sm badge-accent"
+													>{$language === 'en' ? 'Upcoming Event' : 'Предстоящее событие'}</span
+												>
+												<span class="text-xs text-base-content/50"
+													>{evt.date_day}
+													{$language === 'en' ? evt.date_month_en : evt.date_month_ru}</span
+												>
+											</div>
+											<h3
+												class="card-title text-base-content transition-colors group-hover:text-primary"
+											>
+												{$language === 'en' ? evt.title_en : evt.title_ru}
+											</h3>
+											<p class="line-clamp-2 text-base-content/70">
+												{$language === 'en' ? evt.description_en : evt.description_ru}
+											</p>
+										</div>
+									</a>
+								{:else if relatedContent.fallbackNews}
+									{@const item2 = relatedContent.fallbackNews}
+									<a
+										href="/news/@{item2.slug || item2.id}"
+										class="group card cursor-pointer border border-base-200 bg-base-100 shadow-md transition-all duration-300 hover:shadow-xl"
+									>
+										<div class="card-body">
+											<div class="mb-2 flex items-start justify-between">
+												<span class="badge badge-outline badge-sm badge-secondary"
+													>{$language === 'en' ? item2.category_en : item2.category_ru}</span
+												>
+												<span class="text-xs text-base-content/50">{timeAgo(item2.created)}</span>
+											</div>
+											<h3
+												class="card-title text-base-content transition-colors group-hover:text-primary"
+											>
+												{$language === 'en' ? item2.title_en : item2.title_ru}
+											</h3>
+											<p class="line-clamp-2 text-base-content/70">
+												{$language === 'en' ? item2.excerpt_en : item2.excerpt_ru}
+											</p>
+										</div>
+									</a>
+								{/if}
 							</div>
-						</div>
-					</div>
-				</section>
+						</section>
+					{/if}
+				{/await}
 			</article>
 		</div>
 	</div>

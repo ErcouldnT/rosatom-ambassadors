@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { ambassadors, events, news } from '$lib/server/db/schema';
+import { ambassadors, events, news, universities } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
 	const { type, id } = params;
 	const ifNoneMatch = request.headers.get('if-none-match');
 
-	type ImageTable = typeof ambassadors | typeof events | typeof news;
+	type ImageTable = typeof ambassadors | typeof events | typeof news | typeof universities;
 
 	const getMetaAndImage = async (table: ImageTable) => {
 		const meta = await db
@@ -57,6 +57,8 @@ export const GET: RequestHandler = async ({ params, request }) => {
 			result = await getMetaAndImage(events);
 		} else if (type === 'news') {
 			result = await getMetaAndImage(news);
+		} else if (type === 'universities') {
+			result = await getMetaAndImage(universities);
 		} else {
 			throw error(400, 'Invalid image type');
 		}

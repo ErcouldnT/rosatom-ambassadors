@@ -231,7 +231,7 @@
 		<!-- Footer text -->
 		<div class="mt-6 text-center">
 			<p class="text-xs text-base-content/40">
-				RNE Ambassadors Dashboard &copy; {new Date().getFullYear()}
+				RNEA Dashboard &copy; {new Date().getFullYear()}
 			</p>
 		</div>
 	</div>

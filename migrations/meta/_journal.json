@@ -71,6 +71,13 @@
 			"when": 1768707122882,
 			"tag": "0009_chunky_zzzax",
 			"breakpoints": true
+		},
+		{
+			"idx": 10,
+			"version": "6",
+			"when": 1772584376570,
+			"tag": "0010_cultured_imperial_guard",
+			"breakpoints": true
 		}
 	]
 }

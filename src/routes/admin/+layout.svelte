@@ -17,7 +17,8 @@
 		Image as ImageIcon,
 		User,
 		Sun,
-		Moon
+		Moon,
+		GraduationCap
 	} from '@lucide/svelte';
 	import { language } from '$lib/services/language';
 	import { translations } from '$lib/services/translations';
@@ -44,7 +45,7 @@
 	});
 
 	function toggleTheme() {
-		theme = theme === 'light' ? 'dark' : 'light';
+		theme = theme === 'light' ? 'synthwave' : 'light';
 		document.documentElement.setAttribute('data-theme', theme);
 		localStorage.setItem('theme', theme);
 	}
@@ -68,7 +69,8 @@
 		{ name: t.news, href: '/admin/news', icon: Newspaper },
 		{ name: t.stats, href: '/admin/stats', icon: BarChart3 },
 		{ name: t.countries, href: '/admin/countries', icon: Globe },
-		{ name: t.tickers, href: '/admin/tickers', icon: ScrollText }
+		{ name: t.tickers, href: '/admin/tickers', icon: ScrollText },
+		{ name: 'Universities', href: '/admin/universities', icon: GraduationCap }
 	]);
 
 	async function handleLogout() {
@@ -190,8 +192,8 @@
 						<input
 							type="checkbox"
 							class="theme-controller"
-							value="dark"
-							checked={theme === 'dark'}
+							value="synthwave"
+							checked={theme === 'synthwave'}
 							onchange={toggleTheme}
 						/>
 
