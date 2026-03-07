@@ -24,7 +24,7 @@
 		jsonLd
 	}: Props = $props();
 
-	const siteName = 'RNE Ambassadors';
+	const siteName = 'RNEA';
 	const fullTitle = $derived(title ? `${title} | ${siteName}` : siteName);
 	const siteUrl = $derived($page.url.origin);
 	const currentPath = $derived($page.url.pathname);

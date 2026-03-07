@@ -189,9 +189,8 @@ const NEWS_DATA = [
 		date: 'July 28, 2024',
 		title_en: 'New Scholarship Opportunities Announced',
 		title_ru: 'Объявлены новые возможности получения стипендий',
-		excerpt_en: 'RNE Ambassadors launches a new scholarship program for international students.',
-		excerpt_ru:
-			'RNE Ambassadors запускает новую стипендиальную программу для иностранных студентов.'
+		excerpt_en: 'RNEA launches a new scholarship program for international students.',
+		excerpt_ru: 'RNEA запускает новую стипендиальную программу для иностранных студентов.'
 	},
 	{
 		category_en: 'Technology',

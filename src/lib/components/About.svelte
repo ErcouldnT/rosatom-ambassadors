@@ -21,7 +21,7 @@
 				<div class="relative z-10 overflow-hidden rounded-[2rem] shadow-2xl">
 					<img
 						src={aboutImage}
-						alt="About RNE Ambassadors"
+						alt="About RNEA"
 						class="h-auto w-full object-cover"
 						onerror={(e) => ((e.currentTarget as HTMLImageElement).src = defaultAboutImage)}
 					/>

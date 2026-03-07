@@ -235,7 +235,7 @@
 									</div>
 								</div>
 								<div>
-									<p class="text-lg font-bold text-base-content">RNE Ambassadors</p>
+									<p class="text-lg font-bold text-base-content">RNEA</p>
 									<p class="text-sm text-base-content/70">Official Organizer</p>
 								</div>
 							</div>

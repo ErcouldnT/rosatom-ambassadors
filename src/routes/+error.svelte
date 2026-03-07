@@ -2,7 +2,7 @@
 </script>
 
 <svelte:head>
-	<title>404 | RNE Ambassadors</title>
+	<title>404 | RNEA</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col items-center justify-center bg-base-100 px-6">

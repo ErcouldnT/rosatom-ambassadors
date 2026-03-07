@@ -35,7 +35,7 @@
 </script>
 
 <svelte:head>
-	<title>Admin Login - RNE Ambassadors</title>
+	<title>Admin Login - RNEA</title>
 </svelte:head>
 
 <!-- Background with animated gradient -->

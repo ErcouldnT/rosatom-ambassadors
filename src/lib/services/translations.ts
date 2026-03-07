@@ -84,7 +84,7 @@ export const translations = {
 		cta: {
 			title: 'Ready to make an impact?',
 			description:
-				'Join the RNE Ambassadors program today and become part of a global movement towards a sustainable future.',
+				'Join the RNEA program today and become part of a global movement towards a sustainable future.',
 			apply: 'Apply Now',
 			contact: 'Contact Us'
 		},
@@ -150,7 +150,7 @@ export const translations = {
 				faq: 'FAQ',
 				contact: 'Contact Support'
 			},
-			copyright: 'RNE Ambassadors. All rights reserved.',
+			copyright: 'RNEA. All rights reserved.',
 			developedBy: 'Developed by Erkut & Cansın with ♥️ in Moscow.'
 		},
 		admin: {
@@ -313,7 +313,7 @@ export const translations = {
 		cta: {
 			title: 'Готовы внести свой вклад?',
 			description:
-				'Присоединяйтесь к программе RNE Ambassadors сегодня и станьте частью глобального движения к устойчивому будущему.',
+				'Присоединяйтесь к программе RNEA сегодня и станьте частью глобального движения к устойчивому будущему.',
 			apply: 'Подать Заявку',
 			contact: 'Связаться с Нами'
 		},
@@ -378,7 +378,7 @@ export const translations = {
 				faq: 'FAQ',
 				contact: 'Поддержка'
 			},
-			copyright: 'RNE Ambassadors. Все права защищены.',
+			copyright: 'RNEA. Все права защищены.',
 			developedBy: 'Разработано Эркутом и Джансыном с ♥️ в Москве.'
 		},
 		admin: {

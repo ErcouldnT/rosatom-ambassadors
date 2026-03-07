@@ -55,7 +55,7 @@
 			dateModified: newsItem.updated,
 			author: {
 				'@type': 'Organization',
-				name: 'RNE Ambassadors'
+				name: 'RNEA'
 			}
 		}}
 	/>
@@ -172,7 +172,7 @@
 					<p class="text-base-content/80">
 						The future of nuclear energy education looks bright, with continued investment and
 						international cooperation driving progress. Stay tuned for more updates and developments
-						from the RNE Ambassadors network.
+						from the RNEA network.
 					</p>
 				</div>
 
