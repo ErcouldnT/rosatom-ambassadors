@@ -178,10 +178,11 @@
 				throw new Error(errData.error || 'Failed to save ambassador');
 			}
 
+			const wasEditing = !!editingId;
 			closeModal();
 			await fetchAmbassadors();
 			toasts.add(
-				editingId ? 'Ambassador updated successfully' : 'Ambassador created successfully',
+				wasEditing ? 'Ambassador updated successfully' : 'Ambassador created successfully',
 				'success'
 			);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

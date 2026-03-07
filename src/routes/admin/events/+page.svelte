@@ -121,10 +121,11 @@
 				throw new Error('Failed to save event');
 			}
 
+			const wasEditing = !!editingId;
 			closeModal();
 			await fetchEvents();
 			toasts.add(
-				editingId ? 'Event updated successfully' : 'Event created successfully',
+				wasEditing ? 'Event updated successfully' : 'Event created successfully',
 				'success'
 			);
 		} catch (error) {

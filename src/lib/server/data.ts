@@ -217,6 +217,7 @@ export async function getAmbassadorById(id: string): Promise<Ambassador | null> 
 				contributions_en: ambassadors.contributions_en,
 				contributions_ru: ambassadors.contributions_ru,
 				isAlumni: ambassadors.isAlumni,
+				awards_json: ambassadors.awards_json,
 				image_mime_type: ambassadors.image_mime_type,
 				created: ambassadors.created,
 				updated: ambassadors.updated,
@@ -247,6 +248,7 @@ export async function getAmbassadorBySlug(slug: string): Promise<Ambassador | nu
 				role_ru: ambassadors.role_ru,
 				about_en: ambassadors.about_en,
 				about_ru: ambassadors.about_ru,
+				contributions_en: ambassadors.contributions_en,
 				contributions_ru: ambassadors.contributions_ru,
 				isAlumni: ambassadors.isAlumni,
 				awards_json: ambassadors.awards_json,
@@ -318,6 +320,7 @@ export async function getEventById(id: string): Promise<Event | null> {
 				location_ru: events.location_ru,
 				description_en: events.description_en,
 				description_ru: events.description_ru,
+				event_date: events.event_date,
 				created: events.created,
 				updated: events.updated,
 				image: sql<boolean>`CASE WHEN ${events.image} IS NOT NULL THEN 1 ELSE 0 END`
@@ -614,14 +617,14 @@ export async function deleteCountry(id: string): Promise<boolean> {
 }
 
 // Admin CRUD operations (No token needed, auth check should be done in route)
-export async function createAmbassador(data: Partial<Ambassador>): Promise<Ambassador | null> {
+export async function createAmbassador(data: Partial<Ambassador>): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.insert(ambassadors)
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			.values(data as any)
-			.returning();
-		return record as unknown as Ambassador;
+			.returning({ id: ambassadors.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to create ambassador:', error);
 		return null;
@@ -631,14 +634,14 @@ export async function createAmbassador(data: Partial<Ambassador>): Promise<Ambas
 export async function updateAmbassador(
 	id: string,
 	data: Partial<Ambassador>
-): Promise<Ambassador | null> {
+): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.update(ambassadors)
 			.set({ ...data, updated: new Date().toISOString() })
 			.where(eq(ambassadors.id, id))
-			.returning();
-		return record as unknown as Ambassador;
+			.returning({ id: ambassadors.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to update ambassador:', error);
 		return null;
@@ -655,28 +658,31 @@ export async function deleteAmbassador(id: string): Promise<boolean> {
 	}
 }
 
-export async function createEvent(data: Partial<Event>): Promise<Event | null> {
+export async function createEvent(data: Partial<Event>): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.insert(events)
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			.values(data as any)
-			.returning();
-		return record as unknown as Event;
+			.returning({ id: events.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to create event:', error);
 		return null;
 	}
 }
 
-export async function updateEvent(id: string, data: Partial<Event>): Promise<Event | null> {
+export async function updateEvent(
+	id: string,
+	data: Partial<Event>
+): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.update(events)
 			.set({ ...data, updated: new Date().toISOString() })
 			.where(eq(events.id, id))
-			.returning();
-		return record as unknown as Event;
+			.returning({ id: events.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to update event:', error);
 		return null;
@@ -693,28 +699,31 @@ export async function deleteEvent(id: string): Promise<boolean> {
 	}
 }
 
-export async function createNews(data: Partial<NewsItem>): Promise<NewsItem | null> {
+export async function createNews(data: Partial<NewsItem>): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.insert(news)
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			.values(data as any)
-			.returning();
-		return record as unknown as NewsItem;
+			.returning({ id: news.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to create news:', error);
 		return null;
 	}
 }
 
-export async function updateNews(id: string, data: Partial<NewsItem>): Promise<NewsItem | null> {
+export async function updateNews(
+	id: string,
+	data: Partial<NewsItem>
+): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.update(news)
 			.set({ ...data, updated: new Date().toISOString() })
 			.where(eq(news.id, id))
-			.returning();
-		return record as unknown as NewsItem;
+			.returning({ id: news.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to update news:', error);
 		return null;
@@ -864,14 +873,14 @@ export async function getUniversities(): Promise<University[]> {
 	}
 }
 
-export async function createUniversity(data: Partial<University>): Promise<University | null> {
+export async function createUniversity(data: Partial<University>): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.insert(universities)
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			.values(data as any)
-			.returning();
-		return record as unknown as University;
+			.returning({ id: universities.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to create university:', error);
 		return null;
@@ -881,14 +890,14 @@ export async function createUniversity(data: Partial<University>): Promise<Unive
 export async function updateUniversity(
 	id: string,
 	data: Partial<University>
-): Promise<University | null> {
+): Promise<{ id: string } | null> {
 	try {
 		const [record] = await db
 			.update(universities)
 			.set({ ...data, updated: new Date().toISOString() })
 			.where(eq(universities.id, id))
-			.returning();
-		return record as unknown as University;
+			.returning({ id: universities.id });
+		return record;
 	} catch (error) {
 		console.error('Failed to update university:', error);
 		return null;

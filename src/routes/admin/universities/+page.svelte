@@ -100,10 +100,11 @@
 				throw new Error(errData.error || 'Failed to save university');
 			}
 
+			const wasEditing = !!editingId;
 			closeModal();
 			await invalidateAll();
 			toasts.add(
-				editingId ? 'University updated successfully' : 'University created successfully',
+				wasEditing ? 'University updated successfully' : 'University created successfully',
 				'success'
 			);
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -129,10 +129,11 @@
 				throw new Error('Failed to save article');
 			}
 
+			const wasEditing = !!editingId;
 			closeModal();
 			await fetchNews();
 			toasts.add(
-				editingId ? 'Article updated successfully' : 'Article created successfully',
+				wasEditing ? 'Article updated successfully' : 'Article created successfully',
 				'success'
 			);
 		} catch (error) {

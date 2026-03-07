@@ -105,7 +105,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		if (!ambassador) {
 			return json({ error: 'Failed to create ambassador' }, { status: 500 });
 		}
-		return json(ambassador, { status: 201 });
+		return json({ id: ambassador.id, success: true }, { status: 201 });
 	} catch (error) {
 		console.error('API POST Error:', error);
 		const message = error instanceof Error ? error.message : 'Server error';
@@ -189,7 +189,7 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		if (!ambassador) {
 			return json({ error: 'Ambassador not found' }, { status: 404 });
 		}
-		return json(ambassador);
+		return json({ id: ambassador.id, success: true });
 	} catch (error) {
 		console.error('API PUT Error:', error);
 		const message = error instanceof Error ? error.message : 'Server error';

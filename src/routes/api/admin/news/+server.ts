@@ -77,11 +77,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		}
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const news = await createNews(data as any);
-		if (!news) {
+		const newsItem = await createNews(data as any);
+		if (!newsItem) {
 			return json({ error: 'Failed to create' }, { status: 500 });
 		}
-		return json(news, { status: 201 });
+		return json({ id: newsItem.id, success: true }, { status: 201 });
 	} catch (error) {
 		console.error('API POST Error:', error);
 		const message = error instanceof Error ? error.message : 'Server error';
@@ -148,11 +148,11 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 			data.image_mime_type = 'image/webp';
 		}
 
-		const news = await updateNews(id, data);
-		if (!news) {
+		const newsItem = await updateNews(id, data);
+		if (!newsItem) {
 			return json({ error: 'Not found' }, { status: 404 });
 		}
-		return json(news);
+		return json({ id: newsItem.id, success: true });
 	} catch (error) {
 		console.error('API PUT Error:', error);
 		const message = error instanceof Error ? error.message : 'Server error';

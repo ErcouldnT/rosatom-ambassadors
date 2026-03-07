@@ -82,10 +82,11 @@
 
 			if (!res.ok) throw new Error('Failed to save');
 
+			const wasEditing = !!editingId;
 			await fetchCountries();
 			closeModal();
 			toasts.add(
-				editingId ? 'Country updated successfully' : 'Country created successfully',
+				wasEditing ? 'Country updated successfully' : 'Country created successfully',
 				'success'
 			);
 		} catch (error) {

@@ -93,7 +93,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		if (!event) {
 			return json({ error: 'Failed to create' }, { status: 500 });
 		}
-		return json(event, { status: 201 });
+		return json({ id: event.id, success: true }, { status: 201 });
 	} catch (error) {
 		console.error('API POST Error:', error);
 		const message = error instanceof Error ? error.message : 'Server error';
@@ -172,7 +172,7 @@ export const PUT: RequestHandler = async ({ request, locals }) => {
 		if (!event) {
 			return json({ error: 'Not found' }, { status: 404 });
 		}
-		return json(event);
+		return json({ id: event.id, success: true });
 	} catch (error) {
 		console.error('API PUT Error:', error);
 		const message = error instanceof Error ? error.message : 'Server error';
